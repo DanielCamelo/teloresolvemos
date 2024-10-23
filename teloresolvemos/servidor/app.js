@@ -11,7 +11,18 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
+//Conexión con la base de datos
+const connectDB = require('./config/db');
+connectDB();
+
+// app.js
+const { connect } = require('./database');  // Se ajusta la ruta del database
+
 // Arrancar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-});
+connect().then(() => {
+  // Aquí puedes continuar con la inicialización de tu servidor
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}).catch(console.error);
+
