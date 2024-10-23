@@ -1,33 +1,25 @@
-import { Outlet } from 'react-router-dom';
+import logo from './logo.svg';
 import './App.css';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import fondoMovil from './assets/fondoMovil.jpg'; // Asegúrate de que la ruta sea correcta
-
 
 function App() {
   return (
-    <>
-      {/* Fondo para tabletas y PC */}
-      <div className="hidden md:bg-cover md:bg-center md:h-screen md:block" >
-        <Header />
-        <main className="">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-
-      {/* Fondo para dispositivos móviles */}
-      <div className="bg-cover bg-center min-h-screen md:hidden" style={{ backgroundImage: `url('${fondoMovil}')` }}>
-        <Header />
-        <main className="">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-    </>
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
 export default App;
-
