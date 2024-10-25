@@ -1,33 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+  import React from 'react';
+  import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+  import Home from './pages/Home';
+  import Mensajeria from './pages/Mensajeria'; // Importa los componentes para cada servicio
+  import Domicilios from './pages/Domicilios';
+  import TransporteParticular from './pages/TransporteParticular';
+  import TransporteSalud from './pages/TransporteSalud.js';
+  import TrasladoAeropuertos from './pages/TrasladoAeropuertos';
+  import Diligencias from './pages/Diligencias';
 
-function App() {
-  const servicios = [
-    { nombre: 'Mensajería', icono: '📦' },
-    { nombre: 'Domicilios', icono: '🛵' },
-    { nombre: 'Transporte Particular', icono: '🚗' },
-    { nombre: 'Transporte Salud', icono: '🚑' },
-    { nombre: 'Traslado Aeropuertos', icono: '✈️' },
-    { nombre: 'Diligencias', icono: '📋' },
-  ];
 
-  return (
-    <div className="min-h-screen bg-mobile bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center text-center">
+  function App() {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/mensajeria" element={<Mensajeria />} />
+          <Route path="/domicilios" element={<Domicilios />} />
+          <Route path="/transporte-particular" element={<TransporteParticular />} />
+          <Route path="/transporte-salud" element={<TransporteSalud />} />
+          <Route path="/traslado-aeropuertos" element={<TrasladoAeropuertos />} />
+          <Route path="/diligencias" element={<Diligencias />} />
+        </Routes>
+      </Router>
+    );
+  }
 
-      <div className="grid grid-cols-2 gap-4">
-        {servicios.map((servicio, index) => (
-          <button
-            key={index}
-            className="bg-white text-black p-4 rounded-lg shadow-md hover:bg-gray-200 transition-all"
-          >
-            <span className="text-2xl">{servicio.icono}</span>
-            <p className="mt-2 text-lg">{servicio.nombre}</p>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default App;
+  export default App;
