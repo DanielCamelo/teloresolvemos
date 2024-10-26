@@ -1,33 +1,22 @@
 const express = require('express');
+const userSignUpController = require('../controller/user/userSignUp');
+const userSignInController = require('../controller/user/userSignin');
+const authToken = require('../middleware/authToken');
+const userDetailsController = require('../controller/user/useDetails');
+const userLogout = require('../controller/user/userLogout');
+const { forgotPasswordController, resetPasswordController } = require('../controller/user/forgot-password');
+
 const router = express.Router();
-const User = require('../models/userModel');
 
-// Ruta para obtener todos los usuarios
-router.get('/usuarios', async (req, res) => {
-  try {
-    const usuarios = await User.find();
-    res.json(usuarios);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
-// Ruta para crear un nuevo usuario
-router.post('/usuarios', async (req, res) => {
-  const usuario = new User({
-    nombre: req.body.nombre,
-    correo: req.body.correo,
-    teléfono: req.body.teléfono,
-    password: req.body.password,
-    tipoUsuario: req.body.tipoUsuario
-  });
 
-  try {
-    const nuevoUsuario = await usuario.save();
-    res.status(201).json(nuevoUsuario);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+router.post('/signup', userSignUpController);
+router.post('/signin', userSignInController);
+router.get("/user-details", authToken, userDetailsController);
+router.get("/userLogout", userLogout);
+router.post('/send-verification-code', userSignUpController);
+router.post('/verify-code', userSignUpController); 
+router.post('/forgot-password', forgotPasswordController);
+router.post('/reset-password', resetPasswordController);
 
 module.exports = router;

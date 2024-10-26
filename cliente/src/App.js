@@ -1,27 +1,62 @@
-  import React from 'react';
-  import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-  import Home from './pages/Home';
-  import Mensajeria from './pages/Mensajeria'; // Importa los componentes para cada servicio
-  import Domicilios from './pages/Domicilios';
-  import TransporteParticular from './pages/TransporteParticular';
-  import TransporteSalud from './pages/TransporteSalud.js';
-  import TrasladoAeropuertos from './pages/TrasladoAeropuertos';
-  import Diligencias from './pages/Diligencias';
+  import React, { useEffect, useState } from 'react';
+  import fondoMovil from './assets/fondoMovil.jpg';
+import Header from './components/Header.js';
+import Footer from './components/Footer.js';
+import { Outlet } from 'react-router-dom';
+import Context from './context/index.js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import SummaryApi from './common';
+import { setUserDetails } from './store/userSlice.js';
 
 
   function App() {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state?.user?.user)
+  
+    const fetchUserDetails = async()=>{
+      const dataResponse = await fetch(SummaryApi.current_user.url,{
+        method: SummaryApi.current_user.method,
+        credentials: 'include'
+      })
+  
+      const dataApi = await dataResponse.json()
+  
+      if(dataApi.success){
+        dispatch(setUserDetails(dataApi.data))
+      }
+  
+      console.log(dataResponse)
+    }
+  
+  
+  
+  useEffect(()=>{
+    /**user Details */
+    fetchUserDetails()
+  
+  },[])
+
     return (
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/mensajeria" element={<Mensajeria />} />
-          <Route path="/domicilios" element={<Domicilios />} />
-          <Route path="/transporte-particular" element={<TransporteParticular />} />
-          <Route path="/transporte-salud" element={<TransporteSalud />} />
-          <Route path="/traslado-aeropuertos" element={<TrasladoAeropuertos />} />
-          <Route path="/diligencias" element={<Diligencias />} />
-        </Routes>
-      </Router>
+      <>
+      <Context.Provider value={{
+          fetchUserDetails, // user detail fetch 
+    }}>
+    <ToastContainer className="rounded-full" position="top-right"/>
+      
+      {/* Fondo para dispositivos móviles */}
+<div className="bg-cover bg-center min-h-screen md:hidden" style={{ backgroundImage: `url('${fondoMovil}')` }}>
+  <Header />
+  <main className="flex flex-col justify-between min-h-full">
+    <Outlet />
+  </main>
+  <Footer />
+</div>
+
+</Context.Provider>
+      </>
+      
     );
   }
 
