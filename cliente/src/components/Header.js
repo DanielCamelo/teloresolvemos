@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../store/userSlice"
+import { FaBell } from 'react-icons/fa';
 
 
 
@@ -52,7 +53,11 @@ const Header = () => {
                 <div>
                     {
                         user?._id ? (
+                        <div>
                             <button onClick={handleLogout} className='bg-slate-50 text-green px-3 py-1 rounded-full hover:bg-slate-200'>Cerrar</button>
+                            <p className='text-white'>Bienvenido {user?.name}</p>
+                            
+                            </div>
                         ):
                         (
                             <Link to={"/login"} className='bg-slate-50 text-green px-3 py-1 rounded-full hover:bg-slate-200'>Iniciar sesión</Link>
