@@ -45,8 +45,8 @@ import { setUserDetails } from './store/userSlice.js';
     }}>
     <ToastContainer className="rounded-full" position="top-right"/>
       
-      {/* Fondo para dispositivos móviles */}
-<div className="bg-cover bg-center min-h-screen md:hidden" style={{ backgroundImage: `url('${fondoMovil}')` }}>
+      {/* Fondo para dispositivos móviles md:hidden */}
+<div className="bg-cover bg-center min-h-screen " style={{ backgroundImage: `url('${fondoMovil}')` }}>
   <Header />
   <main className="flex flex-col justify-between min-h-full">
     <Outlet />

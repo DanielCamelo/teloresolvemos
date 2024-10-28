@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SummaryApi from "../common";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import VerificationCodePopup from '../components/VerificationCodePopup';
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,10 +15,10 @@ const SignUp = () => {
     name: '',
     confirmPassword: '',
     phone: '',
-    verificationCode: '',
   });
 
   const [isCodeSent, setIsCodeSent] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,7 +33,7 @@ const SignUp = () => {
     e.preventDefault();
 
     // Verificar si todos los campos están llenos
-    if (!data.name || !data.email || !data.password || !data.phone || (isCodeSent && !data.verificationCode)) {
+    if (!data.name || !data.email || !data.password || !data.phone) {
       toast.error("Por favor, complete todos los campos requeridos");
       return;
     }
@@ -44,45 +45,7 @@ const SignUp = () => {
     }
 
     if (isCodeSent) {
-      // Verificar el código de verificación
-      try {
-        const response = await fetch(SummaryApi.verifyCode.url, {
-          method: SummaryApi.verifyCode.method,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: data.email, verificationCode: data.verificationCode, name: data.name, phone: data.phone, password: data.password }),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          const { password, name, phone } = data;
-          const newUserData = { name, email: data.email, password, phone };
-
-          // Registrar el nuevo usuario
-          const dataResponse = await fetch(SummaryApi.signUP.url, {
-            method: SummaryApi.signUP.method,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUserData),
-          });
-
-          const dataApi = await dataResponse.json();
-          if (dataApi.success) {
-            toast.success(dataApi.message);
-            navigate('/login');
-          } else {
-            toast.error(dataApi.message);
-          }
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.error("Error verificando el código:", error);
-        toast.error("Error al verificar el código");
-      }
+      setIsPopupOpen(true); // Abre el popup para ingresar el código
     } else {
       try {
         // Validar si el correo es temporal o desechable
@@ -97,6 +60,7 @@ const SignUp = () => {
         // Enviar el código de verificación
         const codeResponse = await fetch(SummaryApi.sendVerificationCode.url, {
           method: SummaryApi.sendVerificationCode.method,
+          credentials: 'include',
           headers: {
             "Content-Type": "application/json",
           },
@@ -118,13 +82,73 @@ const SignUp = () => {
     }
   };
 
+  const handleVerifyCode = async (verificationCode) => {
+    // Lógica para verificar el código
+    try {
+      const response = await fetch(SummaryApi.verifyCode.url, {
+        method: SummaryApi.verifyCode.method,
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: data.email, verificationCode, name: data.name, phone: data.phone, password: data.password }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        // Registrar el nuevo usuario
+        const newUserData = { name: data.name, email: data.email, password: data.password, phone: data.phone };
+
+        const dataResponse = await fetch(SummaryApi.signUP.url, {
+          method: SummaryApi.signUP.method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUserData),
+        });
+
+        const dataApi = await dataResponse.json();
+        if (dataApi.success) {
+          toast.success(dataApi.message);
+          navigate('/login');
+        } else {
+          toast.error(dataApi.message);
+        }
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error verificando el código:", error);
+      toast.error("Error al verificar el código");
+    } finally {
+      setIsPopupOpen(false); // Cierra el popup
+    }
+  };
+
   return (
-    <section id='sign-up' className="flex items-center justify-center min-h-screen mx-auto">
-      <div className='bg-white p-2 py-5 w-full max-w-md mx-auto rounded-3xl border-2 border-green-600' style={{ marginTop: '-50%', opacity: '0.8' }}>
-        <form className='' onSubmit={handleSubmit}>
-          <div className='grid'>
-            <label>Nombre :</label>
-            <div className='bg-slate-100 p-2'>
+    <section id='sign-up' className="flex items-center justify-center min-h-screen bg-cover bg-center">
+      <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ marginTop: '-10%', opacity: '0.9' }}>
+        <h2 className="text-center font-bold text-xl mb-6">Regístrate en Te lo resolvemos</h2>
+                {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
+                <div className="flex mb-6 bg-gray-200 rounded-full mt-4">
+          <button 
+            className="text-white bg-red-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
+            onClick={() => navigate("/login")}
+          >
+            Iniciar Sesión
+          </button>
+          <button 
+            className=" text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"
+            onClick={() => navigate("/sign-up")}
+          >
+            Registrarse
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className='grid mb-4'>
+            <label className="text-gray-600">Nombre :</label>
+            <div className='bg-gray-100 p-3 rounded-lg'>
               <input
                 type='text'
                 placeholder='Escribe tu nombre'
@@ -132,14 +156,14 @@ const SignUp = () => {
                 value={data.name}
                 onChange={handleChange}
                 required
-                className='w-full h-full outline-none bg-transparent'
+                className='w-full bg-transparent outline-none'
               />
             </div>
           </div>
 
-          <div className='grid'>
-            <label>Correo :</label>
-            <div className='bg-slate-100 p-2'>
+          <div className='grid mb-4'>
+            <label className="text-gray-600">Correo :</label>
+            <div className='bg-gray-100 p-3 rounded-lg'>
               <input
                 type='email'
                 placeholder='Escribe tu correo'
@@ -147,14 +171,14 @@ const SignUp = () => {
                 value={data.email}
                 onChange={handleChange}
                 required
-                className='w-full h-full outline-none bg-transparent'
+                className='w-full bg-transparent outline-none'
               />
             </div>
           </div>
 
-          <div className='grid'>
-            <label>Teléfono :</label>
-            <div className='bg-slate-100 p-2'>
+          <div className='grid mb-4'>
+            <label className="text-gray-600">Teléfono :</label>
+            <div className='bg-gray-100 p-3 rounded-lg'>
               <input
                 type='tel'
                 placeholder='Escribe tu teléfono'
@@ -162,14 +186,14 @@ const SignUp = () => {
                 value={data.phone}
                 onChange={handleChange}
                 required
-                className='w-full h-full outline-none bg-transparent'
+                className='w-full bg-transparent outline-none'
               />
             </div>
           </div>
 
-          <div>
-            <label>Contraseña :</label>
-            <div className='bg-slate-100 p-2 flex'>
+          <div className="mb-4">
+            <label className="text-gray-600">Contraseña :</label>
+            <div className='bg-gray-100 p-3 rounded-lg flex items-center'>
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder='Escribe tu contraseña'
@@ -177,23 +201,17 @@ const SignUp = () => {
                 name='password'
                 onChange={handleChange}
                 required
-                className='w-full h-full outline-none bg-transparent'
+                className='w-full bg-transparent outline-none'
               />
-              <div className='cursor-pointer text-green-600'>
-                <span>
-                  {showPassword ? (
-                    <IoEyeSharp onClick={() => setShowPassword(false)} />
-                  ) : (
-                    <IoEyeOff onClick={() => setShowPassword(true)} />
-                  )}
-                </span>
+              <div className='cursor-pointer ml-2 text-gray-500' onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <IoEyeSharp /> : <IoEyeOff />}
               </div>
             </div>
           </div>
 
-          <div>
-            <label>Confirmar Contraseña :</label>
-            <div className='bg-slate-100 p-2 flex'>
+          <div className="mb-4">
+            <label className="text-gray-600">Confirmar Contraseña :</label>
+            <div className='bg-gray-100 p-3 rounded-lg flex items-center'>
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder='Confirma tu contraseña'
@@ -201,44 +219,29 @@ const SignUp = () => {
                 name='confirmPassword'
                 onChange={handleChange}
                 required
-                className='w-full h-full outline-none bg-transparent'
+                className='w-full bg-transparent outline-none'
               />
-              <div className='cursor-pointer text-green-600'>
-                <span>
-                  {showConfirmPassword ? (
-                    <IoEyeSharp onClick={() => setShowConfirmPassword(false)} />
-                  ) : (
-                    <IoEyeOff onClick={() => setShowConfirmPassword(true)} />
-                  )}
-                </span>
+              <div className='cursor-pointer ml-2 text-gray-500' onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? <IoEyeSharp /> : <IoEyeOff />}
               </div>
             </div>
           </div>
 
-          {isCodeSent && (
-            <div>
-              <label>Código de Verificación :</label>
-              <div className='bg-slate-100 p-2'>
-                <input
-                  type='text'
-                  placeholder='Introduce el código'
-                  name='verificationCode'
-                  value={data.verificationCode}
-                  onChange={handleChange}
-                  required
-                  className='w-full h-full outline-none bg-transparent'
-                />
-              </div>
-            </div>
-          )}
-
-          <div className='flex justify-between mt-4'>
-            <p>¿Ya tienes cuenta? <Link to='/login' className='text-green-500'>Iniciar sesión</Link></p>
-            <button type='submit' className='bg-green-600 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto'>
-              {isCodeSent ? 'Verificar Código' : 'Enviar Código'}
-            </button>
-          </div>
+          <button type='submit' className='bg-red-500 text-white py-2 w-full rounded-full hover:bg-red-600 transition-all mt-4'>
+            {isCodeSent ? 'Abrir Código' : 'Enviar Código'}
+          </button>
         </form>
+
+        {/* Componente de Popup para el código de verificación */}
+        <VerificationCodePopup 
+          isOpen={isPopupOpen} 
+          onClose={() => setIsPopupOpen(false)} 
+          onVerify={handleVerifyCode} 
+        />
+
+        <p className='text-center text-gray-600 mt-5'>
+          ¿Ya tienes cuenta? <Link to='/login' className='text-red-500 hover:underline'>Iniciar sesión</Link>
+        </p>
       </div>
     </section>
   );

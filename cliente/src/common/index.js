@@ -32,6 +32,10 @@ const SummaryApi = {
     logout_user : {
         url : `${backendDomin}/api/userLogout`,
         method : 'get'
+    },
+    addMensaje : {
+        url : `${backendDomin}/api/addMensaje`,
+        method : 'post'
     }
 
 

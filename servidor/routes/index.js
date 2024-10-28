@@ -5,6 +5,7 @@ const authToken = require('../middleware/authToken');
 const userDetailsController = require('../controller/user/useDetails');
 const userLogout = require('../controller/user/userLogout');
 const { forgotPasswordController, resetPasswordController } = require('../controller/user/forgot-password');
+const registrarMensajeria = require('../controller/servicios/registrarMensajeria');
 
 const router = express.Router();
 
@@ -18,5 +19,11 @@ router.post('/send-verification-code', userSignUpController);
 router.post('/verify-code', userSignUpController); 
 router.post('/forgot-password', forgotPasswordController);
 router.post('/reset-password', resetPasswordController);
+
+
+
+//servicios
+//mensajeria
+router.post('/addMensaje', authToken,registrarMensajeria);
 
 module.exports = router;

@@ -69,12 +69,18 @@ const ResetPassword = () => {
 
   return (
     <section id="reset-password" className="flex items-center justify-center min-h-screen mx-auto">
-      <div className="bg-white p-2 py-5 w-full max-w-md mx-auto rounded-3xl border-2 border-green-600" style={{ marginTop: '-50%', opacity: '0.8' }}>
-        <h2 className="text-3xl text-center font-bold text-green-600 mb-6">Cambiar contraseña</h2>
-        <form className='pt-6' onSubmit={handleSubmit}>
+      <div className="bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg" style={{ marginTop: '-10%', opacity: '0.9' }}>
+        <h2 className="text-3xl text-center font-bold  mb-6">Cambiar contraseña</h2>
+        
+        {/* Mensaje de aviso */}
+        <p className="text-center text-gray-600 mb-4">
+          Esta será su nueva contraseña. Asegúrese de recordarla.
+        </p>
+        
+        <form className='' onSubmit={handleSubmit}>
           <div className='grid mb-4'>
-            <label>Correo electrónico:</label>
-            <div className='bg-slate-100 p-2'>
+            <label className="text-gray-600">Correo electrónico:</label>
+            <div className='bg-slate-100 p-2 rounded-lg'>
               <input
                 type="email"
                 name="email"
@@ -87,8 +93,8 @@ const ResetPassword = () => {
           </div>
 
           <div className='grid mb-4'>
-            <label>Código de Verificación:</label>
-            <div className='bg-slate-100 p-2'>
+            <label className="text-gray-600">Código de Verificación:</label>
+            <div className='bg-slate-100 p-2 rounded-lg'>
               <input
                 type="text"
                 name="verificationCode"
@@ -101,8 +107,8 @@ const ResetPassword = () => {
           </div>
 
           <div className='grid mb-4'>
-            <label>Nueva Contraseña:</label>
-            <div className='bg-slate-100 p-2 flex'>
+            <label className="text-gray-600">Nueva Contraseña:</label>
+            <div className='bg-slate-100 p-2 flex rounded-lg'>
               <input
                 type={showPassword ? "text" : "password"}
                 name="newPassword"
@@ -111,15 +117,15 @@ const ResetPassword = () => {
                 required
                 className='w-full h-full outline-none bg-transparent'
               />
-              <div className='cursor-pointer text-green-600' onClick={() => setShowPassword(!showPassword)}>
+              <div className='cursor-pointer text-red-600' onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <IoEyeSharp /> : <IoEyeOff />}
               </div>
             </div>
           </div>
 
           <div className='grid mb-4'>
-            <label>Confirmar Nueva Contraseña:</label>
-            <div className='bg-slate-100 p-2 flex'>
+            <label className="text-gray-600">Confirmar Nueva Contraseña:</label>
+            <div className='bg-slate-100 p-2 flex rounded-lg'>
               <input
                 type={showPassword ? "text" : "password"}
                 name="confirmNewPassword"
@@ -128,7 +134,7 @@ const ResetPassword = () => {
                 required
                 className='w-full h-full outline-none bg-transparent'
               />
-              <div className='cursor-pointer text-green-600' onClick={() => setShowPassword(!showPassword)}>
+              <div className='cursor-pointer  text-gray-500' onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <IoEyeSharp /> : <IoEyeOff />}
               </div>
             </div>
@@ -136,12 +142,20 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className='bg-green-600 text-white px-6 py-2 rounded-full hover:scale-110 transition-all mx-auto block mt-6'
+            className='bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all mx-auto block mt-6'
             disabled={loading}
           >
             {loading ? 'Restableciendo...' : 'Restablecer Contraseña'}
           </button>
         </form>
+
+        {/* Botón para regresar al login */}
+        <button
+          onClick={() => navigate('/login')}
+          className='text-red-600 hover:underline mt-4'
+        >
+          Regresar al Login
+        </button>
       </div>
     </section>
   );

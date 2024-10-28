@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { IoEyeSharp } from "react-icons/io5";
-import { IoEyeOff } from "react-icons/io5";
+import { IoEyeSharp, IoEyeOff } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SummaryApi from "../common";
@@ -12,7 +11,6 @@ const Login = () => {
     email: '',
     password: '',
   });
-
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
 
@@ -50,61 +48,67 @@ const Login = () => {
   };
 
   return (
-    <section id='login' className="flex items-center justify-center min-h-screen mx-auto">
-  <div className='bg-white p-2 py-5 w-full max-w-md mx-auto rounded-3xl border-2 border-green-600' style={{ marginTop: '-50%', opacity: '0.8' }}>
-    <form className='pt-6' onSubmit={handleSubmit}>
-      <div className='grid'>
-        <label>Correo :</label>
-        <div className='bg-slate-100 p-2'>
-          <input
-            type='email'
-            placeholder='Escribe tu correo'
-            name='email'
-            value={data.email}
-            onChange={handleChange}
-            required
-            className='w-full h-full outline-none bg-transparent'
-          />
+    <section id='login' className="flex items-center justify-center min-h-screen bg-cover bg-center" >
+      <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ marginTop: '-10%', opacity: '0.85' }}>
+        <h2 className="text-center font-bold text-xl mb-6">Bienvenido a te lo resolvemos</h2>
+        
+        {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
+        <div className="flex mb-6 bg-gray-200 rounded-full">
+          <button 
+            className="text-gray-500 bg-gray-200 py-2 px-4 rounded-l-full w-1/2"
+            onClick={() => navigate("/login")}
+          >
+            Iniciar Sesión
+          </button>
+          <button 
+            className="text-white bg-red-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
+            onClick={() => navigate("/sign-up")}
+          >
+            Registrarse
+          </button>
         </div>
-      </div>
 
-      <div>
-        <label>Contraseña :</label>
-        <div className='bg-slate-100 p-2 flex'>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder='Escribe tu contraseña'
-            value={data.password}
-            name='password'
-            onChange={handleChange}
-            required
-            className='w-full h-full outline-none bg-transparent'
-          />
-          <div className='cursor-pointer text-green-600'>
-            <span>
-              {showPassword ? (
-                <IoEyeSharp onClick={() => setShowPassword(false)} />
-              ) : (
-                <IoEyeOff onClick={() => setShowPassword(true)} />
-              )}
-            </span>
+        <form onSubmit={handleSubmit}>
+          <div className='grid mb-4'>
+            <label className="text-gray-600">Correo :</label>
+            <div className='bg-gray-100 p-3 rounded-lg'>
+              <input
+                type='email'
+                placeholder='Enter your email'
+                name='email'
+                value={data.email}
+                onChange={handleChange}
+                required
+                className='w-full bg-transparent outline-none'
+              />
+            </div>
           </div>
-        </div>
-        <Link to={'/forgot-password'} className='block w-fit ml-auto hover:underline hover:text-green-600 text-right'>
-          ¿Olvidaste tu contraseña?
-        </Link>
+          <div className="mb-4">
+            <label className="text-gray-600">Contraseña :</label>
+            <div className='bg-gray-100 p-3 rounded-lg flex items-center'>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder='Enter your password'
+                name='password'
+                value={data.password}
+                onChange={handleChange}
+                required
+                className='w-full bg-transparent outline-none'
+              />
+              <div className='cursor-pointer ml-2 text-gray-500' onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <IoEyeSharp /> : <IoEyeOff />}
+              </div>
+            </div>
+            <Link to={'/forgot-password'} className='text-right text-gray-500 hover:underline block mt-2'>¿Has olvidado tu contraseña?</Link>
+          </div>
+          <button className='bg-red-500 text-white py-2 w-full rounded-full hover:bg-red-600 transition-all mt-4'>Iniciar Sesión</button>
+        </form>
+        
+        <p className='text-center text-gray-600 mt-5'>
+        ¿No tienes una cuenta? <Link to={"/sign-up"} className='text-red-500 hover:underline'>Registrate</Link>
+        </p>
       </div>
-
-      <button className='bg-green-600 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6'>
-        Iniciar Sesion
-      </button>
-    </form>
-    <p className='my-5'>
-      ¿No tienes cuenta? <Link to={"/sign-up"} className='text-green-600 hover:text-green-700 hover:underline'>Registrate</Link>
-    </p>
-  </div>
-</section>
-
+    </section>
   );
 };
 

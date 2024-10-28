@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const notificacionSchema = new mongoose.Schema({
+    usuarioID:{
+        ref: "Usuario",
+        type:String
+    },
     titulo: {
         type: String,
         required: true
@@ -14,10 +18,9 @@ const notificacionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now // Si no se proporciona, se usa la hora actual
     },
-    usuarioId: {
-        type: Schema.Types.ObjectId, // Referencia a la colección de usuarios
-        ref: 'Usuario', // Nombre del modelo de usuario
-        required: true
+    leido: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true // Añade automáticamente createdAt y updatedAt
