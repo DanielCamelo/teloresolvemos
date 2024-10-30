@@ -20,20 +20,6 @@ const mensajeriaSchema = new mongoose.Schema({
     type: Number,
     required: true, // Asegúrate de que el peso es un valor numérico
   },
-  dimensiones: {
-    largo: {
-      type: Number,
-      required: false,
-    },
-    ancho: {
-      type: Number,
-      required: false,
-    },
-    alto: {
-      type: Number,
-      required: false,
-    },
-  },
   direccionRecogida: {
     type: String,
     required: true,

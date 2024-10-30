@@ -64,7 +64,7 @@ const ForgotPassword = () => {
           </div>
           <button
             type="submit"
-            className="bg-red-600 text-white px-6 py-2 w-full rounded-full hover:bg-red-700 transition-all mt-4"
+            className="bg-green-600 text-white px-6 py-2 w-full rounded-full hover:bg-green-700 transition-all mt-4"
             disabled={loading}
           >
             {loading ? 'Enviando...' : 'Enviar correo'}
@@ -72,7 +72,7 @@ const ForgotPassword = () => {
         </form>
         <button
           onClick={() => navigate('/login')}
-          className="text-center text-red-600 underline mt-4"
+          className="text-center text-green-600 underline mt-4"
         >
           Volver al inicio de sesión
         </button>

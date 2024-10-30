@@ -117,7 +117,7 @@ const ResetPassword = () => {
                 required
                 className='w-full h-full outline-none bg-transparent'
               />
-              <div className='cursor-pointer text-red-600' onClick={() => setShowPassword(!showPassword)}>
+              <div className='cursor-pointer text-green-600' onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <IoEyeSharp /> : <IoEyeOff />}
               </div>
             </div>
@@ -142,7 +142,7 @@ const ResetPassword = () => {
 
           <button
             type="submit"
-            className='bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all mx-auto block mt-6'
+            className='bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition-all mx-auto block mt-6'
             disabled={loading}
           >
             {loading ? 'Restableciendo...' : 'Restablecer Contraseña'}
@@ -152,7 +152,7 @@ const ResetPassword = () => {
         {/* Botón para regresar al login */}
         <button
           onClick={() => navigate('/login')}
-          className='text-red-600 hover:underline mt-4'
+          className='text-green-600 hover:underline mt-4'
         >
           Regresar al Login
         </button>
