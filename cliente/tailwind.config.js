@@ -12,10 +12,10 @@ module.exports = {
       colors: {
         primary: '#FF6363',
         secondary: '#3B82F6',
-        accent: '#22C55E',
+        accent: '#22ea00',
       },
       backgroundImage: {
-        'mobile': "url('/src/assets/fondoMovil.jpg')", // Fondo para móviles
+        'mobile': "url('/src/assets/fondoMovil.png')", // Fondo para móviles
        // 'desktop': "url('/src/assets/fondoDesktop.jpg')", // Puedes añadir otro para pantallas grandes
       },
     },

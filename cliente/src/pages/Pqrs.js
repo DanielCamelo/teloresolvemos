@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+import FormularioPQRS from '../components/FormularioPQRS';
 
-function Pqrs(){
-    return (
-        <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">
+function Pqrs() {
+  const [showForm, setShowForm] = useState(false);
+
+  const handleShowForm = () => {
+    setShowForm(true);
+  };
+
+  return (
+    <div 
+      className="flex items-center justify-center h-screen p-6 bg-cover bg-center bg-fixed" 
+      style={{ backgroundImage: `url('/path/to/background-image.jpg')` }}
+    >
+      {!showForm ? (
+        <div className="p-10 bg-white bg-opacity-90 shadow-2xl rounded-lg max-w-2xl w-full text-center">
+          <h1 className="text-3xl font-bold mb-6">
             Peticiones, Quejas, Reclamos y Sugerencias (PQRS)
           </h1>
-          <p>Aquí puedes enviar peticiones, quejas, reclamos y sugerencias.</p>
-          {/* Parte para añadir la lógica de la PQRS */}
+          <p className="mb-6 text-lg">Si tienes alguna solicitud o comentario, no dudes en hacérnoslo saber.</p>
+          <button
+            className="px-8 py-3 text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-200 text-lg"
+            onClick={handleShowForm}
+          >
+            Crear una PQRS
+          </button>
         </div>
-      </div>
-    );
+      ) : (
+        <FormularioPQRS />
+      )}
+    </div>
+  );
 }
 
 export default Pqrs;
