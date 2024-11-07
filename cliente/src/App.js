@@ -14,6 +14,11 @@ import { FaWhatsapp, FaHeadset } from 'react-icons/fa';
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user);
+<<<<<<< HEAD
+=======
+  // Estado para mostrar/ocultar las notificaciones
+  
+>>>>>>> 3e115c80e2caf147da89ce6413cb805f61dfccd4
 
   const fetchUserDetails = async () => {
     const dataResponse = await fetch(SummaryApi.current_user.url, {
@@ -34,6 +39,11 @@ function App() {
     fetchUserDetails();
   }, []);
 
+<<<<<<< HEAD
+=======
+  
+
+>>>>>>> 3e115c80e2caf147da89ce6413cb805f61dfccd4
   return (
     <>
       <Context.Provider value={{ fetchUserDetails }}>
@@ -42,6 +52,11 @@ function App() {
         <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: `url(${fondoMovil})` }}>
           <Header />
 
+<<<<<<< HEAD
+=======
+          
+
+>>>>>>> 3e115c80e2caf147da89ce6413cb805f61dfccd4
           <main className="flex flex-col justify-between min-h-full">
             <Outlet />
           </main>

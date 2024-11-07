@@ -55,13 +55,14 @@ const Login = () => {
         {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
         <div className="flex mb-6 bg-gray-200 rounded-full">
           <button 
-            className="text-gray-500 bg-gray-200 py-2 px-4 rounded-l-full w-1/2"
+          className="text-white bg-green-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
+            
             onClick={() => navigate("/login")}
           >
             Iniciar Sesión
           </button>
           <button 
-            className="text-white bg-red-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
+          className="text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"            
             onClick={() => navigate("/sign-up")}
           >
             Registrarse
@@ -101,11 +102,11 @@ const Login = () => {
             </div>
             <Link to={'/forgot-password'} className='text-right text-gray-500 hover:underline block mt-2'>¿Has olvidado tu contraseña?</Link>
           </div>
-          <button className='bg-red-500 text-white py-2 w-full rounded-full hover:bg-red-600 transition-all mt-4'>Iniciar Sesión</button>
+          <button className='bg-green-500 text-white py-2 w-full rounded-full hover:bg-green-600 transition-all mt-4'>Iniciar Sesión</button>
         </form>
         
         <p className='text-center text-gray-600 mt-5'>
-        ¿No tienes una cuenta? <Link to={"/sign-up"} className='text-red-500 hover:underline'>Registrate</Link>
+        ¿No tienes una cuenta? <Link to={"/sign-up"} className='text-green-500 hover:underline'>Registrate</Link>
         </p>
       </div>
     </section>

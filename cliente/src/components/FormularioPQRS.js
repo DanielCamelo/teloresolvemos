@@ -77,4 +77,8 @@ function FormularioPQRS() {
   );
 }
 
+<<<<<<< HEAD
 export default FormularioPQRS;
+=======
+export default FormularioPQRS;
+>>>>>>> 3e115c80e2caf147da89ce6413cb805f61dfccd4

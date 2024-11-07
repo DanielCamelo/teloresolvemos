@@ -132,13 +132,14 @@ const SignUp = () => {
                 {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
                 <div className="flex mb-6 bg-gray-200 rounded-full mt-4">
           <button 
-            className="text-white bg-red-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
+          className=" text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"
+            
             onClick={() => navigate("/login")}
           >
             Iniciar Sesión
           </button>
           <button 
-            className=" text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"
+          className="text-white bg-green-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"            
             onClick={() => navigate("/sign-up")}
           >
             Registrarse
@@ -227,7 +228,7 @@ const SignUp = () => {
             </div>
           </div>
 
-          <button type='submit' className='bg-red-500 text-white py-2 w-full rounded-full hover:bg-red-600 transition-all mt-4'>
+          <button type='submit' className='bg-green-500 text-white py-2 w-full rounded-full hover:bg-green-600 transition-all mt-4'>
             {isCodeSent ? 'Abrir Código' : 'Enviar Código'}
           </button>
         </form>
@@ -240,7 +241,7 @@ const SignUp = () => {
         />
 
         <p className='text-center text-gray-600 mt-5'>
-          ¿Ya tienes cuenta? <Link to='/login' className='text-red-500 hover:underline'>Iniciar sesión</Link>
+          ¿Ya tienes cuenta? <Link to='/login' className='text-green-500 hover:underline'>Iniciar sesión</Link>
         </p>
       </div>
     </section>

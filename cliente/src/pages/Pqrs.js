@@ -11,7 +11,10 @@ function Pqrs() {
   return (
     <div 
       className="flex items-center justify-center h-screen p-6 bg-cover bg-center bg-fixed" 
+<<<<<<< HEAD
       style={{ backgroundImage: `url('/path/to/background-image.jpg')` }}
+=======
+>>>>>>> 3e115c80e2caf147da89ce6413cb805f61dfccd4
     >
       {!showForm ? (
         <div className="p-10 bg-white bg-opacity-90 shadow-2xl rounded-lg max-w-2xl w-full text-center">
