@@ -17,17 +17,19 @@ function Home() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="mt-20 grid grid-cols-2 gap-6">
         {servicios.map((servicio, index) => (
           <button
             key={index}
-            className="bg-accent bg-opacity-80 hover:bg-opacity-100 text-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary flex flex-col items-center justify-center"
+            className="bg-accent bg-opacity-80 hover:bg-opacity-100 text-white p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-all 
+                       focus:outline-none focus:ring-4 focus:ring-primary"
             onClick={() => handleServiceClick(servicio.ruta)}
             aria-label={`Servicio: ${servicio.nombre}`}
+            style={{ fontSize: '1.5rem' }}
           >
-            <span className="text-2xl">{servicio.icono}</span>
-            <p className="mt-2 text-lg text-center">{servicio.nombre}</p>
+            <span className="text-3xl">{servicio.icono}</span>
+            <p className="mt-2 text-xl text-center">{servicio.nombre}</p>
           </button>
         ))}
       </div>
@@ -36,3 +38,4 @@ function Home() {
 }
 
 export default Home;
+
