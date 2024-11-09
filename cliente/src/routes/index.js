@@ -2,6 +2,12 @@ import {createBrowserRouter} from 'react-router-dom';
 import App from '../App';
 import Home from '../pages/Home';
 import Mensajeria from '../pages/Mensajeria';
+import Domicilios from '../pages/Domicilios';
+import TransporteParticular from '../pages/TransporteParticular';
+import TransporteSalud from '../pages/TransporteSalud';
+import TrasladoAeropuertos from '../pages/TrasladoAeropuertos';
+import Diligencias from '../pages/Diligencias';
+
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import ResetPassword from '../pages/ResetPassword';
@@ -15,7 +21,7 @@ const routes = createBrowserRouter(
             element : <App />,
             children: [
                 {
-                    path: '',
+                    path: '', // Esta ruta se encargar de cargar el componente Home por defecto
                     element: <Home />
                 },
                 {
@@ -37,6 +43,26 @@ const routes = createBrowserRouter(
                 {
                     path:"/mensajeria",
                     element: <Mensajeria />
+                },
+                {
+                    path: '/domicilios', // ruta para domicilios
+                    element: <Domicilios />,
+                },
+                {
+                    path:"/transporte-particular",
+                    element: <TransporteParticular />,
+                },
+                {
+                    path:"/transporte-salud",
+                    element: <TransporteSalud />,
+                },
+                {
+                    path:"/traslado-aeropuertos",
+                    element: <TrasladoAeropuertos />,
+                },
+                {
+                    path:"/diligencias",
+                    element: <Diligencias />,       
                 },
                 {
                     path:"/pqrs",
