@@ -14,3 +14,44 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/*Estilos para los botones de redes sociales*/
+.social-icons {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* Espacio entre los botones */
+}
+
+.social-tag {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 120px; /* Ancho para pantallas grandes */
+  padding: 6px 10px; /* Relleno para pantallas grandes */
+  border-radius: 15px 0 0 15px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 0.85rem; /* Tamaño del texto */
+}
+
+.social-tag:hover {
+  filter: brightness(1.1);
+  transform: translateX(-2px);
+}
+
+/* Estilos específicos para pantallas móviles */
+@media (max-width: 768px) {
+  .social-tag {
+    width: 50px; /* Ancho reducido para móviles */
+    padding: 10px; /* Padding uniforme */
+    justify-content: center; /* Centrar el ícono */
+  }
+
+  .social-tag span {
+    display: none; /* Ocultar el texto */
+  }
+}

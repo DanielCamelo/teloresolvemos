@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { store } from './store/store';
 import routes from './routes';
+import '@fortawesome/fontawesome-free/css/all.min.css'; // FontAwesome
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
