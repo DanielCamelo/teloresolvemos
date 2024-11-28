@@ -1,4 +1,6 @@
 const express = require('express');
+//inicializar router
+const router = express.Router();
 const userSignUpController = require('../controller/user/userSignUp');
 const userSignInController = require('../controller/user/userSignin');
 const authToken = require('../middleware/authToken');
@@ -10,9 +12,18 @@ const registrarMensajeria = require('../controller/servicios/registrarMensajeria
 const allBanners = require('../controller/banner/allBanner');
 const DeleteBannerController = require('../controller/banner/deleteBaner');
 const UploadBannerController = require('../controller/banner/uploadBaner');
+//panel usuario en administrador
+const allUsers = require('../controller/user/allUsers');
+const updateUser = require('../controller/user/updateUser');
+const deleteUser = require('../controller/user/deleteUser');
 
 
-const router = express.Router();
+//panel usuario en administrador
+router.get("/all-user",authToken,allUsers);
+router.post("/update-user",authToken,updateUser);
+router.post("/delete-user",authToken,deleteUser);
+
+
 
 
 

@@ -36,10 +36,33 @@ const SummaryApi = {
     addMensaje : {
         url : `${backendDomin}/api/addMensaje`,
         method : 'post'
-    }
-
-
-
+    },
+    //rutas de banner
+    uploadBanner: {
+        url: `${backendDomin}/api/upload-Banner`,
+        method: "post",
+      },
+      deleteBanner: {
+        url: `${backendDomin}/api/delete-Banner`,
+        method: "post",
+      },
+      allBanner: {
+        url: `${backendDomin}/api/all-banners`,
+        method: "get",
+      },
+      //rutas de usuario
+      deleteUser: {
+        url: `${backendDomin}/api/delete-user`,
+        method: "post",
+      },
+      allUser: {
+        url: `${backendDomin}/api/all-user`,
+        method: "get",
+      },
+        updateUser: {
+            url: `${backendDomin}/api/update-user`,
+            method: "post",
+        },
 
 }
 
