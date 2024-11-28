@@ -1,38 +1,67 @@
-.App {
-  text-align: center;
+/* Contenedor relativo para el botón y el menú desplegable */
+.relative.group {
+  position: relative;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Menú desplegable de "Nosotros" */
+.dropdown-about {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 100%; /* Alineado justo debajo del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  padding: 10px;
+  width: 200px; /* Ancho del menú */
+  transition: opacity 0.2s ease-in-out;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Menús desplegables de "Únete" y "Servicios" */
+.dropdown-join, .dropdown-services {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 100%; /* Alineado justo debajo del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  padding: 10px;
+  width: 200px; /* Ancho del menú */
+  transition: opacity 0.2s ease-in-out;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Mostrar menús al pasar el ratón */
+.relative.group:hover .dropdown-about,
+.relative.group:hover .dropdown-join,
+.relative.group:hover .dropdown-services {
+  display: block;
+}
+
+/* Lista dentro de los menús desplegables */
+.dropdown-about ul, .dropdown-join ul, .dropdown-services ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-about li, .dropdown-join li, .dropdown-services li {
+  margin: 8px 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 8px;
 }
 
-.App-link {
-  color: #61dafb;
+.dropdown-about li a, .dropdown-join li a, .dropdown-services li a {
+  color: #333333;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dropdown-about li a:hover, .dropdown-join li a:hover, .dropdown-services li a:hover {
+  color: #555555;
 }

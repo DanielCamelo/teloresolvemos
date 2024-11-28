@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, FaHome, FaShippingFast } from 'react-icons/fa';
+import { FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, FaHome, FaShippingFast, FaMotorcycle, FaTruck, FaClock } from 'react-icons/fa';
 import logo from '../assets/Logo PNG.png'; // Importa el logo
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [servicesOpen, setServicesOpen] = useState(false); // Estado para el menú de servicios
+    const [servicesOpen, setServicesOpen] = useState(false);
+    const [joinOpen, setJoinOpen] = useState(false);
+    const [aboutOpen, setAboutOpen] = useState(false); // Estado para el menú "Nosotros"
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
-    };
-
-    const handleServicesClick = () => {
-        // Cambia el estado de "Servicios" al hacer clic
-        setServicesOpen(!servicesOpen);
     };
 
     return (
@@ -41,36 +38,87 @@ const Header = () => {
 
                 {/* Menú para pantallas grandes */}
                 <nav className="hidden lg:flex items-center gap-10">
-                    <Link 
-                        to="/nosotros" 
-                        className="relative text-white text-lg hover:text-gray-400 transition hover:border-b-2 hover:border-primary">
-                        Nosotros
-                    </Link>
-                    <Link 
-                        to="/unete" 
-                        className="relative text-white text-lg hover:text-gray-400 transition hover:border-b-2 hover:border-primary">
-                        Únete
-                    </Link>
-
-                    {/* Enlace Servicios con menú desplegable */}
+                    {/* Botón Nosotros con menú desplegable */}
                     <div 
-                        className="relative"
-                        onMouseEnter={() => setServicesOpen(true)} // Mostrar al pasar el ratón
-                        onMouseLeave={() => {if (!servicesOpen) setServicesOpen(false)}} // Ocultar al sacar el ratón solo si el menú no está abierto
+                        className="relative group"
+                        onMouseEnter={() => setAboutOpen(true)}
+                        onMouseLeave={() => setAboutOpen(false)}
                     >
                         <button 
-                            onClick={handleServicesClick} // Cambiar el estado al hacer clic
                             className={`relative text-white text-lg hover:text-gray-400 transition 
-                                ${servicesOpen ? 'border-b-2 border-red-500' : ''}`} // Barra roja si el menú está abierto
+                                ${aboutOpen ? 'border-b-2 border-green-500' : ''}`}
+                        >
+                            Nosotros
+                        </button>
+                        {aboutOpen && (
+                            <div className="dropdown-about absolute top-full left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4 w-48 z-20">
+                                <ul className="flex flex-col gap-2">
+                                    <li className="flex items-center gap-2">
+                                        <FaClock />
+                                        <Link 
+                                            to="/quienes-somos" 
+                                            className="text-gray-700 hover:text-gray-500 transition">
+                                            ¿Quiénes somos?
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Botón Únete con menú desplegable */}
+                    <div 
+                        className="relative group"
+                        onMouseEnter={() => setJoinOpen(true)}
+                        onMouseLeave={() => setJoinOpen(false)}
+                    >
+                        <button 
+                            className={`relative text-white text-lg hover:text-gray-400 transition 
+                                ${joinOpen ? 'border-b-2 border-blue-500' : ''}`}
+                        >
+                            Únete
+                        </button>
+                        {joinOpen && (
+                            <div className="dropdown-join absolute top-full left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4 w-48 z-20">
+                                <ul className="flex flex-col gap-2">
+                                    <li className="flex items-center gap-2">
+                                        <FaMotorcycle />
+                                        <Link 
+                                            to="/unete-domiciliario" 
+                                            className="text-gray-700 hover:text-gray-500 transition">
+                                            Domiciliario
+                                        </Link>
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                        <FaTruck />
+                                        <Link 
+                                            to="/unete-transportador" 
+                                            className="text-gray-700 hover:text-gray-500 transition">
+                                            Transportador
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Botón Servicios con menú desplegable */}
+                    <div 
+                        className="relative group"
+                        onMouseEnter={() => setServicesOpen(true)}
+                        onMouseLeave={() => setServicesOpen(false)}
+                    >
+                        <button 
+                            className={`relative text-white text-lg hover:text-gray-400 transition 
+                                ${servicesOpen ? 'border-b-2 border-red-500' : ''}`}
                         >
                             Servicios
                         </button>
-                        {/* Menú desplegable de servicios */}
                         {servicesOpen && (
-                            <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4 w-48 z-20">
+                            <div className="dropdown-services absolute top-full left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4 w-48 z-20">
                                 <ul className="flex flex-col gap-2">
                                     <li className="flex items-center gap-2">
-                                        <FaEnvelope /> {/* Icono para Mensajería */}
+                                        <FaEnvelope />
                                         <Link 
                                             to="/mensajeria" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -78,7 +126,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaShippingFast /> {/* Icono para Domicilios */}
+                                        <FaShippingFast />
                                         <Link 
                                             to="/domicilios" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -86,7 +134,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaCar /> {/* Icono para Transporte Particular */}
+                                        <FaCar />
                                         <Link 
                                             to="/transporte-particular" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -94,7 +142,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaHospital /> {/* Icono para Transporte Salud */}
+                                        <FaHospital />
                                         <Link 
                                             to="/transporte-salud" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -102,7 +150,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaPlane /> {/* Icono para Traslado Aeropuertos */}
+                                        <FaPlane />
                                         <Link 
                                             to="/traslado-aeropuertos" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -110,7 +158,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaHome /> {/* Icono para Diligencias */}
+                                        <FaHome />
                                         <Link 
                                             to="/diligencias" 
                                             className="text-gray-700 hover:text-gray-500 transition">
@@ -128,34 +176,6 @@ const Header = () => {
                         Iniciar sesión
                     </Link>
                 </nav>
-
-                {/* Menú desplegable en pantallas pequeñas */}
-                {menuOpen && (
-                    <div className="absolute top-24 right-4 bg-white shadow-lg rounded-lg p-4 w-48">
-                        <nav className="flex flex-col gap-4">
-                            <Link 
-                                to="/nosotros" 
-                                className="text-gray-700 text-lg hover:text-gray-500 transition hover:border-b-2 hover:border-primary">
-                                Nosotros
-                            </Link>
-                            <Link 
-                                to="/unete" 
-                                className="text-gray-700 text-lg hover:text-gray-500 transition hover:border-b-2 hover:border-primary">
-                                Únete
-                            </Link>
-                            <Link 
-                                to="/servicios" 
-                                className="text-gray-700 text-lg hover:text-gray-500 transition hover:border-b-2 hover:border-primary">
-                                Servicios
-                            </Link>
-                            <Link 
-                                to="/login" 
-                                className="bg-secondary text-white px-4 py-2 rounded-full hover:bg-secondary-light transition">
-                                Iniciar sesión
-                            </Link>
-                        </nav>
-                    </div>
-                )}
             </div>
         </header>
     );
