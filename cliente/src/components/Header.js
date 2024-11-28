@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, FaHome, FaShippingFast, FaMotorcycle, FaTruck, FaClock } from 'react-icons/fa';
+import { 
+    FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, 
+    FaHome, FaShippingFast, FaMotorcycle, FaTruck, FaClock 
+} from 'react-icons/fa';
 import logo from '../assets/Logo PNG.png'; // Importa el logo
 
 const Header = () => {
@@ -8,9 +11,19 @@ const Header = () => {
     const [servicesOpen, setServicesOpen] = useState(false);
     const [joinOpen, setJoinOpen] = useState(false);
     const [aboutOpen, setAboutOpen] = useState(false); // Estado para el menú "Nosotros"
+    const [activeDropdown, setActiveDropdown] = useState(null); // Control de dropdown en pantallas pequeñas
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
+    };
+
+    const toggleDropdown = (menu) => {
+        setActiveDropdown(activeDropdown === menu ? null : menu);
+    };
+
+    const closeMenu = () => {
+        setMenuOpen(false);
+        setActiveDropdown(null);
     };
 
     return (
@@ -26,14 +39,16 @@ const Header = () => {
                         />
                     </Link>
                 </div>
-
                 {/* Botón menú hamburguesa para pantallas pequeñas */}
-                <div className="flex lg:hidden w-full justify-end">
-                    <button 
-                        onClick={toggleMenu} 
-                        className="text-white p-2 rounded-full hover:bg-gray-800 transition">
-                        {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-                    </button>
+                <div className="lg:hidden w-full flex justify-end items-center py-4 px-4">
+                    {!menuOpen && (
+                         <button 
+                            onClick={toggleMenu} 
+                             className="text-white p-3 rounded-full hover:bg-gray-800 transition"
+                        >
+                             <FaBars size={32} />
+                        </button>
+                    )}
                 </div>
 
                 {/* Menú para pantallas grandes */}
@@ -176,6 +191,130 @@ const Header = () => {
                         Iniciar sesión
                     </Link>
                 </nav>
+
+                {/* Menú para pantallas pequeñas */}
+                {menuOpen && (
+                    <div className="absolute top-0 left-0 w-full h-full bg-gray-900 bg-opacity-90 text-white z-50 flex flex-col">
+                        <button 
+                            onClick={toggleMenu} 
+                             className="text-white p-3 rounded-full hover:bg-gray-800 transition self-end m-4"
+                        >
+                              <FaTimes size={32} />
+                         </button>
+                        <nav className="flex flex-col items-start gap-6 px-8 mt-10">
+                            {/* Opciones para pantallas pequeñas */}
+                            <Link 
+                                to="/login" 
+                                onClick={closeMenu} 
+                                className="bg-secondary text-white px-4 py-2 rounded-full hover:bg-secondary-light transition"
+                            >
+                                Iniciar sesión
+                            </Link>
+
+                            <div>
+                                <button
+                                    onClick={() => toggleDropdown('nosotros')}
+                                    className="text-lg font-bold hover:text-gray-400 transition"
+                                >
+                                    Nosotros
+                                </button>
+                                {activeDropdown === 'nosotros' && (
+                                    <div className="ml-4 mt-2">
+                                        <Link 
+                                            to="/quienes-somos" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaClock className="inline-block mr-2" /> ¿Quiénes somos?
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <button
+                                    onClick={() => toggleDropdown('unete')}
+                                    className="text-lg font-bold hover:text-gray-400 transition"
+                                >
+                                    Únete
+                                </button>
+                                {activeDropdown === 'unete' && (
+                                    <div className="ml-4 mt-2">
+                                        <Link 
+                                            to="/unete-domiciliario" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaMotorcycle className="inline-block mr-2" /> Domiciliario
+                                        </Link>
+                                        <Link 
+                                            to="/unete-transportador" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaTruck className="inline-block mr-2" /> Transportador
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <button
+                                    onClick={() => toggleDropdown('servicios')}
+                                    className="text-lg font-bold hover:text-gray-400 transition"
+                                >
+                                    Servicios
+                                </button>
+                                {activeDropdown === 'servicios' && (
+                                    <div className="ml-4 mt-2">
+                                        <Link 
+                                            to="/mensajeria" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaEnvelope className="inline-block mr-2" /> Mensajería
+                                        </Link>
+                                        <Link 
+                                            to="/domicilios" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaShippingFast className="inline-block mr-2" /> Domicilios
+                                        </Link>
+                                        <Link 
+                                            to="/transporte-particular" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaCar className="inline-block mr-2" /> Transporte Particular
+                                        </Link>
+                                        <Link 
+                                            to="/transporte-salud" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaHospital className="inline-block mr-2" /> Transporte Salud
+                                        </Link>
+                                        <Link 
+                                            to="/traslado-aeropuertos" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaPlane className="inline-block mr-2" /> Traslado Aeropuertos
+                                        </Link>
+                                        <Link 
+                                            to="/diligencias" 
+                                            onClick={closeMenu} 
+                                            className="text-base hover:text-gray-400 block"
+                                        >
+                                            <FaHome className="inline-block mr-2" /> Diligencias
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        </nav>
+                    </div>
+                )}
             </div>
         </header>
     );
