@@ -6,6 +6,11 @@ const userDetailsController = require('../controller/user/useDetails');
 const userLogout = require('../controller/user/userLogout');
 const { forgotPasswordController, resetPasswordController } = require('../controller/user/forgot-password');
 const registrarMensajeria = require('../controller/servicios/registrarMensajeria');
+//banner
+const allBanners = require('../controller/banner/allBanner');
+const DeleteBannerController = require('../controller/banner/deleteBaner');
+const UploadBannerController = require('../controller/banner/uploadBaner');
+
 
 const router = express.Router();
 
@@ -27,3 +32,8 @@ router.post('/reset-password', resetPasswordController);
 router.post('/addMensaje', authToken,registrarMensajeria);
 
 module.exports = router;
+
+//panel banner
+router.get("/all-banners",allBanners);
+router.post("/upload-Banner",authToken,UploadBannerController);
+router.post("/delete-Banner", authToken, DeleteBannerController); 
