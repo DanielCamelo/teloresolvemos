@@ -43,7 +43,7 @@ const ForgotPassword = () => {
 
   return (
     <section id="forgot-password" className="flex items-center justify-center min-h-screen bg-cover bg-center">
-      <div className="bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg" style={{ marginTop: '-10%', opacity: '0.9' }}>
+      <div className="bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg" style={{ margin: '1%', opacity: '0.9' }}>
         <h2 className="text-3xl text-center font-bold  mb-6">Restablecer contraseña</h2>
         <p className="text-center text-gray-600 mb-4">
           Se enviará un código de verificación a tu correo para restablecer la contraseña.

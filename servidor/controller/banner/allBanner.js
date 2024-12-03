@@ -22,3 +22,4 @@ async function allBanners(req, res) {
 }
 
 module.exports = allBanners;
+

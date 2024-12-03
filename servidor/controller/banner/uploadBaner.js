@@ -1,5 +1,5 @@
 const uploadBannerPermission = require("../../helpers/permission") // Verificación de permisos
-const bannerModel = require("../../models/bannerModel.js") // Modelo del banner
+const bannerModel = require("../../models/bannerModel") // Modelo del banner
 
 async function UploadBannerController(req, res) {
     try {
@@ -33,3 +33,5 @@ async function UploadBannerController(req, res) {
 }
 
 module.exports = UploadBannerController
+
+

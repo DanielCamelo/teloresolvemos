@@ -24,7 +24,7 @@ const TrasladoAeropuertos = () => {
 
     return (
         <section className="flex items-center justify-center min-h-screen bg-cover bg-center">
-            <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ marginTop: '-10%', opacity: '0.85' }}>
+            <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.85' }}>
                 <h2 className="text-center font-bold text-xl mb-6">Reserva de Traslado a Aeropuertos</h2>
 
                 <form onSubmit={handleSubmit}>

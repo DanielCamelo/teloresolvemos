@@ -1,6 +1,6 @@
 const STATUS ={
-    Activo :'Activo',
-    Suspendido :'Suspendido',
-    Bloqueado :'Bloqueado',
+    Activo :'activo',
+    Suspendido :'suspendido',
+    Bloqueado :'bloqueado',
 }
 export default STATUS;

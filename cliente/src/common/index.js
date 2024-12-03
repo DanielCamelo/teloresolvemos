@@ -63,8 +63,56 @@ const SummaryApi = {
             url: `${backendDomin}/api/update-user`,
             method: "post",
         },
-
+        registrarRepartidor : {
+            url : `${backendDomin}/api/registrarRepartidor`,
+            method : 'post'
+        },
+        registrarConductor: {
+            url: `${backendDomin}/api/registrarConductor`,
+            method: 'post'
+        },
+        getAllMensajeriaByUser:{
+            url : `${backendDomin}/api/getAllMensajeriaByUser`,
+            method : 'get'
+        },
+        getMensajeriaByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getMensajeriaByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getClientes: {
+            url: `${backendDomin}/api/get-clientes`,
+            method: "post"
+        },
+        allUser: {
+            url: `${backendDomin}/api/all-user`,
+            method: "get"
+          },
+          updateUser: {
+            url: `${backendDomin}/api/update-user`,
+            method: "post"
+          },
+          deleteUser: {
+            url: `${backendDomin}/api/delete-user`,
+            method: "post"
+          },
+          allOrdenesMensajeria: {
+            url: `${backendDomin}/api/allOrdenesMensajeria`,
+            method: "get"
+          },
+            assignDomiciliario: {
+                url: `${backendDomin}/api/asignar-domiciliario`,
+                method: "post"
+            },
+            cambiarEstadoMensajeria: {
+                url: `${backendDomin}/api/cambiarEstadoMensajeria`,
+                method: "post"
+            },
+            getDomiciliarios:{
+                url: `${backendDomin}/api/allDomiciliarios`,
+                method: "get"
+            }
+            
 }
 
 
-export default SummaryApi
+export default SummaryApi;

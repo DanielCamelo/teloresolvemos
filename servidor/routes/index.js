@@ -14,14 +14,25 @@ const DeleteBannerController = require('../controller/banner/deleteBaner');
 const UploadBannerController = require('../controller/banner/uploadBaner');
 //panel usuario en administrador
 const allUsers = require('../controller/user/allUsers');
-const updateUser = require('../controller/user/updateUser');
+
 const deleteUser = require('../controller/user/deleteUser');
+const registrarRepartidor = require('../controller/user/registrarRepartidor ');
+const registrarConductor = require('../controller/user/registrarConductor');
+const getAllMensajeriaByUser = require('../controller/servicios/getAllMensajeriaByUser');
+const getMensajeriaByUserIdAndOrderId = require('../controller/servicios/getMensajeriaByUserIdAndOrderId');
+const updateUser = require('../controller/user/updateuser');
+const assignDomiciliaryToOrder = require('../controller/servicios/assignDomiciliaryToOrder ');
+const updateOrderStatus = require('../controller/servicios/updateOrderStatus ');
+const getDomiciliarios = require('../controller/user/getDomiciliarios');
+const getClientesByIds = require('../controller/user/getUserById');
+const getAllMensajeriaOrder = require('../controller/servicios/getAllMensajeriaOrder ');
 
 
 //panel usuario en administrador
 router.get("/all-user",authToken,allUsers);
 router.post("/update-user",authToken,updateUser);
 router.post("/delete-user",authToken,deleteUser);
+router.post('/get-clientes', getClientesByIds);
 
 
 
@@ -36,15 +47,28 @@ router.post('/verify-code', userSignUpController);
 router.post('/forgot-password', forgotPasswordController);
 router.post('/reset-password', resetPasswordController);
 
+//cambio de rol
+router.post('/registrarRepartidor', authToken,registrarRepartidor);
+router.post('/registrarConductor', authToken,registrarConductor);
+//obtener domiciliarios
+router.get('/allDomiciliarios', getDomiciliarios);
+
 
 
 //servicios
 //mensajeria
 router.post('/addMensaje', authToken,registrarMensajeria);
+router.get("/getAllMensajeriaByUser",authToken,getAllMensajeriaByUser);
+router.get("/getMensajeriaByUserIdAndOrderId/:orderId",authToken,getMensajeriaByUserIdAndOrderId);
+router.get('/allOrdenesMensajeria', getAllMensajeriaOrder);
+router.post('/asignar-domiciliario', assignDomiciliaryToOrder);
+router.post('/cambiarEstadoMensajeria', updateOrderStatus);
 
-module.exports = router;
+
 
 //panel banner
 router.get("/all-banners",allBanners);
 router.post("/upload-Banner",authToken,UploadBannerController);
 router.post("/delete-Banner", authToken, DeleteBannerController); 
+
+module.exports = router;

@@ -7,12 +7,24 @@ import TransporteParticular from '../pages/TransporteParticular';
 import TransporteSalud from '../pages/TransporteSalud';
 import TrasladoAeropuertos from '../pages/TrasladoAeropuertos';
 import Diligencias from '../pages/Diligencias';
+import RegistroDelivery from '../pages/RegistroDelivery';
+import RegistroChofer from '../pages/RegistroChofer';
 
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import ResetPassword from '../pages/ResetPassword';
 import ForgotPassword from '../pages/ForgotPassword';
 import Pqrs from '../pages/Pqrs';
+import HistorialMensajeria from '../pages/HistorialMensajeria';
+import DetalleMensajeria from '../pages/DetalleMensajeria';
+import PerfilAdministrador from '../pages/PerfilAdministrador';
+import VerUsuarios from '../pages/VerUsuarios';
+import VerBanners from '../pages/VerBanners';
+import OrdenesDeServicio from '../pages/OrdenesDeServicio';
+import OrdenesPendiente from '../pages/OrdenesPendiente';
+import OrdenesEnProceso from '../pages/OrdenesEnProceso';
+import OrdenesEntregadas from '../pages/OrdenesEntregadas';
+import OrdenesCanceladas from '../pages/OrdenesCanceladas';
 
 const routes = createBrowserRouter(
     [
@@ -67,7 +79,57 @@ const routes = createBrowserRouter(
                 {
                     path:"/pqrs",
                     element: <Pqrs />,
+                },
+                {
+                    path:"/unete-domiciliario",
+                    element: <RegistroDelivery />
+                },
+                {
+                    path:"/unete-transportador",
+                    element: <RegistroChofer />
+                },
+                {
+                    path:"/historial-mensajeria",
+                    element: <HistorialMensajeria />
+                },
+                {
+                    path: "/detalle-mensajeria/:orderId", // Ruta dinámica para el detalle
+                    element: <DetalleMensajeria /> // El componente que se muestra cuando se accede a esta ruta
+                },
+                {
+                    path: "perfil-administrador",
+                    element: <PerfilAdministrador />
+                },
+                {
+                    path: "ver-usuarios",
+                    element: <VerUsuarios />
+                },
+                {
+                    path: "ver-banners",
+                    element: <VerBanners />
+                },
+                {
+                    path: "ver-ordenes",
+                    element: <OrdenesDeServicio />,
+                },
+                {
+                    path: "ver-ordenes/pendiente",
+                    element: <OrdenesPendiente />
+                },
+                {
+                    path: "ver-ordenes/en-proceso",
+                    element: <OrdenesEnProceso />
+                },
+                {
+                    path: "ver-ordenes/entregado",
+                    element: <OrdenesEntregadas />
+                },
+                {
+                    path: "ver-ordenes/cancelado",
+                    element: <OrdenesCanceladas />
                 }
+                    
+                
             ]
                 
         }

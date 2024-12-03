@@ -1,7 +1,7 @@
 const ROLE= {
-    Administrador: 'Administrador',
-    Domiciliario: 'Domiciliario',
-    Conductor: 'Conductor',
-    Cliente: 'Cliente'
+    Administrador: 'administrador',
+    Domiciliario: 'domiciliario',
+    Conductor: 'conductor',
+    Cliente: 'cliente'
 }
 export default ROLE

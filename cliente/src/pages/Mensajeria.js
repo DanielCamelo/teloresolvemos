@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
 import axios from 'axios';
 import SummaryApi from "../common";
 import tipoPaqueteCategoria from "../helpers/tipoPaqueteCategoria";
@@ -121,7 +122,7 @@ const RegistrarMensajeria = () => {
 
     return (
         <section id='registrar-mensajeria' className="flex items-center justify-center min-h-screen bg-cover bg-center">
-            <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ marginTop: '-10%', opacity: '0.85' }}>
+            <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.85' }}>
                 <h2 className="text-center font-bold text-xl mb-6">Registrar Orden de Mensajería</h2>
 
                 <form onSubmit={handleSubmit}>
@@ -243,11 +244,17 @@ const RegistrarMensajeria = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
+                        className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition duration-200"
                     >
                         Registrar
                     </button>
                 </form>
+
+                {/* Enlace debajo del botón de registro */}
+            <Link to="/historial-mensajeria" className="text-blue-500 mt-4">
+                Historial de órdenes de mensajería
+            </Link>
+
             </div>
         </section>
     );

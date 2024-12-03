@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    role: String,
+    role: {
+        type: [String],
+        default: 'cliente'
+    },
     status: {
         type: String,
         enum: ['activo', 'bloqueado', 'suspendido'], // Estados posibles

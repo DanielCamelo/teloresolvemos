@@ -35,4 +35,3 @@ async function deleteBanner(req, res) {
 }
 
 module.exports = deleteBanner;
-

@@ -127,7 +127,7 @@ const SignUp = () => {
 
   return (
     <section id='sign-up' className="flex items-center justify-center min-h-screen bg-cover bg-center">
-      <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ marginTop: '-10%', opacity: '0.9' }}>
+      <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.9' }}>
         <h2 className="text-center font-bold text-xl mb-6">Regístrate en Te lo resolvemos</h2>
                 {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
                 <div className="flex mb-6 bg-gray-200 rounded-full mt-4">

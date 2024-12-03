@@ -37,6 +37,10 @@ const mensajeriaSchema = new mongoose.Schema({
     enum: ['pendiente', 'en proceso', 'entregado', 'cancelado'],
     default: 'pendiente',
   },
+  precio: {
+    type: Number,
+    default: 0
+  },
 }, {
   timestamps: true, // Añade campos de createdAt y updatedAt
 });

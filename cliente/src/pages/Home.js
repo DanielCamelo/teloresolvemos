@@ -17,7 +17,7 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen m-4"> 
       <div className="mt-20 grid grid-cols-2 gap-6">
         {servicios.map((servicio, index) => (
           <button
@@ -38,4 +38,5 @@ function Home() {
 }
 
 export default Home;
+
 
