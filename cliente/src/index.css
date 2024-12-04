@@ -9,6 +9,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/*Redirrecionamiento en los servicios del footer*/
+html {
+  scroll-behavior: smooth;
+}
+#services {
+  scroll-margin-top: 100px;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

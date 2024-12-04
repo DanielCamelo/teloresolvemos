@@ -178,3 +178,66 @@ button {
 .bg-neutral-dark {
   background-color: #1c1c1c;
 }
+/* Estilo para el footer */
+footer {
+  background-color: #282c34;
+  color: #ffffff;
+  padding: 20px 0;
+  font-size: 1rem;
+}
+
+footer h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+footer a {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.2s ease-in-out;
+}
+
+footer a:hover {
+  color: #0056b3;
+}
+
+/* Estilo específico para la sección "Únete" */
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+footer ul li {
+  margin: 8px 0;
+}
+
+footer ul ul {
+  padding-left: 16px; /* Espaciado para enlaces anidados */
+}
+
+footer ul ul li a {
+  font-size: 1rem; /* Tamaño más pequeño para subopciones */
+  color: #007bff;
+}
+
+footer ul ul li a:hover {
+  color: #0056b3;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  footer {
+    text-align: center;
+  }
+
+  footer h3 {
+    font-size: 1.25rem;
+  }
+
+  footer ul ul li a {
+    font-size: 0.9rem;
+  }
+}
