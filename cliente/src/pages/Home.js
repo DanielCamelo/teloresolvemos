@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import BannerProduct from '../components/BannerProduct'; // Importamos el componente BannerProduct
+
 
 function Home() {
   const navigate = useNavigate();
@@ -17,7 +19,9 @@ function Home() {
   };
 
   return (
+
     <div id="services" className="flex flex-col items-center justify-center min-h-screen m-4"> 
+      <BannerProduct />
       <div className="mt-20 grid grid-cols-2 gap-6">
         {servicios.map((servicio, index) => (
           <button
@@ -31,6 +35,7 @@ function Home() {
             <span className="text-3xl">{servicio.icono}</span>
             <p className="mt-2 text-xl text-center">{servicio.nombre}</p>
           </button>
+          
         ))}
       </div>
     </div>

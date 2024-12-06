@@ -34,7 +34,7 @@ const Footer = () => {
               className="text-blue-400 hover:underline"
               aria-label="Llamar a +52 302 588 7156"
             >
-              302 588 7156
+              +52 302 588 7156
             </a>
           </p>
         </div>
@@ -46,11 +46,11 @@ const Footer = () => {
           </h3>
           <ul className="space-y-1">
             <li>
-              <a href="/about" className="text-white hover:underline" aria-label="Página de Nosotros">
+            <Link to="/nosotros" className="text-white hover:underline" aria-label="Página de Nosotros">
                 Nosotros
-              </a>
+              </Link>
             </li>
-            <li>
+            <li> 
               <button
                 onClick={toggleUnete}
                 className="text-white hover:underline focus:outline-none"

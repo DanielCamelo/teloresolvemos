@@ -9,6 +9,7 @@ import TrasladoAeropuertos from '../pages/TrasladoAeropuertos';
 import Diligencias from '../pages/Diligencias';
 import RegistroDelivery from '../pages/RegistroDelivery';
 import RegistroChofer from '../pages/RegistroChofer';
+import Nosotros from '../pages/Nosotros';
 
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
@@ -127,9 +128,11 @@ const routes = createBrowserRouter(
                 {
                     path: "ver-ordenes/cancelado",
                     element: <OrdenesCanceladas />
-                }
-                    
-                
+                },
+                {
+                    path: "nosotros",  // Ruta para la página de Nosotros
+                    element: <Nosotros />, // Componente que se muestra cuando se accede a esta ruta
+                },
             ]
                 
         }

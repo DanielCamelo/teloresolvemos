@@ -106,7 +106,7 @@ const Header = () => {
                                     <li className="flex items-center gap-2">
                                         <FaClock />
                                         <Link 
-                                            to="/quienes-somos" 
+                                            to="Nosotros" 
                                             className="text-gray-700 hover:text-gray-500 transition">
                                             ¿Quiénes somos?
                                         </Link>
@@ -140,7 +140,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaTruck />
+                                        <FaCar />
                                         <Link 
                                             to="/unete-transportador" 
                                             className="text-gray-700 hover:text-gray-500 transition">
