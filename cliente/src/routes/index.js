@@ -26,6 +26,7 @@ import OrdenesPendiente from '../pages/OrdenesPendiente';
 import OrdenesEnProceso from '../pages/OrdenesEnProceso';
 import OrdenesEntregadas from '../pages/OrdenesEntregadas';
 import OrdenesCanceladas from '../pages/OrdenesCanceladas';
+import PerfilCliente from '../pages/PerfilCliente';
 
 const routes = createBrowserRouter(
     [
@@ -133,6 +134,10 @@ const routes = createBrowserRouter(
                     path: "nosotros",  // Ruta para la página de Nosotros
                     element: <Nosotros />, // Componente que se muestra cuando se accede a esta ruta
                 },
+                {
+                    path: "perfilCliente",
+                    element: <PerfilCliente />
+                }
             ]
                 
         }

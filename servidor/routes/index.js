@@ -26,6 +26,7 @@ const updateOrderStatus = require('../controller/servicios/updateOrderStatus ');
 const getDomiciliarios = require('../controller/user/getDomiciliarios');
 const getClientesByIds = require('../controller/user/getUserById');
 const getAllMensajeriaOrder = require('../controller/servicios/getAllMensajeriaOrder ');
+const updateUserDetailsController = require('../controller/user/updateUserDatail');
 
 
 //panel usuario en administrador
@@ -33,6 +34,7 @@ router.get("/all-user",authToken,allUsers);
 router.post("/update-user",authToken,updateUser);
 router.post("/delete-user",authToken,deleteUser);
 router.post('/get-clientes', getClientesByIds);
+router.post("/actualizarUsuario",authToken,updateUserDetailsController);
 
 
 

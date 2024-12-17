@@ -34,7 +34,7 @@ const Footer = () => {
               className="text-blue-400 hover:underline"
               aria-label="Llamar a +52 302 588 7156"
             >
-              +52 302 588 7156
+              +57 302 588 7156
             </a>
           </p>
         </div>

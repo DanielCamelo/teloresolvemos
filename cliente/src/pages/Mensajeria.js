@@ -6,8 +6,6 @@ import tipoPaqueteCategoria from "../helpers/tipoPaqueteCategoria";
 import pesoPaqueteCategoria from "../helpers/pesoPaqueteCategoria";
 import { toast } from 'react-toastify';
 
-const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-
 const RegistrarMensajeria = () => {
     const [formData, setFormData] = useState({
         tipoDePaquete: '',
@@ -20,6 +18,7 @@ const RegistrarMensajeria = () => {
     const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
     const [sugerenciasEntrega, setSugerenciasEntrega] = useState([]);
     const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
+    const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -78,6 +77,29 @@ const RegistrarMensajeria = () => {
         }
     };
 
+    const handleCalcularDistancia = async () => {
+        const origen = await validarDireccion(formData.direccionRecogida);
+        const destino = await validarDireccion(formData.direccionEntrega);
+
+        if (!origen || !destino) {
+            toast.error("Una o ambas direcciones no son válidas.");
+            return;
+        }
+
+        const distanciaEnMetros = await calcularDistancia(origen, destino);
+        if (!distanciaEnMetros) {
+            toast.error("No se pudo calcular la distancia entre las direcciones.");
+            return;
+        }
+
+        const distanciaCalculada = (distanciaEnMetros / 1000).toFixed(2); // Convertir a kilómetros
+        setDistancia(distanciaCalculada); // Actualiza el estado de la distancia
+
+        // Calcular el precio (1000 pesos por km)
+        const precioCalculado = distanciaCalculada * 1000;
+        setPrecio(precioCalculado); // Actualiza el estado del precio
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -90,23 +112,17 @@ const RegistrarMensajeria = () => {
                 return;
             }
 
-            const distanciaEnMetros = await calcularDistancia(origen, destino);
-            if (!distanciaEnMetros) {
-                toast.error("No se pudo calcular la distancia entre las direcciones.");
-                return;
-            }
-
-            const distanciaCalculada = (distanciaEnMetros / 1000).toFixed(2);
-            setDistancia(distanciaCalculada); // Actualiza el estado de la distancia
-            console.log("Distancia entre direcciones:", distanciaCalculada, "km");
-
             const response = await fetch(SummaryApi.addMensaje.url, {
                 method: SummaryApi.addMensaje.method,
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...formData, distancia: distanciaCalculada }) // Envía la distancia calculada
+                body: JSON.stringify({ 
+                    ...formData, 
+                    distancia: distancia,
+                    precio: precio // Incluye el precio calculado
+                }) 
             });
 
             const data = await response.json();
@@ -230,34 +246,42 @@ const RegistrarMensajeria = () => {
                             value={formData.fechaHoraRecogida}
                             onChange={handleChange}
                             required
-                            className="bg-gray-100 p-3 rounded-lg w-full"
+                            className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                         />
                     </div>
 
-                    {/* Campo para mostrar la distancia calculada */}
-                    {distancia && (
-                        <div className='mb-4'>
-                            <label className="text-gray-600">Distancia:</label>
-                            <p className="bg-gray-100 p-3 rounded-lg">{distancia} km</p>
+                    <div className="mb-4 text-center">
+                        <button
+                            type="button"
+                            onClick={handleCalcularDistancia}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        >
+                            Calcular Distancia
+                        </button>
+                    </div>
+
+                    {distancia && precio && (
+                        <div className="mb-4 text-center">
+                            <p className="text-lg font-semibold">Distancia: {distancia} km</p>
+                            <p className="text-lg font-semibold">Precio: ${precio.toLocaleString()}</p>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
+                            >
+                                Registrar Orden
+                            </button>
                         </div>
                     )}
-
-                    <button
-                        type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition duration-200"
-                    >
-                        Registrar
-                    </button>
                 </form>
 
-                {/* Enlace debajo del botón de registro */}
-            <Link to="/historial-mensajeria" className="text-blue-500 mt-4">
-                Historial de órdenes de mensajería
-            </Link>
-
+                <Link to="/historial-mensajeria" className="text-blue-500 mt-4">
+                    Historial de órdenes de mensajería
+                </Link>
+                
             </div>
         </section>
     );
 };
 
 export default RegistrarMensajeria;
+

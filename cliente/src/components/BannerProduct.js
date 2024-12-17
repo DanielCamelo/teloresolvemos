@@ -1,91 +1,131 @@
 import React, { useEffect, useState } from 'react';
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
-import SummaryApi from '../common'; // Asegúrate de que el path a SummaryApi sea correcto.
+import SummaryApi from '../common'; // Asegúrate de que el path sea correcto.
 
 const BannerProduct = () => {
-    const [currentImage, setCurrentImage] = useState(0);
-    const [banners, setBanners] = useState([]);
-    const [loading, setLoading] = useState(true); // Estado de carga
+  const [currentImage, setCurrentImage] = useState(0);
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const fetchBanners = async () => {
-        try {
-            const response = await fetch(SummaryApi.allBanner.url, {
-                method: SummaryApi.allBanner.method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-    
-            if (!response.ok) {
-                throw new Error('Error al cargar los banners');
-            }
-    
-            const dataResponse = await response.json();
-            setBanners(dataResponse.data || []);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error al cargar banners:', error);
-            setLoading(false);
-        }
-    };
-    
+  const fetchBanners = async () => {
+    try {
+      const response = await fetch(SummaryApi.allBanner.url, {
+        method: SummaryApi.allBanner.method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    const nextImage = () => {
-        if (banners.length === 0) return; // Evitar si no hay banners
-        setCurrentImage(prev => (prev + 1) % banners.length);
-    };
+      if (!response.ok) {
+        throw new Error('Error al cargar los banners');
+      }
 
-    const prevImage = () => {
-        if (banners.length === 0) return; // Evitar si no hay banners
-        setCurrentImage(prev => (prev - 1 + banners.length) % banners.length);
-    };
-
-    useEffect(() => {
-        fetchBanners();
-        const interval = setInterval(() => {
-            if (banners.length > 0) { // Solo ejecuta si hay banners
-                nextImage();
-            }
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [banners.length]); // Dependencia en el número de banners
-
-    if (loading) {
-        return <div>Loading...</div>; // Mostrar un indicador de carga
+      const dataResponse = await response.json();
+      setBanners(dataResponse.data || []);
+    } catch (error) {
+      console.error('Error al cargar banners:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const nextImage = () => {
+    if (banners.length === 0) return;
+    setCurrentImage((prev) => (prev + 1) % banners.length);
+  };
+
+  const prevImage = () => {
+    if (banners.length === 0) return;
+    setCurrentImage((prev) => (prev - 1 + banners.length) % banners.length);
+  };
+
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  useEffect(() => {
+    if (banners.length > 0) {
+      const interval = setInterval(nextImage, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [banners]);
+
+  if (loading) {
     return (
-        <div className='container mx-auto px-4 rounded'>
-            <div className='h-56 md:h-72 w-full bg-slate-200 relative'>
-                <div className='absolute z-10 h-full w-full md:flex items-center hidden'>
-                    <div className='flex justify-between w-full text-2xl'>
-                        <button onClick={prevImage} className='bg-white shadow-md rounded-full p-1'>
-                            <FaAngleLeft />
-                        </button>
-                        <button onClick={nextImage} className='bg-white shadow-md rounded-full p-1'>
-                            <FaAngleRight />
-                        </button>
-                    </div>
-                </div>
-
-                <div className='flex h-full w-full overflow-hidden'>
-                    {banners.map((banner, index) => (
-                        <div 
-                            className='w-full h-full min-w-full min-h-full transition-all' 
-                            key={banner._id} 
-                            style={{ transform: `translateX(-${currentImage * 100}%)` }}
-                        >
-                            <img 
-                                src={banner.url} 
-                                alt={banner.title} 
-                                className='w-full h-full object-cover' 
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
+      <div className="flex items-center justify-center h-56 md:h-72 bg-gray-200 text-gray-500">
+        Cargando banners...
+      </div>
     );
-}
+  }
+
+  if (banners.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-56 md:h-72 bg-gray-200 text-gray-500">
+        No hay banners disponibles.
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 rounded">
+      <div className="h-56 md:h-72 w-full relative overflow-hidden rounded-lg shadow-lg">
+        {/* Botones de navegación */}
+        <div className="absolute inset-0 flex items-center justify-between z-10 hidden md:flex">
+          <button
+            onClick={prevImage}
+            className="bg-white shadow-md rounded-full p-2 m-2 hover:scale-110 transition-transform"
+          >
+            <FaAngleLeft />
+          </button>
+          <button
+            onClick={nextImage}
+            className="bg-white shadow-md rounded-full p-2 m-2 hover:scale-110 transition-transform"
+          >
+            <FaAngleRight />
+          </button>
+        </div>
+
+        {/* Carrusel */}
+        <div className="flex h-full transition-transform duration-500" style={{ transform: `translateX(-${currentImage * 100}%)` }}>
+          {banners.map((banner, index) => (
+            <div key={banner._id} className="w-full h-full flex-shrink-0 relative">
+              <img
+                src={banner.url}
+                alt={banner.title || `Banner ${index + 1}`}
+                className="w-full h-full object-cover opacity-90" // Opacidad ajustada
+              />
+              {/* Contenido del banner */}
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white text-center px-4 py-4">
+                <h2 className="text-2xl md:text-4xl font-bold">{banner.title}</h2>
+                <p className="mt-2 text-sm md:text-lg">{banner.description}</p>
+                {banner.link && (
+                  <a
+                    href={banner.link}
+                    className="mt-4 bg-primary text-white px-4 py-2 rounded hover:bg-opacity-90 transition"
+                  >
+                    Más información
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Indicadores de progreso */}
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-2 z-10">
+          {banners.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImage(index)}
+              className={`h-2 w-2 rounded-full ${currentImage === index ? 'bg-primary' : 'bg-gray-300'} transition-all`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default BannerProduct;
+
+

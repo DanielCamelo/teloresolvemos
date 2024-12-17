@@ -240,7 +240,7 @@ const Header = () => {
                         <li className="flex items-center gap-2">
                             <FaUser />
                             <Link 
-                                to="/perfil-cliente" 
+                                to="/perfilCliente" 
                                 className="text-gray-700 hover:text-gray-500 transition">
                                 Cliente
                             </Link>
@@ -349,7 +349,7 @@ const Header = () => {
                         <div className="ml-4 mt-2">
                             {user?.role?.includes('cliente') && (
                                 <Link 
-                                    to="/perfil-cliente" 
+                                    to="/perfilCliente" 
                                     onClick={closeMenu} 
                                     className="text-base hover:text-gray-400 block"
                                 >

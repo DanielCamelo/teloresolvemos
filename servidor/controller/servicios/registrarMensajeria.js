@@ -8,7 +8,8 @@ const registrarMensajeria = async (req, res) => {
             pesoEstimado,
             direccionRecogida,
             direccionEntrega,
-            fechaHoraRecogida
+            fechaHoraRecogida,
+            precio
         } = req.body;
 
         // Crear el payload con la información para el nuevo registro
@@ -19,7 +20,8 @@ const registrarMensajeria = async (req, res) => {
             direccionRecogida,
             direccionEntrega,
             fechaHoraRecogida,
-            estado: 'pendiente'
+            estado: 'pendiente',
+            precio
         };
 
         const nuevaOrden = new Mensajeria(payload);
