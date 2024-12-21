@@ -5,7 +5,7 @@ import Mensajeria from '../pages/Mensajeria';
 import Domicilios from '../pages/Domicilios';
 import TransporteParticular from '../pages/TransporteParticular';
 import TransporteSalud from '../pages/TransporteSalud';
-import TrasladoAeropuertos from '../pages/TrasladoAeropuertos';
+import ComprasIntermunicipales from '../pages/ComprasIntermunicipales';
 import Diligencias from '../pages/Diligencias';
 import RegistroDelivery from '../pages/RegistroDelivery';
 import RegistroChofer from '../pages/RegistroChofer';
@@ -71,8 +71,8 @@ const routes = createBrowserRouter(
                     element: <TransporteSalud />,
                 },
                 {
-                    path:"/traslado-aeropuertos",
-                    element: <TrasladoAeropuertos />,
+                    path:"/compras-intermunicipales",
+                    element: <ComprasIntermunicipales />,
                 },
                 {
                     path:"/diligencias",

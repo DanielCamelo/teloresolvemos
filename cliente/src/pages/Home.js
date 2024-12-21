@@ -10,7 +10,7 @@ function Home() {
     { nombre: 'Domicilios', icono: '🍔', ruta: '/domicilios' },
     { nombre: 'Transporte Particular', icono: '🚗', ruta: '/transporte-particular' },
     { nombre: 'Transporte Salud', icono: '🚑', ruta: '/transporte-salud' },
-    { nombre: 'Traslado Aeropuertos', icono: '✈️', ruta: '/traslado-aeropuertos' },
+    { nombre: 'Compras Intermunicipales', icono: '🛍️', ruta: '/compras-intermunicipales' },
     { nombre: 'Diligencias', icono: '📝', ruta: '/diligencias' },
   ];
 
@@ -21,7 +21,7 @@ function Home() {
   return (
 
     <div id="services" className="flex flex-col items-center justify-center min-h-screen m-4"> 
-      <BannerProduct />
+      <BannerProduct /> {/* Agregamos el componente BannerProduct */}
       <div className="mt-20 grid grid-cols-2 gap-6">
         {servicios.map((servicio, index) => (
           <button
