@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-    FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, 
+    FaBars, FaTimes, FaEnvelope, FaCar, FaHospital, 
     FaHome, FaShippingFast, FaMotorcycle, FaTruck, FaClock, 
     FaUser,
     FaUserShield,
+    FaShoppingBag,
     FaCogs
 } from 'react-icons/fa';
 import logo from '../assets/Logo PNG.png'; // Importa el logo
@@ -200,11 +201,11 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <FaPlane />
+                                        <FaShoppingBag />
                                         <Link 
-                                            to="/traslado-aeropuertos" 
+                                            to="/compras-intermunicipales" 
                                             className="text-gray-700 hover:text-gray-500 transition">
-                                            Traslado Aeropuertos
+                                            Compras Intermunicipales
                                         </Link>
                                     </li>
                                     <li className="flex items-center gap-2">
@@ -476,11 +477,11 @@ const Header = () => {
                             <FaHospital className="inline-block mr-2" /> Transporte Salud
                         </Link>
                         <Link 
-                            to="/traslado-aeropuertos" 
+                            to="/compras-intermunicipales" 
                             onClick={closeMenu} 
                             className="text-base hover:text-gray-400 block"
                         >
-                            <FaPlane className="inline-block mr-2" /> Traslado Aeropuertos
+                            <FaShoppingBag className="inline-block mr-2" /> Compras
                         </Link>
                         <Link 
                             to="/diligencias" 
