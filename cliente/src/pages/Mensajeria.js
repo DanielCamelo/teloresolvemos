@@ -80,38 +80,116 @@ const RegistrarMensajeria = () => {
     const handleCalcularDistancia = async () => {
         const origen = await validarDireccion(formData.direccionRecogida);
         const destino = await validarDireccion(formData.direccionEntrega);
-
+    
         if (!origen || !destino) {
             toast.error("Una o ambas direcciones no son válidas.");
             return;
         }
-
+    
         const distanciaEnMetros = await calcularDistancia(origen, destino);
         if (!distanciaEnMetros) {
             toast.error("No se pudo calcular la distancia entre las direcciones.");
             return;
         }
-
+    
         const distanciaCalculada = (distanciaEnMetros / 1000).toFixed(2); // Convertir a kilómetros
-        setDistancia(distanciaCalculada); // Actualiza el estado de la distancia
+        setDistancia(distanciaCalculada);
+    
+        // Lógica de precios según la hora
+        const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
+        const horaRecogida = fechaHoraRecogida.getHours();
+        let tarifaBase = 1000; // Tarifa base por kilómetro
+        let tarifaNocturna = 0;
+    
+        // Tarifas nocturnas de 9:00 p.m. a 6:00 a.m.
+        if (horaRecogida >= 21 || horaRecogida < 6) {
+            toast.info("Se aplicará una tarifa nocturna.");
+            tarifaNocturna = 500;
+        }
+    
+        // Calcular el precio base
+        let precioCalculado = (distanciaCalculada * tarifaBase) + tarifaNocturna;
+    
+        // Ajustar según los rangos
+if (precioCalculado <= 2000) {
+    precioCalculado = 2000; // Tarifa mínima
+} else {
+    // Incrementos posteriores
+    const division = precioCalculado / 500;
+    const decimal = division - Math.floor(division);
 
-        // Calcular el precio (1000 pesos por km)
-        const precioCalculado = distanciaCalculada * 1000;
-        setPrecio(precioCalculado); // Actualiza el estado del precio
+    if (decimal < 0.5) {
+        precioCalculado = Math.floor(division) * 500; // Usar piso si el decimal es menor a 0.5
+    } else {
+        precioCalculado = Math.ceil(division) * 500; // Usar techo si el decimal es mayor o igual a 0.5
+    }
+}
+
+    
+        setPrecio(precioCalculado); // Formatear el precio final con dos decimales
     };
+    
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
+        // Validar que la fecha y hora de recogida no estén en el pasado
+        const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
+        const ahora = new Date();
+    
+        if (fechaHoraRecogida < ahora) {
+            toast.error("La fecha y hora de recogida no pueden estar en el pasado.");
+            return;
+        }
+    
         try {
             const origen = await validarDireccion(formData.direccionRecogida);
             const destino = await validarDireccion(formData.direccionEntrega);
-
+    
             if (!origen || !destino) {
                 toast.error("Una o ambas direcciones no son válidas.");
                 return;
             }
-
+    
+            // Formatear la fecha y hora de recogida de manera más legible
+            const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
+                weekday: 'long', // Día de la semana (opcional)
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true, // Usar formato de 12 horas (AM/PM)
+            });
+    
+            // Crear el mensaje para WhatsApp con un formato más claro
+            const mensaje = `
+    *Detalles de la Orden de Mensajería:*
+    
+    ──────────────────────
+    *Tipo de Paquete:* ${formData.tipoDePaquete}
+    *Peso Estimado:* ${formData.pesoEstimado} kg
+    ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida}
+    *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
+    ──────────────────────
+    *Distancia Estimada:* ${distancia} km
+    ──────────────────────
+    *Precio sugerido:* $${precio.toLocaleString()}
+            `;
+    
+            // URL para WhatsApp (ajustar el número y el mensaje)
+            const telefono = "+573178925603"; // Número de teléfono del destinatario
+            const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    
+            // Redirigir a WhatsApp para enviar el mensaje
+            window.open(urlWhatsApp, '_blank');
+    
+            // Registrar la orden en la base de datos
             const response = await fetch(SummaryApi.addMensaje.url, {
                 method: SummaryApi.addMensaje.method,
                 credentials: 'include',
@@ -124,7 +202,7 @@ const RegistrarMensajeria = () => {
                     precio: precio // Incluye el precio calculado
                 }) 
             });
-
+    
             const data = await response.json();
             if (data.success) {
                 toast.success(data.message);
@@ -135,6 +213,9 @@ const RegistrarMensajeria = () => {
             toast.error("Error al registrar la orden de mensajería");
         }
     };
+    
+
+    
 
     return (
         <section id='registrar-mensajeria' className="flex items-center justify-center min-h-screen bg-cover bg-center">

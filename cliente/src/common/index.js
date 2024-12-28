@@ -41,6 +41,14 @@ const SummaryApi = {
         url : `${backendDomin}/api/addMensaje`,
         method : 'post'
     },
+    addDomicilio : {
+        url : `${backendDomin}/api/addDomicilio`,
+        method : 'post'
+    },
+    addTransporteParticular : {
+        url : `${backendDomin}/api/addTransporteParticular`,
+        method : 'post'
+    },
     //rutas de banner
     uploadBanner: {
         url: `${backendDomin}/api/upload-Banner`,
@@ -79,8 +87,16 @@ const SummaryApi = {
             url : `${backendDomin}/api/getAllMensajeriaByUser`,
             method : 'get'
         },
+        getAllDomicilioByUser:{
+            url : `${backendDomin}/api/getAllDomicilioByUser`,
+            method : 'get'
+        },
         getMensajeriaByUserIdAndOrderId : {
             url : (orderId) => `${backendDomin}/api/getMensajeriaByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getDomicilioByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getDomicilioByUserIdAndOrderId/${orderId}`,
             method : 'get'
         },
         getClientes: {
@@ -103,6 +119,10 @@ const SummaryApi = {
             url: `${backendDomin}/api/allOrdenesMensajeria`,
             method: "get"
           },
+            allOrdenesDomicilio: {
+                url: `${backendDomin}/api/allOrdenesDomicilio`,
+                method: "get"
+            },
             assignDomiciliario: {
                 url: `${backendDomin}/api/asignar-domiciliario`,
                 method: "post"
@@ -113,6 +133,10 @@ const SummaryApi = {
             },
             getDomiciliarios:{
                 url: `${backendDomin}/api/allDomiciliarios`,
+                method: "get"
+            },
+            allOrdenesRepatidor:{
+                url: `${backendDomin}/api/allOrdenesRepatidor`,
                 method: "get"
             }
             

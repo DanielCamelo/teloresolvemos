@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 
 
 const OrdenesPendiente = () => {
-  const [ordenes, setOrdenes] = useState([]);
+  const [ordenesMensajeria, setOrdenesMensajeria] = useState([]);
+  const [ordenesDomicilio, setOrdenesDomicilio] = useState([]);
   const [domiciliarios, setDomiciliarios] = useState([]);
   const [repartidorId, setRepartidorId] = useState('');
   const [nuevoEstado, setNuevoEstado] = useState('');
@@ -12,7 +13,7 @@ const OrdenesPendiente = () => {
   const [searchTerm, setSearchTerm] = useState(''); // Estado para la búsqueda
 
   // Obtener todas las órdenes de mensajería
-  const fetchOrdenes = async () => {
+  const fetchOrdenesMensajeria = async () => {
     try {
       const response = await fetch(SummaryApi.allOrdenesMensajeria.url, {
         method: SummaryApi.allOrdenesMensajeria.method,
@@ -27,14 +28,14 @@ const OrdenesPendiente = () => {
 
       const data = await response.json();
       const ordenesConOrdenacion = data.data || [];
-      
+
       // Filtrar órdenes con estado pendiente
       const ordenesPendientes = ordenesConOrdenacion.filter(orden => orden.estado === 'pendiente');
-      
+
       // Ordenar las órdenes por fechaHoraRecogida de más reciente a más antigua
       ordenesPendientes.sort((a, b) => new Date(b.fechaHoraRecogida) - new Date(a.fechaHoraRecogida));
-      
-      setOrdenes(ordenesPendientes);
+
+      setOrdenesMensajeria(ordenesPendientes);
 
       // Obtener IDs de los clientes solo si hay órdenes pendientes
       if (ordenesPendientes.length > 0) {
@@ -42,7 +43,43 @@ const OrdenesPendiente = () => {
         fetchClientes(clienteIds);
       }
     } catch (err) {
-      toast.error('Error al obtener las órdenes');
+      toast.error('Error al obtener las órdenes de mensajería');
+      console.error(err.message);
+    }
+  };
+
+  // Obtener todas las órdenes de domicilio
+  const fetchOrdenesDomicilio = async () => {
+    try {
+      const response = await fetch(SummaryApi.allOrdenesDomicilio.url, {
+        method: SummaryApi.allOrdenesDomicilio.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Error al obtener las órdenes de domicilio');
+
+      const data = await response.json();
+      const ordenesConOrdenacion = data.data || [];
+
+      // Filtrar órdenes con estado pendiente
+      const ordenesPendientes = ordenesConOrdenacion.filter(orden => orden.estado === 'pendiente');
+
+      // Ordenar las órdenes por createdAt de más reciente a más antigua
+      ordenesPendientes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setOrdenesDomicilio(ordenesPendientes);
+
+      // Obtener IDs de los clientes solo si hay órdenes pendientes
+      if (ordenesPendientes.length > 0) {
+        const clienteIds = ordenesPendientes.map(orden => orden.nombreCliente);
+        fetchClientes(clienteIds);
+      }
+    } catch (err) {
+      toast.error('Error al obtener las órdenes de domicilio');
       console.error(err.message);
     }
   };
@@ -114,7 +151,8 @@ const OrdenesPendiente = () => {
       if (!response.ok) throw new Error('Error al asignar domiciliario');
 
       toast.success(`Domiciliario asignado con éxito para la orden ${orderId}`);
-      await fetchOrdenes(); // Actualizar la lista de órdenes
+      await fetchOrdenesMensajeria(); // Actualizar la lista de órdenes
+      await fetchOrdenesDomicilio(); // Actualizar la lista de órdenes
     } catch (err) {
       toast.error('Error al asignar domiciliario');
       console.error(err.message);
@@ -136,18 +174,26 @@ const OrdenesPendiente = () => {
 
       if (!response.ok) throw new Error('Error al cambiar el estado');
 
-      
       toast.success(`Estado de la orden ${orderId} actualizado con éxito`);
-      await fetchOrdenes(); // Actualizar la lista de órdenes
+      await fetchOrdenesMensajeria(); // Actualizar la lista de órdenes
+      await fetchOrdenesDomicilio(); // Actualizar la lista de órdenes
     } catch (err) {
-      
       toast.error('Error al cambiar el estado');
       console.error(err.message);
     }
   };
 
   // Filtrar las órdenes según el término de búsqueda
-  const filteredOrders = ordenes.filter((orden) => {
+  const filteredOrdersMensajeria = ordenesMensajeria.filter((orden) => {
+    const cliente = clientes[orden.nombreCliente];
+    return (
+      cliente &&
+      (cliente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cliente.phone.toString().includes(searchTerm))
+    );
+  });
+
+  const filteredOrdersDomicilio = ordenesDomicilio.filter((orden) => {
     const cliente = clientes[orden.nombreCliente];
     return (
       cliente &&
@@ -158,13 +204,14 @@ const OrdenesPendiente = () => {
 
   // Cargar las órdenes y domiciliarios al montar el componente
   useEffect(() => {
-    fetchOrdenes();
+    fetchOrdenesMensajeria();
+    fetchOrdenesDomicilio();
     fetchDomiciliarios();
   }, []);
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Gestión de Órdenes de Mensajería</h1>
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Gestión de Órdenes</h1>
 
       {/* Campo de búsqueda */}
       <div className="mb-4">
@@ -179,16 +226,82 @@ const OrdenesPendiente = () => {
 
       {/* Listado de órdenes */}
       <div>
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Órdenes Pendientes</h2>
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Órdenes Pendientes de mensajeria</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((orden) => (
+          {filteredOrdersMensajeria.length > 0 ? (
+            filteredOrdersMensajeria.map((orden) => (
               <div key={orden._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="p-4">
                   <h3 className="text-lg font-bold text-gray-800">Cliente: {clientes[orden.nombreCliente]?.name}</h3>
                   <p className="text-gray-600">Teléfono: {clientes[orden.nombreCliente]?.phone}</p>
                   <p className="text-gray-600">Estado: <span className={`font-semibold text-green-600`}>{orden.estado}</span></p>
                   <p className="text-gray-600">Tipo de Paquete: {orden.tipoDePaquete}</p>
+                  <p className="text-gray-600">Recogida: {orden.direccionRecogida}</p>
+                  <p className="text-gray-600">Entrega: {orden.direccionEntrega}</p>
+                  <p className="text-gray-600">Precio: ${orden.precio}</p>
+                  <p className="text-gray-600">Repartidor: {clientes[orden.nombreRepartidor]?.name}</p>
+                </div>
+
+                <div className="p-4 border-t">
+                  {/* Cambiar estado */}
+                  <select
+                    value={nuevoEstado}
+                    onChange={(e) => setNuevoEstado(e.target.value)}
+                    className="mb-2 w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Cambiar Estado</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en proceso">En Proceso</option>
+                    <option value="entregado">Entregado</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+
+                  <button
+                    onClick={() => handleCambiarEstado(orden._id)}
+                    className="block w-full bg-blue-500 text-white p-2 rounded-md mt-2"
+                  >
+                    Actualizar Estado
+                  </button>
+
+                  {/* Asignar domiciliario */}
+                  <select
+                    value={repartidorId}
+                    onChange={(e) => setRepartidorId(e.target.value)}
+                    className="mb-2 w-full p-2 border border-gray-300 rounded-md mt-2"
+                  >
+                    <option value="">Seleccionar Domiciliario</option>
+                    {domiciliarios.map((domiciliario) => (
+                      <option key={domiciliario._id} value={domiciliario._id}>
+                        {domiciliario.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => handleAsignarDomiciliario(orden._id)}
+                    className="block w-full bg-green-500 text-white p-2 rounded-md mt-2"
+                  >
+                    Asignar Domiciliario
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-600">No hay órdenes pendientes.</p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Órdenes Pendientes de Domicilio</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredOrdersDomicilio.length > 0 ? (
+            filteredOrdersDomicilio.map((orden) => (
+              <div key={orden._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-gray-800">Cliente: {clientes[orden.nombreCliente]?.name}</h3>
+                  <p className="text-gray-600">Teléfono: {clientes[orden.nombreCliente]?.phone}</p>
+                  <p className="text-gray-600">Estado: <span className={`font-semibold text-green-600`}>{orden.estado}</span></p>
+                  <p className="text-gray-600">Tipo de Pago: {orden.opcionPago}</p>
                   <p className="text-gray-600">Recogida: {orden.direccionRecogida}</p>
                   <p className="text-gray-600">Entrega: {orden.direccionEntrega}</p>
                   <p className="text-gray-600">Precio: ${orden.precio}</p>

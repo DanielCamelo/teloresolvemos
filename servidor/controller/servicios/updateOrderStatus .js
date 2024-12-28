@@ -1,4 +1,5 @@
 const Mensajeria = require('../../models/mensajeriaModel');
+const Domicilio = require('../../models/domiciliosModel');
 
 // Controlador para cambiar el estado de una orden
 const updateOrderStatus = async (req, res) => {
@@ -11,13 +12,23 @@ const updateOrderStatus = async (req, res) => {
       return res.status(400).json({ message: 'Estado no válido' });
     }
 
-    // Actualizar el estado de la orden
-    const updatedOrder = await Mensajeria.findByIdAndUpdate(
+    // Intentar actualizar la orden de mensajería
+    let updatedOrder = await Mensajeria.findByIdAndUpdate(
       orderId,
       { estado: nuevoEstado },
       { new: true } // Devuelve el documento actualizado
     );
 
+    // Si no se encuentra en Mensajeria, intentar con Domicilio
+    if (!updatedOrder) {
+      updatedOrder = await Domicilio.findByIdAndUpdate(
+        orderId,
+        { estado: nuevoEstado },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    // Si la orden no se encuentra en ninguno de los dos modelos
     if (!updatedOrder) {
       return res.status(404).json({ message: 'Orden no encontrada' });
     }
@@ -28,4 +39,5 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-module.exports =  updateOrderStatus ;
+module.exports = updateOrderStatus;
+

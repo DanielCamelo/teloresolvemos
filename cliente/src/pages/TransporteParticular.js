@@ -1,26 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
+import axios from 'axios';
+import SummaryApi from "../common";
 import { toast } from 'react-toastify';
+
 
 const TransporteParticular = () => {
     const [formData, setFormData] = useState({
-        tipoVehiculo: '',
-        numPasajeros: '',
+        tipoDeVehiculo: '',
+        NumeroPasajeros: '',
         direccionRecogida: '',
-        direccionDestino: '',
-        opcionViaje: '',
-        fechaHoraRecogida: ''
+        direccionEntrega: '',
+        opcionDeViaje: '',
+        fechaHoraRecogida: '',
+        precio: null
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+        const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
+        const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Aquí deberías integrar la lógica para enviar esta información al servidor
-        toast.success("Reserva de transporte registrada con éxito!");
-    };
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+    
+        };
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+                
+            try {
+        
+                const response = await fetch(SummaryApi.addTransporteParticular.url, {
+                    method: SummaryApi.addTransporteParticular.method,
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        ...formData, 
+                        distancia: distancia,
+                        precio: precio // Incluye el precio calculado
+                    }) 
+                });
+        
+                const data = await response.json();
+                if (data.success) {
+                    toast.success(data.message);
+                } else if (data.error) {
+                    toast.error(data.message);
+                }
+            } catch (err) {
+                toast.error("Error al registrar la orden de mensajería");
+            }
+        };
+
 
     return (
         <section className="flex items-center justify-center min-h-screen bg-cover bg-center">
@@ -31,8 +64,8 @@ const TransporteParticular = () => {
                     <div className='grid mb-4'>
                         <label className="text-gray-600">Tipo de Vehículo:</label>
                         <select
-                            name="tipoVehiculo"
-                            value={formData.tipoVehiculo}
+                            name="tipoDeVehiculo"
+                            value={formData.tipoDeVehiculo}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
@@ -46,15 +79,18 @@ const TransporteParticular = () => {
 
                     <div className='grid mb-4'>
                         <label className="text-gray-600">Número de Pasajeros:</label>
-                        <input
-                            type="number"
-                            name="numPasajeros"
-                            value={formData.numPasajeros}
+                        <select
+                            name="NumeroPasajeros"
+                            value={formData.NumeroPasajeros}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                            placeholder="Ejemplo: 3"
-                        />
+                        >
+                            <option value="">Seleccione el número de pasajeros</option>
+                            {[...Array(6).keys()].map(i => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className='grid grid-cols-2 gap-4'>
@@ -74,8 +110,8 @@ const TransporteParticular = () => {
                             <label className="text-gray-600">Dirección de Destino:</label>
                             <input
                                 type="text"
-                                name="direccionDestino"
-                                value={formData.direccionDestino}
+                                name="direccionEntrega"
+                                value={formData.direccionEntrega}
                                 onChange={handleChange}
                                 required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
@@ -87,8 +123,8 @@ const TransporteParticular = () => {
                     <div className='grid mb-4'>
                         <label className="text-gray-600">Opción de Viaje:</label>
                         <select
-                            name="opcionViaje"
-                            value={formData.opcionViaje}
+                            name="opcionDeViaje"
+                            value={formData.opcionDeViaje}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
@@ -111,15 +147,25 @@ const TransporteParticular = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
-                    >
-                        Registrar Reserva
-                    </button>
-                </form>
-            </div>
-        </section>
+                   
+                                        
+                          
+                                                                <div className="mb-4 text-center">
+                                                                    <button
+                                                                        type="submit"
+                                                                        className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
+                                                                    >
+                                                                        Registrar Orden
+                                                                    </button>
+                                                                </div>
+                                                        </form>
+                                        
+                                                        <Link to="/historial-domicilios" className="text-blue-500 mt-4">
+                                                            Historial de pedidos de domicilios
+                                                        </Link>
+                                                        
+                                                    </div>
+                            </section>
     );
 };
 

@@ -43,7 +43,7 @@ const transporteParticulaSchema = new mongoose.Schema({
   },
   precio: {
     type: Number,
-    default: 0
+    default: null
   },
 }, {
   timestamps: true, // Añade campos de createdAt y updatedAt

@@ -3,21 +3,21 @@ import { useParams } from "react-router-dom";
 import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; // Importa iconos
 import { jsPDF } from "jspdf";
 import SummaryApi from "../common";
-import logo from "../assets/Logo PNG.png";
 
-const DetalleMensajeria = () => {
+const DetalleDomicilio = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await fetch(
-          SummaryApi.getMensajeriaByUserIdAndOrderId.url(orderId),
+          SummaryApi.getDomicilioByUserIdAndOrderId.url(orderId),
           {
-            method: SummaryApi.getMensajeriaByUserIdAndOrderId.method,
+            method: SummaryApi.getDomicilioByUserIdAndOrderId.method,
             headers: { "Content-Type": "application/json" },
             credentials: "include",
           }
@@ -53,17 +53,9 @@ const DetalleMensajeria = () => {
     doc.setFont("helvetica", "normal");
     const pageWidth = doc.internal.pageSize.getWidth();
   
-    // Agregar el logo en la esquina superior izquierda
-     // Agregar el logo en la parte superior derecha con mayor tamaño
-  const logoWidth = 50; // Nuevo ancho del logo
-  const logoHeight = 50; // Nuevo alto del logo
-  const logoX = pageWidth - logoWidth - 10; // Posición a la derecha con un margen de 10
-  const logoY = 10; // Posición en la parte superior con un margen de 10
-  doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
-  
     // Encabezado
     doc.setFontSize(18);
-    doc.text("ORDEN DE MENSAJERÍA", pageWidth / 2, 20, { align: "center" });
+    doc.text("ORDEN DE DOMICILIO", pageWidth / 2, 20, { align: "center" });
     doc.setFontSize(12);
     doc.text("TE LO RESOLVEMOS", pageWidth / 2, 30, { align: "center" });
     doc.text("FALTA DIRECCION", pageWidth / 2, 35, { align: "center" });
@@ -86,13 +78,13 @@ const DetalleMensajeria = () => {
     doc.setFont("helvetica", "normal");
     doc.text(`N° de Orden: ${order._id || "No disponible"}`, 10, currentY);
     currentY += lineSpacing;
-    doc.text(`Fecha: ${new Date(order.fechaHoraRecogida).toLocaleDateString()}`, 10, currentY);
+    doc.text(`Fecha: ${new Date(order.createdAt).toLocaleDateString()}`, 10, currentY);
     currentY += lineSpacing;
     doc.text(`Cliente: ${order.nombreCliente?.name || "No disponible"}`, 10, currentY);
     currentY += lineSpacing;
     doc.text(`Repartidor: ${order.nombreRepartidor?.name || "No asignado"}`, 10, currentY);
     currentY += lineSpacing;
-    doc.text(`Peso Estimado: ${order.pesoEstimado} kg`, 10, currentY);
+    doc.text(`Categoria Producto : ${order.categoriaProducto}`, 10, currentY);
     currentY += lineSpacing;
     doc.text(`Dirección de Recogida: ${order.direccionRecogida}`, 10, currentY);
     currentY += lineSpacing;
@@ -124,7 +116,8 @@ const DetalleMensajeria = () => {
   
     // Rellenar tabla
     doc.setFont("helvetica", "normal");
-    doc.text("Servicio de mensajería", 15, tableY + 17);
+    doc.text("Servicio de domicilio", 15, tableY + 17);
+    doc.text(`${order.descripcionProducto}`, 15, tableY + 27);
     doc.text(`$${order.precio}`, 125, tableY + 17);
   
     // Total
@@ -143,7 +136,7 @@ const DetalleMensajeria = () => {
     );
   
     // Guardar el archivo
-    doc.save(`detalle_mensajeria_${order._id || "orden"}.pdf`);
+    doc.save(`detalle_domicilio_${orderId}.pdf`);
   };
   
   
@@ -158,9 +151,9 @@ const DetalleMensajeria = () => {
       ) : order ? (
         <div>
           <div className="flex justify-between items-center border-b pb-3">
-            <h2 className="text-xl font-bold">{order.tipoDePaquete}</h2>
+            <h2 className="text-xl font-bold">{order.categoriaProducto}</h2>
             <span className="text-sm text-gray-500">
-              {new Date(order.fechaHoraRecogida).toLocaleDateString()}
+              {new Date(order.createdAt).toLocaleDateString()}
             </span>
           </div>
 
@@ -219,8 +212,8 @@ const DetalleMensajeria = () => {
               <span>{order.nombreRepartidor?.name || "No asignado"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700">Peso Estimado:</span>
-              <span>{order.pesoEstimado} kg</span>
+              <span className="text-gray-700">Opcion de Pago:</span>
+              <span>{order.opcionPago}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-700">Dirección de Recogida:</span>
@@ -254,5 +247,5 @@ const DetalleMensajeria = () => {
   );
 };
 
-export default DetalleMensajeria;
 
+export default DetalleDomicilio

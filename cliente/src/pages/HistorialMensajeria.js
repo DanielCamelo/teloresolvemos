@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SummaryApi from '../common';
 import Context from '../context';
 
@@ -25,10 +25,12 @@ const HistorialMensajeria = () => {
 
       const data = await response.json();
 
+      
       if (data.success) {
         setMensajeriaList(data.data);
       } else {
         setError(data.message);
+        
       }
     } catch (err) {
       toast.error("Error al obtener el historial de órdenes.");
@@ -49,7 +51,13 @@ const HistorialMensajeria = () => {
       {loading ? (
         <p>Cargando...</p>
       ) : error ? (
-        <p className="text-red-500">{error}</p>
+        <div className="text-red-500 bg-white text-center p-4">
+        <p >{error}</p>
+        <Link to="/login" className="text-white mt-4 inline-block rounded-md bg-blue-500 hover:bg-blue-600 px-4 py-2">
+    Iniciar sesión
+</Link>
+
+        </div>
       ) : (
         <div>
           {mensajeriaList.length === 0 ? (

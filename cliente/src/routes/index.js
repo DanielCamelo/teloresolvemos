@@ -27,6 +27,9 @@ import OrdenesEnProceso from '../pages/OrdenesEnProceso';
 import OrdenesEntregadas from '../pages/OrdenesEntregadas';
 import OrdenesCanceladas from '../pages/OrdenesCanceladas';
 import PerfilCliente from '../pages/PerfilCliente';
+import HistorialDomicilio from '../pages/HistorialDomicilio';
+import DetalleDomicilio from '../pages/DetalleDomicilio';
+import PerfilDomiciliario from '../pages/PerfilDomiciliario';
 
 const routes = createBrowserRouter(
     [
@@ -99,6 +102,14 @@ const routes = createBrowserRouter(
                     element: <DetalleMensajeria /> // El componente que se muestra cuando se accede a esta ruta
                 },
                 {
+                    path: "historial-domicilios",
+                    element: <HistorialDomicilio />
+                },
+                {
+                    path: "/detalle-domicilio/:orderId", // Ruta dinámica para el detalle
+                    element: <DetalleDomicilio /> // El componente que se muestra cuando se accede a esta ruta
+                },
+                {
                     path: "perfil-administrador",
                     element: <PerfilAdministrador />
                 },
@@ -137,6 +148,10 @@ const routes = createBrowserRouter(
                 {
                     path: "perfilCliente",
                     element: <PerfilCliente />
+                },
+                {
+                    path: "perfil-domiciliario",
+                    element: <PerfilDomiciliario />
                 }
             ]
                 

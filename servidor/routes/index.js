@@ -27,6 +27,12 @@ const getDomiciliarios = require('../controller/user/getDomiciliarios');
 const getClientesByIds = require('../controller/user/getUserById');
 const getAllMensajeriaOrder = require('../controller/servicios/getAllMensajeriaOrder ');
 const updateUserDetailsController = require('../controller/user/updateUserDatail');
+const registrarDomicilio = require('../controller/servicios/registrarDomicilio');
+const getAllDomicilioByUser = require('../controller/servicios/getAllDomicilioByUser');
+const getDomicilioByUserIdAndOrderId = require('../controller/servicios/getDomicilioByUserIdAndOrderId');
+const getAllDomiciliOrder = require('../controller/servicios/getAllDomicilioOrder');
+const getOrdenesPorRepartidor = require('../controller/Perfiles/ordenesRepartidor');
+const registrarTransporteParticular = require('../controller/serviciosTransporte.js/registrarTransporteParticular');
 
 
 //panel usuario en administrador
@@ -35,6 +41,10 @@ router.post("/update-user",authToken,updateUser);
 router.post("/delete-user",authToken,deleteUser);
 router.post('/get-clientes', getClientesByIds);
 router.post("/actualizarUsuario",authToken,updateUserDetailsController);
+
+
+//panel del usuario en domiciliario
+router.get("/allOrdenesRepatidor",authToken,getOrdenesPorRepartidor);
 
 
 
@@ -58,6 +68,16 @@ router.get('/allDomiciliarios', getDomiciliarios);
 
 
 //servicios
+
+//domilicios
+router.post('/addDomicilio', authToken,registrarDomicilio);
+router.get("/getAllDomicilioByUser",authToken,getAllDomicilioByUser);
+router.get("/getDomicilioByUserIdAndOrderId/:orderId",authToken,getDomicilioByUserIdAndOrderId);
+router.get('/allOrdenesDomicilio', getAllDomiciliOrder);
+
+//transporte particular
+router.post('/addTransporteParticular', authToken,registrarTransporteParticular);
+
 //mensajeria
 router.post('/addMensaje', authToken,registrarMensajeria);
 router.get("/getAllMensajeriaByUser",authToken,getAllMensajeriaByUser);
