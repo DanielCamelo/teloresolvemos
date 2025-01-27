@@ -1,68 +1,138 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
+import axios from 'axios';
+import SummaryApi from "../common";
 import { toast } from 'react-toastify';
+
 
 const TransporteSalud = () => {
     const [formData, setFormData] = useState({
-        tipoServicio: 'transporte particular', // Tipo fijo ya que siempre es transporte particular
+        tipoDeVehiculo: '',
+        NumeroPasajeros: '',
         direccionRecogida: '',
-        direccionDestino: '',
-        descripcionAdicional: '',
-        fechaHoraRecogida: ''
+        direccionEntrega: '',
+        opcionDeViaje: '',
+        fechaHoraRecogida: '',
+        precio: null
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+        const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
+        const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Lógica para enviar datos al servidor
-        toast.success("Reserva de transporte de salud registrada con éxito!");
-    };
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData({ ...formData, [name]: value });
+    
+        };
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+                
+            try {
+        
+                const response = await fetch(SummaryApi.addTransporteSalud.url, {
+                    method: SummaryApi.addTransporteSalud.method,
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        ...formData, 
+                        distancia: distancia,
+                        precio: precio // Incluye el precio calculado
+                    }) 
+                });
+        
+                const data = await response.json();
+                if (data.success) {
+                    toast.success(data.message);
+                } else if (data.error) {
+                    toast.error(data.message);
+                }
+            } catch (err) {
+                toast.error("Error al registrar la orden de transporte de salud");
+            }
+        };
+
 
     return (
         <section className="flex items-center justify-center min-h-screen bg-cover bg-center">
             <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.85' }}>
-                <h2 className="text-center font-bold text-xl mb-6">Reserva de Transporte para Salud</h2>
+                <h2 className="text-center font-bold text-xl mb-6">Reserva de Transporte de Salud</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className='grid mb-4'>
-                        <label className="text-gray-600">Dirección de Recogida:</label>
-                        <input
-                            type="text"
-                            name="direccionRecogida"
-                            value={formData.direccionRecogida}
+                        <label className="text-gray-600">Tipo de Vehículo:</label>
+                        <select
+                            name="tipoDeVehiculo"
+                            value={formData.tipoDeVehiculo}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                            placeholder="Ingrese dirección de recogida"
-                        />
+                        >
+                            <option value="">Seleccione un tipo de vehículo</option>
+                            <option value="carro">Carro</option>
+                            <option value="moto">Moto</option>
+                            <option value="van">Van</option>
+                        </select>
                     </div>
 
                     <div className='grid mb-4'>
-                        <label className="text-gray-600">Dirección de Destino (hospital, clínica):</label>
-                        <input
-                            type="text"
-                            name="direccionDestino"
-                            value={formData.direccionDestino}
+                        <label className="text-gray-600">Número de Pasajeros:</label>
+                        <select
+                            name="NumeroPasajeros"
+                            value={formData.NumeroPasajeros}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                            placeholder="Ingrese dirección de destino"
-                        />
+                        >
+                            <option value="">Seleccione el número de pasajeros</option>
+                            {[...Array(6).keys()].map(i => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className='grid grid-cols-2 gap-4'>
+                        <div>
+                            <label className="text-gray-600">Dirección de Recogida:</label>
+                            <input
+                                type="text"
+                                name="direccionRecogida"
+                                value={formData.direccionRecogida}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Calle 123"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-gray-600">Dirección de clinica:</label>
+                            <input
+                                type="text"
+                                name="direccionEntrega"
+                                value={formData.direccionEntrega}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Avenida 456"
+                            />
+                        </div>
                     </div>
 
                     <div className='grid mb-4'>
-                        <label className="text-gray-600">Descripción Adicional:</label>
-                        <textarea
-                            name="descripcionAdicional"
-                            value={formData.descripcionAdicional}
+                        <label className="text-gray-600">Opción de Viaje:</label>
+                        <select
+                            name="opcionDeViaje"
+                            value={formData.opcionDeViaje}
                             onChange={handleChange}
-                            rows="3"
+                            required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                            placeholder="Detalles adicionales"
-                        ></textarea>
+                        >
+                            <option value="">Seleccione una opción de viaje</option>
+                            <option value="solo_ida">Solo Ida</option>
+                            <option value="ida_y_vuelta">Ida y Vuelta</option>
+                        </select>
                     </div>
 
                     <div className='grid mb-4'>
@@ -76,16 +146,21 @@ const TransporteSalud = () => {
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                         />
                     </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
-                    >
-                        Registrar Reserva
-                    </button>
-                </form>
-            </div>
-        </section>
+                           <div className="mb-4 text-center">
+                              <button
+                                   type="submit"
+                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
+                                     >
+                                      Registrar Orden
+                                     </button>
+                                     </div>
+                                     </form>
+                                        
+                                     <Link to="/historial-TransporteSalud" className="text-blue-500 mt-4">
+                                    Historial de pedidos de transporte salud
+                                     </Link>
+  </div>
+                            </section>
     );
 };
 

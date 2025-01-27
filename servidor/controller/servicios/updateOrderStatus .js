@@ -1,5 +1,9 @@
 const Mensajeria = require('../../models/mensajeriaModel');
 const Domicilio = require('../../models/domiciliosModel');
+const TransporteParticular = require('../../models/transporteParticulaModel');
+const TransporteSalud = require('../../models/transporteSaludModel');
+const ComprasIntermunicipales = require('../../models/comprasIntermunicipalesModel');
+const Diligencias = require('../../models/diligenciasModel');
 
 // Controlador para cambiar el estado de una orden
 const updateOrderStatus = async (req, res) => {
@@ -22,6 +26,38 @@ const updateOrderStatus = async (req, res) => {
     // Si no se encuentra en Mensajeria, intentar con Domicilio
     if (!updatedOrder) {
       updatedOrder = await Domicilio.findByIdAndUpdate(
+        orderId,
+        { estado: nuevoEstado },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await TransporteParticular.findByIdAndUpdate(
+        orderId,
+        { estado: nuevoEstado },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await TransporteSalud.findByIdAndUpdate(
+        orderId,
+        { estado: nuevoEstado },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await ComprasIntermunicipales.findByIdAndUpdate(
+        orderId,
+        { estado: nuevoEstado },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await Diligencias.findByIdAndUpdate(
         orderId,
         { estado: nuevoEstado },
         { new: true } // Devuelve el documento actualizado

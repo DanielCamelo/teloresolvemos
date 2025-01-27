@@ -1,4 +1,7 @@
 const express = require('express');
+const axios = require('axios');
+require('dotenv').config();
+
 //inicializar router
 const router = express.Router();
 const userSignUpController = require('../controller/user/userSignUp');
@@ -32,7 +35,27 @@ const getAllDomicilioByUser = require('../controller/servicios/getAllDomicilioBy
 const getDomicilioByUserIdAndOrderId = require('../controller/servicios/getDomicilioByUserIdAndOrderId');
 const getAllDomiciliOrder = require('../controller/servicios/getAllDomicilioOrder');
 const getOrdenesPorRepartidor = require('../controller/Perfiles/ordenesRepartidor');
-const registrarTransporteParticular = require('../controller/serviciosTransporte.js/registrarTransporteParticular');
+const registrarTransporteParticular = require('../controller/serviciosTransporte/registrarTransporteParticular');
+const getAllTransporteParticularByUser = require('../controller/serviciosTransporte/getAllTransporteParticularByUser');
+const getTransporteParticularByUserIdAndOrderId = require('../controller/serviciosTransporte/getTransporteParticularByUserIdAndOrderId');
+const getAllTransporteParticularOrder = require('../controller/serviciosTransporte/getAllTransporteParticularOrder');
+const registrarTransporteSalud = require('../controller/serviciosTransporte/registrarTransporteSalud');
+const getAllTransporteSaludByUser = require('../controller/serviciosTransporte/getAllTransporteSaludByUser');
+const getTransporteSaludByUserIdAndOrderId = require('../controller/serviciosTransporte/getTransporteSaludByUserIdAndOrderId');
+const getAllTransporteSaludOrder = require('../controller/serviciosTransporte/getAllTransporteSaludOrder');
+const registrarComprasIntermunicipales = require('../controller/servicios/registrarcomprasIntermunicipales');
+const getAllComprasIntermunicipalesByUser = require('../controller/servicios/getAllcomprasIntermunicipalesByUser');
+const getComprasIntermunicipalesByUserIdAndOrderId = require('../controller/servicios/getcomprasIntermunicipalesByUserIdAndOrderId');
+const getAllComprasIntermunicipalesOrder = require('../controller/servicios/getAllcomprasIntermunicipalesOrder');
+const registrarDiligencias = require('../controller/servicios/registrarDiligencias');
+const getAllDiligenciasByUser = require('../controller/servicios/getAllDiligenciasByUser');
+const getDiligenciasByUserIdAndOrderId = require('../controller/servicios/getDiligenciasByUserIdAndOrderId');
+const getAllDiligenciasOrder = require('../controller/servicios/getAllDiligenciasOrder');
+const assignChoferToOrder = require('../controller/serviciosTransporte/assignChoferToOrder');
+const getConductores = require('../controller/user/getConductor');
+const actualizarPrecio = require('../controller/servicios/actualizarPrecio');
+
+const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 
 //panel usuario en administrador
@@ -64,6 +87,7 @@ router.post('/registrarRepartidor', authToken,registrarRepartidor);
 router.post('/registrarConductor', authToken,registrarConductor);
 //obtener domiciliarios
 router.get('/allDomiciliarios', getDomiciliarios);
+router.get('/allConductores', getConductores);
 
 
 
@@ -77,6 +101,28 @@ router.get('/allOrdenesDomicilio', getAllDomiciliOrder);
 
 //transporte particular
 router.post('/addTransporteParticular', authToken,registrarTransporteParticular);
+router.get("/getAllTransporteParticularByUser",authToken,getAllTransporteParticularByUser);
+router.get("/getTransporteParticularByUserIdAndOrderId/:orderId",authToken,getTransporteParticularByUserIdAndOrderId);
+router.get('/allOrdenesTransporteParticular', getAllTransporteParticularOrder);
+router.post('/asignar-conductor', assignChoferToOrder);
+
+//transporte salud
+router.post('/addTransporteSalud', authToken,registrarTransporteSalud);
+router.get("/getAllTransporteSaludByUser",authToken,getAllTransporteSaludByUser);
+router.get("/getTransporteSaludByUserIdAndOrderId/:orderId",authToken,getTransporteSaludByUserIdAndOrderId);
+router.get('/allOrdenesTransporteSalud', getAllTransporteSaludOrder);
+
+//Compras intermunicipales
+router.post('/addComprasIntermunicipales', authToken,registrarComprasIntermunicipales);
+router.get("/getAllComprasIntermunicipalesByUser",authToken,getAllComprasIntermunicipalesByUser);
+router.get("/getComprasIntermunicipalesByUserIdAndOrderId/:orderId",authToken,getComprasIntermunicipalesByUserIdAndOrderId);
+router.get('/allOrdenesComprasIntermunicipales', getAllComprasIntermunicipalesOrder);
+
+//Diligencias
+router.post('/addDiligencias', authToken,registrarDiligencias);
+router.get("/getAllDiligenciasByUser",authToken,getAllDiligenciasByUser);
+router.get("/getDiligenciasByUserIdAndOrderId/:orderId",authToken,getDiligenciasByUserIdAndOrderId);
+router.get('/allOrdenesDiligencias', getAllDiligenciasOrder);
 
 //mensajeria
 router.post('/addMensaje', authToken,registrarMensajeria);
@@ -85,6 +131,7 @@ router.get("/getMensajeriaByUserIdAndOrderId/:orderId",authToken,getMensajeriaBy
 router.get('/allOrdenesMensajeria', getAllMensajeriaOrder);
 router.post('/asignar-domiciliario', assignDomiciliaryToOrder);
 router.post('/cambiarEstadoMensajeria', updateOrderStatus);
+router.post('/actualizarPrecio', actualizarPrecio);
 
 
 
@@ -92,5 +139,25 @@ router.post('/cambiarEstadoMensajeria', updateOrderStatus);
 router.get("/all-banners",allBanners);
 router.post("/upload-Banner",authToken,UploadBannerController);
 router.post("/delete-Banner", authToken, DeleteBannerController); 
+
+
+
+router.get('/distance', async (req, res) => {
+    const { origins, destinations } = req.query;
+    console.error('Orígenes bien:', apiKey, origins, destinations);
+
+    try {
+        const response = await axios.get('https://maps.googleapis.com/maps/api/distancematrix/json', {
+            params: { units: 'metric', origins, destinations, key: apiKey },
+        });
+
+        res.status(200).json(response.data);
+    } catch (error) {
+        console.error('Error al consultar la API de Google:', error.response?.data || error.message);
+        
+        res.status(500).json({ error: 'No se pudo calcular la distancia' });
+    }
+});
+
 
 module.exports = router;

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 const ChangeUserRole = ({
     name,
-    email,
+    phone,
     role,
     status,
     userId,
@@ -65,7 +65,7 @@ const ChangeUserRole = ({
                 <h1 className='pb-4 text-lg font-medium'>Cambiar el rol y estado del usuario</h1>
 
                 <p>Nombre: {name}</p>
-                <p>Correo: {email}</p>
+                <p>Telefono: {phone}</p>
 
                 <div className='flex items-center justify-between my-4'>
                     <p>Rol:</p>

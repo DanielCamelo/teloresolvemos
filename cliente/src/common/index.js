@@ -49,6 +49,18 @@ const SummaryApi = {
         url : `${backendDomin}/api/addTransporteParticular`,
         method : 'post'
     },
+    addTransporteSalud: {
+        url : `${backendDomin}/api/addTransporteSalud`,
+        method : 'post'
+    },
+    addComprasIntermunicipales : {
+        url : `${backendDomin}/api/addComprasIntermunicipales`,
+        method : 'post'
+    },
+    addDiligencias : {
+        url : `${backendDomin}/api/addDiligencias`,
+        method : 'post'
+    },
     //rutas de banner
     uploadBanner: {
         url: `${backendDomin}/api/upload-Banner`,
@@ -71,10 +83,6 @@ const SummaryApi = {
         url: `${backendDomin}/api/all-user`,
         method: "get",
       },
-        updateUser: {
-            url: `${backendDomin}/api/update-user`,
-            method: "post",
-        },
         registrarRepartidor : {
             url : `${backendDomin}/api/registrarRepartidor`,
             method : 'post'
@@ -91,12 +99,43 @@ const SummaryApi = {
             url : `${backendDomin}/api/getAllDomicilioByUser`,
             method : 'get'
         },
+        getAllTransporteParticularByUser:{
+            url : `${backendDomin}/api/getAllTransporteParticularByUser`,
+            method : 'get'
+        },getAllTransporteSaludByUser:{
+            url : `${backendDomin}/api/getAllTransporteSaludByUser`,
+            method : 'get'
+        },
+        getAllComprasIntermunicipalesByUser:{
+            url : `${backendDomin}/api/getAllComprasIntermunicipalesByUser`,
+            method : 'get'
+        },
+        getAllDiligenciasByUser:{
+            url : `${backendDomin}/api/getAllDiligenciasByUser`,
+            method : 'get'
+        },
         getMensajeriaByUserIdAndOrderId : {
             url : (orderId) => `${backendDomin}/api/getMensajeriaByUserIdAndOrderId/${orderId}`,
             method : 'get'
         },
         getDomicilioByUserIdAndOrderId : {
             url : (orderId) => `${backendDomin}/api/getDomicilioByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getTransporteParticularByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getTransporteParticularByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getTransporteSaludByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getTransporteSaludByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getComprasIntermunicipalesByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getComprasIntermunicipalesByUserIdAndOrderId/${orderId}`,
+            method : 'get'
+        },
+        getDiligenciasByUserIdAndOrderId : {
+            url : (orderId) => `${backendDomin}/api/getDiligenciasByUserIdAndOrderId/${orderId}`,
             method : 'get'
         },
         getClientes: {
@@ -123,22 +162,51 @@ const SummaryApi = {
                 url: `${backendDomin}/api/allOrdenesDomicilio`,
                 method: "get"
             },
+            allOrdenesTransporteParticular: {
+                url: `${backendDomin}/api/allOrdenesTransporteParticular`,
+                method: "get"
+              },
+              allOrdenesTransporteSalud: {
+                url: `${backendDomin}/api/allOrdenesTransporteSalud`,
+                method: "get"
+              },
+              allOrdenesComprasIntermunicipales: {
+                url: `${backendDomin}/api/allOrdenesComprasIntermunicipales`,
+                method: "get"
+              },
+              allOrdenesDiligencias: {
+                url: `${backendDomin}/api/allOrdenesDiligencias`,
+                method: "get"
+              },
             assignDomiciliario: {
                 url: `${backendDomin}/api/asignar-domiciliario`,
+                method: "post"
+            },
+            assignConductor: {
+                url: `${backendDomin}/api/asignar-conductor`,
                 method: "post"
             },
             cambiarEstadoMensajeria: {
                 url: `${backendDomin}/api/cambiarEstadoMensajeria`,
                 method: "post"
             },
+            cambiarPrecio: {
+                url: `${backendDomin}/api/actualizarPrecio`,
+                method: "post"
+            },
             getDomiciliarios:{
                 url: `${backendDomin}/api/allDomiciliarios`,
+                method: "get"
+            },
+            getConductores:{
+                url: `${backendDomin}/api/allConductores`,
                 method: "get"
             },
             allOrdenesRepatidor:{
                 url: `${backendDomin}/api/allOrdenesRepatidor`,
                 method: "get"
             }
+            
             
 }
 

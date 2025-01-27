@@ -1,6 +1,8 @@
 const Usuario = require('../../models/userModel');
 const Mensajeria = require('../../models/mensajeriaModel');
 const Domicilio = require('../../models/domiciliosModel');
+const ComprasIntermunicipales = require('../../models/comprasIntermunicipalesModel');
+const Diligencias = require('../../models/diligenciasModel');
 
 // Controlador para asignar un domiciliario a una orden
 const assignDomiciliaryToOrder = async (req, res) => {
@@ -23,6 +25,22 @@ const assignDomiciliaryToOrder = async (req, res) => {
     // Si no se encuentra la orden en Mensajeria, buscar en Domicilio
     if (!updatedOrder) {
       updatedOrder = await Domicilio.findByIdAndUpdate(
+        orderId,
+        { nombreRepartidor: repartidor._id },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await ComprasIntermunicipales.findByIdAndUpdate(
+        orderId,
+        { nombreRepartidor: repartidor._id },
+        { new: true } // Devuelve el documento actualizado
+      );
+    }
+
+    if (!updatedOrder) {
+      updatedOrder = await Diligencias.findByIdAndUpdate(
         orderId,
         { nombreRepartidor: repartidor._id },
         { new: true } // Devuelve el documento actualizado

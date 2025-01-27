@@ -63,16 +63,36 @@ const Domicilios = () => {
             }
         };
 
-        const calcularDistancia = async (origen, destino) => {
-            const url = `https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${destino.lng},${destino.lat}?overview=false`;
+        const calcularDistancia = async () => {
             try {
-                const response = await axios.get(url);
-                if (response.data.routes.length > 0) {
-                    return response.data.routes[0].distance; // Devuelve la distancia en metros
+                const response = await axios.get('http://localhost:5000/api/distance', {
+                    params: {
+                        origins: formData.direccionRecogida + ", Tuluá, Valle del Cauca, Colombia",
+                        destinations: formData.direccionEntrega +  ", Tuluá, Valle del Cauca, Colombia",
+                    },
+                    withCredentials: true, // Si es necesario para cookies
+                });
+        
+                console.log('Respuesta de la API:', response.data);
+        
+                if (
+                    response.data.rows &&
+                    response.data.rows.length > 0 &&
+                    response.data.rows[0].elements &&
+                    response.data.rows[0].elements.length > 0
+                ) {
+                    const distancia = response.data.rows[0].elements[0].distance.value; // Distancia en metros
+                    const duracion = response.data.rows[0].elements[0].duration.text; // Duración como texto
+                    console.log(`Distancia: ${distancia} metros`);
+                    console.log(`Duración estimada: ${duracion}`);
+                    return distancia;
+                } else {
+                    console.warn('No se encontraron datos de distancia.');
+                    return null;
                 }
-                return null;
+                
             } catch (error) {
-                console.error("Error al calcular la distancia:", error);
+                console.error('Error al calcular la distancia:', error.response?.data || error.message);
                 return null;
             }
         };
@@ -140,6 +160,44 @@ const Domicilios = () => {
                     toast.error("Una o ambas direcciones no son válidas.");
                     return;
                 }
+                const fechaRegistro = new Date();
+                const fechaRegistroFormateada = fechaRegistro.toLocaleString('es-CO', {
+                    weekday: 'long', // Día de la semana
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true, // Formato 12 horas (AM/PM)
+                });
+
+                const mensaje =`
+    *Detalles de la Orden de Domicilio:*
+    
+    ──────────────────────
+    *Categoria del producto:* ${formData.categoriaProducto}
+    *Descripcion de productos:* ${formData.descripcionProducto}
+    ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida}
+    *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
+    ──────────────────────
+    *Distancia Estimada:* ${distancia} km
+    ──────────────────────
+    *Metodo de pago:* ${formData.opcionPago}
+    *Precio sugerido:* $${precio.toLocaleString()}
+    ──────────────────────
+    *Comentarios:* ${formData.comentario}
+            `;
+
+     // URL para WhatsApp (ajustar el número y el mensaje)
+     const telefono = "+573178925603"; // Número de teléfono del destinatario
+     const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+     // Redirigir a WhatsApp para enviar el mensaje
+     window.open(urlWhatsApp, '_blank');
         
                 const response = await fetch(SummaryApi.addDomicilio.url, {
                     method: SummaryApi.addDomicilio.method,
@@ -267,8 +325,7 @@ const Domicilios = () => {
                     
                                         {distancia && precio && (
                                             <div className="mb-4 text-center">
-                                                <p className="text-lg font-semibold">Distancia: {distancia} km</p>
-                                                <p className="text-lg font-semibold">Precio: ${precio.toLocaleString()}</p>
+                                                <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
                                                 <button
                                                     type="submit"
                                                     className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"

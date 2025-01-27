@@ -15,7 +15,7 @@ const diligenciasSchema = new mongoose.Schema({
     type: String,
     required: true,
     },
-    direccioninvolucrados: {
+    direccionInvolucrados: {
     type: String,
     required: true,
     },
@@ -33,7 +33,7 @@ const diligenciasSchema = new mongoose.Schema({
   },
   precio: {
     type: Number,
-    default: 0
+    default: null,
   },
 }, {
   timestamps: true, // Añade campos de createdAt y updatedAt

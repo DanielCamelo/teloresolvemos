@@ -7,16 +7,16 @@ const jwt = require('jsonwebtoken')
 async function userSignInController(req, res){
     try{
 
-        const { email, password } = req.body
+        const { phone, password } = req.body
 
-        if(!email){
-            throw new Error("Por favor, inserte su email")
+        if(!phone){
+            throw new Error("Por favor, inserte su telefono")
         }
         if(!password){
             throw new Error("Por favor, inserte su contraseña")
         }
 
-        const user = await userModel.findOne({email})
+        const user = await userModel.findOne({phone})
 
         if(!user){
             throw new Error("El usuario no esta registrado")
@@ -34,7 +34,7 @@ async function userSignInController(req, res){
        if(checkPassword){
         const tokenData = {
             _id : user._id,
-            email : user.email,
+            phone : user.phone,
         }
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: 60 * 60 * 8 });
 

@@ -7,9 +7,8 @@ async function updateUser(req, res) {
 
         // Validar que el userId proporcionado sea el mismo que el sessionUser (si no es admin)
         if (sessionUser !== userId) {
-            // Si no son iguales, verificar si el usuario tiene permisos de admin para modificar
             const currentUser = await userModel.findById(sessionUser);
-            
+
             if (!currentUser) {
                 return res.status(404).json({
                     message: "Usuario no encontrado.",
@@ -17,7 +16,7 @@ async function updateUser(req, res) {
                     success: false
                 });
             }
-            
+
             if (!currentUser.role.includes('administrador')) {
                 return res.status(403).json({
                     message: "No tienes permisos para actualizar este usuario.",
@@ -31,22 +30,19 @@ async function updateUser(req, res) {
         const payload = {};
 
         if (email) {
-            payload.email = email;  // Solo actualiza el email si se proporciona
+            payload.email = email; // Actualiza el email si se proporciona
         }
 
         if (name) {
-            payload.name = name;  // Solo actualiza el nombre si se proporciona
+            payload.name = name; // Actualiza el nombre si se proporciona
         }
 
         if (status) {
-            payload.status = status; // Solo actualiza el estado si se proporciona
+            payload.status = status; // Actualiza el estado si se proporciona
         }
 
-        // Si se proporciona un nuevo rol, asegurarnos de agregarlo al rol existente
+        // Si se proporciona un nuevo rol, agrega o elimina según corresponda
         if (role) {
-            // Si `role` es un string, lo convertimos a un array
-            const rolesArray = Array.isArray(role) ? role : [role];
-
             const currentUser = await userModel.findById(userId); // Aseguramos que el `userId` tiene roles válidos
             if (!currentUser) {
                 return res.status(404).json({
@@ -56,8 +52,15 @@ async function updateUser(req, res) {
                 });
             }
 
-            // Combinamos los roles existentes con los nuevos, asegurándonos de no duplicar valores
-            payload.role = [...new Set([...rolesArray, ...(currentUser.role || [])])];
+            // Si el rol ya existe, eliminarlo; si no existe, agregarlo
+            const rolesArray = Array.isArray(currentUser.role) ? currentUser.role : [];
+            if (rolesArray.includes(role)) {
+                // Elimina el rol existente
+                payload.role = rolesArray.filter(r => r !== role);
+            } else {
+                // Agrega el rol al array
+                payload.role = [...rolesArray, role];
+            }
         }
 
         // Buscar y actualizar el usuario
@@ -89,4 +92,5 @@ async function updateUser(req, res) {
 }
 
 module.exports = updateUser;
+
 

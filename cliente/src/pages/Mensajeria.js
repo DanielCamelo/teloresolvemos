@@ -18,7 +18,8 @@ const RegistrarMensajeria = () => {
     const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
     const [sugerenciasEntrega, setSugerenciasEntrega] = useState([]);
     const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
-    const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
+    const [precio, setPrecio] = useState(null); // Nuevo estado para el precio}
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -63,19 +64,42 @@ const RegistrarMensajeria = () => {
         }
     };
 
-    const calcularDistancia = async (origen, destino) => {
-        const url = `https://router.project-osrm.org/route/v1/driving/${origen.lng},${origen.lat};${destino.lng},${destino.lat}?overview=false`;
+    const calcularDistancia = async () => {
         try {
-            const response = await axios.get(url);
-            if (response.data.routes.length > 0) {
-                return response.data.routes[0].distance; // Devuelve la distancia en metros
+            const response = await axios.get('http://localhost:5000/api/distance', {
+                params: {
+                    origins: formData.direccionRecogida + ", Tuluá, Valle del Cauca, Colombia",
+                    destinations: formData.direccionEntrega +  ", Tuluá, Valle del Cauca, Colombia",
+                },
+                withCredentials: true, // Si es necesario para cookies
+            });
+    
+            console.log('Respuesta de la API:', response.data);
+    
+            if (
+                response.data.rows &&
+                response.data.rows.length > 0 &&
+                response.data.rows[0].elements &&
+                response.data.rows[0].elements.length > 0
+            ) {
+                const distancia = response.data.rows[0].elements[0].distance.value; // Distancia en metros
+                const duracion = response.data.rows[0].elements[0].duration.text; // Duración como texto
+                console.log(`Distancia: ${distancia} metros`);
+                console.log(`Duración estimada: ${duracion}`);
+                return distancia;
+            } else {
+                console.warn('No se encontraron datos de distancia.');
+                return null;
             }
-            return null;
+            
         } catch (error) {
-            console.error("Error al calcular la distancia:", error);
+            console.error('Error al calcular la distancia:', error.response?.data || error.message);
             return null;
         }
     };
+     
+      
+    
 
     const handleCalcularDistancia = async () => {
         const origen = await validarDireccion(formData.direccionRecogida);
@@ -343,8 +367,7 @@ if (precioCalculado <= 2000) {
 
                     {distancia && precio && (
                         <div className="mb-4 text-center">
-                            <p className="text-lg font-semibold">Distancia: {distancia} km</p>
-                            <p className="text-lg font-semibold">Precio: ${precio.toLocaleString()}</p>
+                            <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
                             <button
                                 type="submit"
                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"

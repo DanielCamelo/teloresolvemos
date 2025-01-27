@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
+import axios from 'axios';
+import SummaryApi from "../common";
 import { toast } from 'react-toastify';
 
 const Diligencias = () => {
     const [formData, setFormData] = useState({
         descripcionDiligencia: '',
-        direccionesInvolucradas: '',
-        documentacionNecesaria: '',
-        fechaHora: ''
+        direccionInvolucrados: '',
+        documentosNecesarios: '',
+        fechaHoraRecogida: ''
     });
 
     const handleChange = (e) => {
@@ -16,8 +19,62 @@ const Diligencias = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí deberías integrar la lógica para enviar esta información al servidor
-        toast.success("Solicitud de diligencia registrada con éxito!");
+    
+        try {
+              
+            // Formatear la fecha y hora de recogida de manera más legible
+            const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
+                weekday: 'long', // Día de la semana (opcional)
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true, // Usar formato de 12 horas (AM/PM)
+            });
+    
+            // Crear el mensaje para WhatsApp con un formato más claro
+            const mensaje = `
+    *Detalles de la Orden de diligencia:*
+    
+    ──────────────────────
+    *Descripcion diligencia:* ${formData.descripcionDiligencia}
+    *Documentos Necesarios:* ${formData.documentosNecesarios}
+    ──────────────────────
+    *Direcciónes:*
+    *Direcciones involucradas:* ${formData.direccionInvolucrados}
+    ──────────────────────
+    *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
+            `;
+    
+            // URL para WhatsApp (ajustar el número y el mensaje)
+            const telefono = "+573178925603"; // Número de teléfono del destinatario
+            const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    
+            // Redirigir a WhatsApp para enviar el mensaje
+            window.open(urlWhatsApp, '_blank');
+    
+            // Registrar la orden en la base de datos
+            const response = await fetch(SummaryApi.addDiligencias.url, {
+                method: SummaryApi.addDiligencias.method,
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    ...formData, 
+                }) 
+            });
+    
+            const data = await response.json();
+            if (data.success) {
+                toast.success(data.message);
+            } else if (data.error) {
+                toast.error(data.message);
+            }
+        } catch (err) {
+            toast.error("Error al registrar la orden de diligencia.");
+        }
     };
 
     return (
@@ -48,8 +105,8 @@ const Diligencias = () => {
                         <label className="text-gray-600">Direcciones Involucradas:</label>
                         <input
                             type="text"
-                            name="direccionesInvolucradas"
-                            value={formData.direccionesInvolucradas}
+                            name="direccionInvolucrados"
+                            value={formData.direccionInvolucrados}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
@@ -61,8 +118,8 @@ const Diligencias = () => {
                         <label className="text-gray-600">Documentación Necesaria:</label>
                         <input
                             type="text"
-                            name="documentacionNecesaria"
-                            value={formData.documentacionNecesaria}
+                            name="documentosNecesarios"
+                            value={formData.documentosNecesarios}
                             onChange={handleChange}
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                             placeholder="Especificar documentación si es necesaria"
@@ -73,8 +130,8 @@ const Diligencias = () => {
                         <label className="text-gray-600">Fecha y Hora para Realizar la Diligencia:</label>
                         <input
                             type="datetime-local"
-                            name="fechaHora"
-                            value={formData.fechaHora}
+                            name="fechaHoraRecogida"
+                            value={formData.fechaHoraRecogida}
                             onChange={handleChange}
                             required
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
@@ -88,6 +145,11 @@ const Diligencias = () => {
                         Enviar Solicitud
                     </button>
                 </form>
+
+                <Link to="/historial-diligencias" className="text-blue-500 mt-4">
+                                                        Historial de pedidos de diligencias
+                                                    </Link>
+
             </div>
         </section>
     );

@@ -8,7 +8,7 @@ import Context from '../context';
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
-    email: '',
+    phone: '',
     password: '',
   });
   const navigate = useNavigate();
@@ -71,13 +71,13 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <div className='grid mb-4'>
-            <label className="text-gray-600">Correo :</label>
+            <label className="text-gray-600">Telefono :</label>
             <div className='bg-gray-100 p-3 rounded-lg'>
               <input
-                type='email'
-                placeholder='Enter your email'
-                name='email'
-                value={data.email}
+                type='phone'
+                placeholder='Ingresa tu número de teléfono'
+                name='phone'
+                value={data.phone}
                 onChange={handleChange}
                 required
                 className='w-full bg-transparent outline-none'
@@ -89,7 +89,7 @@ const Login = () => {
             <div className='bg-gray-100 p-3 rounded-lg flex items-center'>
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder='Enter your password'
+                placeholder='Ingresa tu contraseña'
                 name='password'
                 value={data.password}
                 onChange={handleChange}

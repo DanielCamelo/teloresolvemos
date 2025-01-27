@@ -10,7 +10,7 @@ function Home() {
     { nombre: 'Domicilios', icono: '🍔', ruta: '/domicilios' },
     { nombre: 'Transporte Particular', icono: '🚗', ruta: '/transporte-particular' },
     { nombre: 'Transporte Salud', icono: '🚑', ruta: '/transporte-salud' },
-    { nombre: 'Traslado Aeropuertos', icono: '✈️', ruta: '/traslado-aeropuertos' },
+    { nombre: 'Compras Intermunicipales', icono: '🛍', ruta: '/compras-intermunicipales' },
     { nombre: 'Diligencias', icono: '📝', ruta: '/diligencias' },
   ];
 

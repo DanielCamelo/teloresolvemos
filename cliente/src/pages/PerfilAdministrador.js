@@ -8,7 +8,6 @@ const PerfilAdministrador = () => {
     { nombre: 'Ver Usuarios', descripcion: 'Gestiona y supervisa los usuarios registrados.', ruta: '/ver-usuarios', icono: '👥' },
     { nombre: 'Ver Banners', descripcion: 'Administra los banners de la aplicación.', ruta: '/ver-banners', icono: '🖼️' },
     { nombre: 'Ver Órdenes de Servicios', descripcion: 'Consulta y gestiona las órdenes realizadas.', ruta: '/ver-ordenes', icono: '📋' },
-    { nombre: 'Ver Estadísticas', descripcion: 'Consulta las estadísticas de rendimiento.', ruta: '/ver-estadisticas', icono: '📊' }
   ];
 
   const handleOpcionClick = (ruta) => {

@@ -146,25 +146,20 @@ const TransporteParticular = () => {
                             className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                         />
                     </div>
-
-                   
+                           <div className="mb-4 text-center">
+                              <button
+                                   type="submit"
+                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
+                                     >
+                                      Registrar Orden
+                                     </button>
+                                     </div>
+                                     </form>
                                         
-                          
-                                                                <div className="mb-4 text-center">
-                                                                    <button
-                                                                        type="submit"
-                                                                        className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-                                                                    >
-                                                                        Registrar Orden
-                                                                    </button>
-                                                                </div>
-                                                        </form>
-                                        
-                                                        <Link to="/historial-domicilios" className="text-blue-500 mt-4">
-                                                            Historial de pedidos de domicilios
-                                                        </Link>
-                                                        
-                                                    </div>
+                                     <Link to="/historial-TransporteParticular" className="text-blue-500 mt-4">
+                                    Historial de pedidos de transporte particular
+                                     </Link>
+  </div>
                             </section>
     );
 };

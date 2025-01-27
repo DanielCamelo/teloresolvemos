@@ -6,7 +6,7 @@ import SummaryApi from "../common";
 const RegistrarChofer = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
-    email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
@@ -32,7 +32,7 @@ const RegistrarChofer = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: data.email,
+        phone: data.phone,
         password: data.password,
         role: 'repartidor', // Definir el rol como "repartidor"
       })
@@ -54,13 +54,13 @@ const RegistrarChofer = () => {
         <h2 className="text-center font-bold text-xl mb-6">Registrarse como Transportador</h2>
         <form onSubmit={handleSubmit}>
           <div className='grid mb-4'>
-            <label className="text-gray-600">Correo Electrónico :</label>
+            <label className="text-gray-600">Telefono:</label>
             <div className='bg-gray-100 p-3 rounded-lg'>
               <input
-                type='email'
-                placeholder='Ingresa tu correo'
-                name='email'
-                value={data.email}
+                type='phone'
+                placeholder='Ingresa tu número de teléfono'
+                name='phone'
+                value={data.phone}
                 onChange={handleChange}
                 required
                 className='w-full bg-transparent outline-none'

@@ -5,9 +5,9 @@ const registrarConductor = async (req, res) => {
     try {
         // Obtener el id del usuario desde el token
         const currentUserId = req.userId; // Asegúrate de que el id del usuario esté incluido en la solicitud
-        const { email, password } = req.body;
+        const { phone, password } = req.body;
         // Buscar al usuario en la base de datos por correo electrónico
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ phone });
         if (!user) {
             return res.status(404).json({
                 message: 'Usuario no encontrado',
@@ -24,15 +24,11 @@ const registrarConductor = async (req, res) => {
                 success: false
             });
         }
-        // Si el usuario ya tiene el rol de "conductor", agregamos el rol "repartidor"
-        if (user.role.includes('repartidor')) {
-            if (!user.role.includes('conductor')) {
-                user.role.push('conductor');
-            }
-        } else {
-            // Si el usuario no tiene el rol de "conductor", se asigna el rol "repartidor"
+        // Verificar y agregar el rol "conductor" si no está presente
+        if (!user.role.includes('conductor')) {
             user.role.push('conductor');
         }
+
         // Guardar los cambios en la base de datos
         const updatedUser = await user.save();
         return res.json({

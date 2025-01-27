@@ -10,7 +10,7 @@ const VerUsuarios = () => {
     const [busqueda, setBusqueda] = useState('');
     const [openEditarRol, setOpenEditarRol] = useState(false);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState({
-        email: "",
+        phone: "",
         name: "",
         role: [],
         status: "",
@@ -71,7 +71,7 @@ const VerUsuarios = () => {
         const usuariosFiltrados = usuarios.filter(
             (usuario) =>
                 usuario.name.toLowerCase().includes(term.toLowerCase()) ||
-                usuario.email.toLowerCase().includes(term.toLowerCase())
+            usuario.phone.toString().includes(term) // Convertir el número a cadena
         );
         setUsuariosFiltrados(usuariosFiltrados);
     };
@@ -100,7 +100,7 @@ const VerUsuarios = () => {
                     type="text"
                     value={busqueda}
                     onChange={handleBusquedaChange}
-                    placeholder="Buscar por nombre o correo..."
+                    placeholder="Buscar por nombre o telefono..."
                     className="p-2 border border-gray-300 rounded-md w-full md:w-1/3"
                 />
             </div>
@@ -137,7 +137,7 @@ const VerUsuarios = () => {
                                 </button>
                             </div>
                         </div>
-                        <p className="text-gray-600 mt-2">Correo: {usuario.email}</p>
+                        <p className="text-gray-600 mt-2">Telefono: {usuario.phone}</p>
 
                         {/* Mostrar roles en pares */}
                         <div className="text-gray-600">
@@ -160,7 +160,7 @@ const VerUsuarios = () => {
                 <ChangeUserRole
                     onClose={() => setOpenEditarRol(false)}
                     name={usuarioSeleccionado.name}
-                    email={usuarioSeleccionado.email}
+                    phone={usuarioSeleccionado.phone}
                     role={usuarioSeleccionado.role}
                     userId={usuarioSeleccionado._id}
                     status={usuarioSeleccionado.status}

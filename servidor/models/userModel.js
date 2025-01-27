@@ -26,11 +26,6 @@ const userSchema = new mongoose.Schema({
         type:String,
         enum: ['disponible', 'ocupado'],
         default: 'disponible'
-    },
-    codes:{
-        type:String,
-        unique: true,
-        default: null
     }
 }, {
     timestamps: true // Añade campos de createdAt y updatedAt automáticamente

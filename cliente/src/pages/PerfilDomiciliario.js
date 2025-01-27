@@ -4,41 +4,134 @@ import SummaryApi from '../common';
 import Context from '../context';
 
 const PerfilDomiciliario = () => {
-  const [ordenes, setOrdenes] = useState([]);
+  const [ordenesMensajeria, setOrdenesMensajeria] = useState([]);
+    const [ordenesDomicilio, setOrdenesDomicilio] = useState([]);
+    const [ordenesComprasIntermunicipales, setOrdenesComprasIntermunicipales] = useState([]);
+    const [ordenesDiligencias, setOrdenesDiligencias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { fetchUserDetails } = useContext(Context);
 
-  useEffect(() => {
-    const fetchOrdenes = async () => {
-      try {
-        // Realiza la solicitud para obtener las órdenes del repartidor
-        const response = await fetch(SummaryApi.getAllMensajeriaByUser.url, {
-          method: SummaryApi.getAllMensajeriaByUser.method,
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  const fetchOrdenesMensajeria = async () => {
+    try {
+      // Realiza la solicitud para obtener las órdenes del repartidor
+      const response = await fetch(SummaryApi.getAllMensajeriaByUser.url, {
+        method: SummaryApi.getAllMensajeriaByUser.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.success) {
-          // Filtrar solo las órdenes con estado "en proceso"
-          const ordenesEnProceso = data.data.filter((orden) => orden.estado === 'en proceso');
-          setOrdenes(ordenesEnProceso);
-        } else {
-          setError(data.message || 'No se pudieron cargar las órdenes.');
-        }
-      } catch (err) {
-        toast.error('Error al obtener las órdenes.');
-        setError('Error al obtener las órdenes.');
-      } finally {
-        setLoading(false);
+      if (data.success) {
+        // Filtrar solo las órdenes con estado "en proceso"
+        const ordenesEnProceso = data.data.filter((orden) => orden.estado === 'en proceso');
+        setOrdenesMensajeria(ordenesEnProceso);
+      } else {
+        setError(data.message || 'No se pudieron cargar las órdenes.');
       }
-    };
+    } catch (err) {
+      toast.error('Error al obtener las órdenes.');
+      setError('Error al obtener las órdenes.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchOrdenes();
+  const fetchOrdenesDomicilio = async () => {
+    try {
+      // Realiza la solicitud para obtener las órdenes del repartidor
+      const response = await fetch(SummaryApi.getAllDomicilioByUser.url, {
+        method: SummaryApi.getAllDomicilioByUser.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Filtrar solo las órdenes con estado "en proceso"
+        const ordenesEnProceso = data.data.filter((orden) => orden.estado === 'en proceso');
+        setOrdenesDomicilio(ordenesEnProceso);
+      } else {
+        setError(data.message || 'No se pudieron cargar las órdenes.');
+      }
+    } catch (err) {
+      toast.error('Error al obtener las órdenes.');
+      setError('Error al obtener las órdenes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchOrdenesComprasIntermunicipales = async () => {
+    try {
+      // Realiza la solicitud para obtener las órdenes del repartidor
+      const response = await fetch(SummaryApi.getAllComprasIntermunicipalesByUser.url, {
+        method: SummaryApi.getAllComprasIntermunicipalesByUser.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Filtrar solo las órdenes con estado "en proceso"
+        const ordenesEnProceso = data.data.filter((orden) => orden.estado === 'en proceso');
+        setOrdenesComprasIntermunicipales(ordenesEnProceso);
+      } else {
+        setError(data.message || 'No se pudieron cargar las órdenes.');
+      }
+    } catch (err) {
+      toast.error('Error al obtener las órdenes.');
+      setError('Error al obtener las órdenes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchOrdenesDiligencias = async () => {
+    try {
+      // Realiza la solicitud para obtener las órdenes del repartidor
+      const response = await fetch(SummaryApi.getAllDiligenciasByUser.url, {
+        method: SummaryApi.getAllDiligenciasByUser.method,
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Filtrar solo las órdenes con estado "en proceso"
+        const ordenesEnProceso = data.data.filter((orden) => orden.estado === 'en proceso');
+        setOrdenesDiligencias(ordenesEnProceso);
+      } else {
+        setError(data.message || 'No se pudieron cargar las órdenes.');
+      }
+    } catch (err) {
+      toast.error('Error al obtener las órdenes.');
+      setError('Error al obtener las órdenes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+  useEffect(() => {
+    
+    fetchOrdenesMensajeria();
+    fetchOrdenesDomicilio();
+    fetchOrdenesComprasIntermunicipales();
+    fetchOrdenesDiligencias();
   }, []);
 
   if (loading) {
@@ -65,10 +158,10 @@ const PerfilDomiciliario = () => {
       <h1 className="text-2xl font-bold mb-4">Órdenes asignadas</h1>
       <h2 className="text-lg font-semibold">Órdenes de mensajeria</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {ordenes.length === 0 ? (
+        {ordenesMensajeria.length === 0 ? (
           <p>No tienes órdenes asignadas.</p>
         ) : (
-          ordenes.map((orden) => (
+          ordenesMensajeria.map((orden) => (
             <div
               key={orden._id}
               className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
@@ -88,7 +181,96 @@ const PerfilDomiciliario = () => {
           ))
         )}
       </div>
+
+      <h2 className="text-lg font-semibold">Órdenes de domicilio</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {ordenesDomicilio.length === 0 ? (
+          <p>No tienes órdenes asignadas.</p>
+        ) : (
+          ordenesDomicilio.map((orden) => (
+            <div
+              key={orden._id}
+              className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-lg font-semibold">Cliente: {orden.nombreCliente?.name || 'No disponible'}</h2>
+              <h2 className="text-lg font-semibold">Numero: {orden.nombreCliente?.phone || 'No disponible'}</h2>
+              <p className="text-sm">Dirección de recogida: {orden.direccionRecogida}</p>
+              <p className="text-sm">Dirección de entrega: {orden.direccionEntrega}</p>
+              <p className="text-sm">Precio: ${orden.precio}</p>
+              <a
+                href={`/detalle-domicilio/${orden._id}`}
+                className="mt-4 inline-block text-blue-500 hover:underline"
+              >
+                Ver detalles
+              </a>
+            </div>
+          ))
+        )}
+      </div>
+
+      <h2 className="text-lg font-semibold">Órdenes de compras intermunicipales</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {ordenesComprasIntermunicipales.length === 0 ? (
+          <p>No tienes órdenes asignadas.</p>
+        ) : (
+          ordenesComprasIntermunicipales.map((orden) => (
+            <div
+              key={orden._id}
+              className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-lg font-semibold">Cliente: {orden.nombreCliente?.name || 'No disponible'}</h2>
+              <h2 className="text-lg font-semibold">Numero: {orden.nombreCliente?.phone || 'No disponible'}</h2>
+              <p className="text-sm">Ubicacion de compra: {orden.ubicacionCompra}</p>
+              <p className="text-sm">Dirección de entrega: {orden.direccionEntrega}</p>
+              <p className="text-sm">Presupuesto Maximo: ${orden.presupuestoMaximo}</p>
+              <a
+                href={`/detalle-ComprasIntermunicipales/${orden._id}`}
+                className="mt-4 inline-block text-blue-500 hover:underline"
+              >
+                Ver detalles
+              </a>
+            </div>
+          ))
+        )}
+      </div>
+
+      <h2 className="text-lg font-semibold">Órdenes de diligencias</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {ordenesDiligencias.length === 0 ? (
+          <p>No tienes órdenes asignadas.</p>
+        ) : (
+          ordenesDiligencias.map((orden) => (
+            <div
+              key={orden._id}
+              className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow"
+            >
+              <h2 className="text-lg font-semibold">Cliente: {orden.nombreCliente?.name || 'No disponible'}</h2>
+              <h2 className="text-lg font-semibold">Numero: {orden.nombreCliente?.phone || 'No disponible'}</h2>
+              <p className="text-sm">Direcciónes involucradas: {orden.direccionInvolucrados}</p>
+              <p className="text-sm">
+  Fecha y Hora de Recogida: {new Date(orden.fechaHoraRecogida).toLocaleString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true, // Para formato de 12 horas
+  })}
+</p>
+
+              <p className="text-sm">Precio: ${orden.precio}</p>
+              <a
+                href={`/detalle-diligencias/${orden._id}`}
+                className="mt-4 inline-block text-blue-500 hover:underline"
+              >
+                Ver detalles
+              </a>
+            </div>
+          ))
+        )}
+      </div>
     </div>
+
   );
 };
 
