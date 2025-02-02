@@ -135,8 +135,8 @@ const RegistrarMensajeria = () => {
         let precioCalculado = (distanciaCalculada * tarifaBase) + tarifaNocturna;
     
         // Ajustar según los rangos
-if (precioCalculado <= 2000) {
-    precioCalculado = 2000; // Tarifa mínima
+if (precioCalculado <= 3500) {
+    precioCalculado = 3500; // Tarifa mínima
 } else {
     // Incrementos posteriores
     const division = precioCalculado / 500;

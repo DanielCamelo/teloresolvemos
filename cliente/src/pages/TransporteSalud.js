@@ -29,6 +29,40 @@ const TransporteSalud = () => {
             e.preventDefault();
                 
             try {
+
+                const fechaRegistro = new Date(formData.fechaHoraRecogida);
+                                const fechaRegistroFormateada = fechaRegistro.toLocaleString('es-CO', {
+                                    weekday: 'long', // Día de la semana
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true, // Formato 12 horas (AM/PM)
+                                });
+                
+                                const mensaje =`
+                    *Detalles de la Orden de Transporte de Salud*
+                    
+                    ──────────────────────
+                    *Tipo de vehiculo:* ${formData.tipoDeVehiculo}
+                    *Numeros de pasajeros:* ${formData.NumeroPasajeros}
+                    ──────────────────────
+                    *Direcciónes:*
+                    *Recogida:* ${formData.direccionRecogida}
+                    *Entrega:* ${formData.direccionEntrega}
+                    ──────────────────────
+                    *Fecha y Hora de recogida:* ${fechaRegistroFormateada}
+                    ──────────────────────
+                    *Opcion de Viaje:* ${formData.opcionDeViaje}
+                            `;
+                
+                     // URL para WhatsApp (ajustar el número y el mensaje)
+                     const telefono = "+573178925603"; // Número de teléfono del destinatario
+                     const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+                
+                     // Redirigir a WhatsApp para enviar el mensaje
+                     window.open(urlWhatsApp, '_blank');
         
                 const response = await fetch(SummaryApi.addTransporteSalud.url, {
                     method: SummaryApi.addTransporteSalud.method,
