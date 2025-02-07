@@ -58,7 +58,7 @@ function App() {
         {/* Icono de WhatsApp flotante */}
         <div className="floating-button-container fixed bottom-4 right-4">
           <a
-            href="https://wa.me/573167809782"
+            href="https://wa.me/573025887156 "
             target="_blank"
             rel="noopener noreferrer"
             className="whatsapp-icon bg-accent rounded-full p-3 shadow-lg flex items-center justify-center"

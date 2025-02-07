@@ -53,7 +53,7 @@ const ComprasIntermunicipales = () => {
             `;
     
             // URL para WhatsApp (ajustar el número y el mensaje)
-            const telefono = "+573178925603"; // Número de teléfono del destinatario
+            const telefono = "+573025887156"; // Número de teléfono del destinatario
             const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
     
             // Redirigir a WhatsApp para enviar el mensaje

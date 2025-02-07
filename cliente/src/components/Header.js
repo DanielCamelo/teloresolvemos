@@ -400,7 +400,7 @@ const Header = () => {
                 {activeDropdown === 'nosotros' && (
                     <div className="ml-4 mt-2">
                         <Link 
-                            to="/quienes-somos" 
+                            to="/nosotros" 
                             onClick={closeMenu} 
                             className="text-base hover:text-gray-400 block"
                         >

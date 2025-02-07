@@ -26,7 +26,7 @@ const RegistrarChofer = () => {
       - Teléfono: ${data.phone}%0A
       - Correo: ${data.email}`;
     
-    const whatsappUrl = `https://wa.me/3178925603?text=${message}`;
+    const whatsappUrl = `https://wa.me/3025887156?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
 

@@ -19,7 +19,7 @@ const RegistrarRepartidor = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const message = `Hola, me gustaría registrarme como domiciliario. Mis datos son:\nNombre: ${data.name}\nEdad: ${data.age}\nTeléfono: ${data.phone}\nCorreo: ${data.email}`;
-    const whatsappUrl = `https://wa.me/3178925603?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/3025887156?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

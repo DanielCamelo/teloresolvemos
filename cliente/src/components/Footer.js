@@ -140,7 +140,7 @@ const Footer = () => {
       </div>
       {/* Aliados y copyright */}
       <div className="container mx-auto mt-6 text-center">
-        <p className="text-sm text-gray-400">&copy; 2024 Te lo resolvemos · Todos los Derechos Reservados</p>
+        <p className="text-sm text-gray-400">&copy; 2025 Te lo resolvemos · Todos los Derechos Reservados</p>
       </div>
     </footer>
   );
