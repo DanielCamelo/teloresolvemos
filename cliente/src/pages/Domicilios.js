@@ -118,17 +118,17 @@ const Domicilios = () => {
             // Lógica de precios según la hora
             const fechaHoraActual = new Date();  // Fecha y hora actual
             const horaActual = fechaHoraActual.getHours();
-            let tarifaBase = 1000; // Tarifa base por kilómetro
+            let tarifaBase = 1500; // Tarifa base por kilómetro
             let tarifaNocturna = 0;
         
-            // Tarifas nocturnas de 9:00 p.m. a 6:00 a.m.
-            if (horaActual >= 21 || horaActual < 6) {
+            // Tarifas nocturnas de 7:00 p.m. a 6:00 a.m.
+            if (horaActual >= 19 || horaActual < 6) {
                 toast.info("Se aplicará una tarifa nocturna.");
                 tarifaNocturna = 500;
             }
         
             // Calcular el precio base
-            let precioCalculado = (distanciaCalculada * tarifaBase) + tarifaNocturna;
+            let precioCalculado = distanciaCalculada * tarifaBase;
         
             // Ajustar según los rangos
             if (precioCalculado <= 3500) {
@@ -144,8 +144,11 @@ const Domicilios = () => {
                     precioCalculado = Math.ceil(division) * 500; // Usar techo si el decimal es mayor o igual a 0.5
                 }
             }
+
+            const precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
         
-            setPrecio(precioCalculado); // Formatear el precio final con dos decimales
+            
+            setPrecio(precioFinal); // Formatear el precio final con dos decimales
         };
         
 
@@ -157,10 +160,46 @@ const Domicilios = () => {
                 const destino = await validarDireccion(formData.direccionEntrega);
         
                 if (!origen || !destino) {
-                    toast.error("Una o ambas direcciones no son válidas.");
-                    return;
-                }
-                const fechaRegistro = new Date();
+                    const fechaRegistro = new Date();
+                const fechaRegistroFormateada = fechaRegistro.toLocaleString('es-CO', {
+                    weekday: 'long', // Día de la semana
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true, // Formato 12 horas (AM/PM)
+                });
+
+                const mensaje =`
+    *Detalles de la Orden de Domicilio:*
+    
+    ──────────────────────
+    *Categoria del producto:* ${formData.categoriaProducto}
+    *Descripcion de productos:* ${formData.descripcionProducto}
+    ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida}
+    *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
+    ──────────────────────
+    *Metodo de pago:* ${formData.opcionPago}
+    *Precio sin calcular*
+    ──────────────────────
+    *Comentarios:* ${formData.comentario}
+    ──────────────────────
+    Orden de Domicilio sin calcular la precio
+            `;
+
+     // URL para WhatsApp (ajustar el número y el mensaje)
+     const telefono = "+573025887156"; // Número de teléfono del destinatario
+     const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+     // Redirigir a WhatsApp para enviar el mensaje
+     window.open(urlWhatsApp, '_blank');
+                }else{
+                    const fechaRegistro = new Date();
                 const fechaRegistroFormateada = fechaRegistro.toLocaleString('es-CO', {
                     weekday: 'long', // Día de la semana
                     year: 'numeric',
@@ -198,6 +237,8 @@ const Domicilios = () => {
 
      // Redirigir a WhatsApp para enviar el mensaje
      window.open(urlWhatsApp, '_blank');
+                }
+                
         
                 const response = await fetch(SummaryApi.addDomicilio.url, {
                     method: SummaryApi.addDomicilio.method,
@@ -326,14 +367,19 @@ const Domicilios = () => {
                                         {distancia && precio && (
                                             <div className="mb-4 text-center">
                                                 <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
-                                                <button
-                                                    type="submit"
-                                                    className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-                                                >
-                                                    Registrar Orden
-                                                </button>
+                                                
                                             </div>
                                         )}
+
+<div className="mb-4 text-center">
+                                               
+<button
+                        type="submit"
+                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
+                    >
+                        Contactar por WhatsApp
+                    </button>
+                                            </div>
                                     </form>
                     
                                     <Link to="/historial-domicilios" className="text-blue-500 mt-4">

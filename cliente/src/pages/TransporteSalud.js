@@ -181,12 +181,12 @@ const TransporteSalud = () => {
                         />
                     </div>
                            <div className="mb-4 text-center">
-                              <button
-                                   type="submit"
-                                 className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-                                     >
-                                      Registrar Orden
-                                     </button>
+                           <button
+                        type="submit"
+                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
+                    >
+                        Contactar por WhatsApp
+                    </button>
                                      </div>
                                      </form>
                                         

@@ -122,17 +122,17 @@ const RegistrarMensajeria = () => {
         // Lógica de precios según la hora
         const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
         const horaRecogida = fechaHoraRecogida.getHours();
-        let tarifaBase = 1000; // Tarifa base por kilómetro
+        let tarifaBase = 1500; // Tarifa base por kilómetro
         let tarifaNocturna = 0;
     
-        // Tarifas nocturnas de 9:00 p.m. a 6:00 a.m.
-        if (horaRecogida >= 21 || horaRecogida < 6) {
+        // Tarifas nocturnas de 7:00 p.m. a 6:00 a.m.
+        if (horaRecogida >= 19 || horaRecogida < 6) {
             toast.info("Se aplicará una tarifa nocturna.");
             tarifaNocturna = 500;
         }
     
         // Calcular el precio base
-        let precioCalculado = (distanciaCalculada * tarifaBase) + tarifaNocturna;
+        let precioCalculado = distanciaCalculada * tarifaBase;
     
         // Ajustar según los rangos
 if (precioCalculado <= 3500) {
@@ -149,8 +149,13 @@ if (precioCalculado <= 3500) {
     }
 }
 
+
+
+let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
+
+
     
-        setPrecio(precioCalculado); // Formatear el precio final con dos decimales
+        setPrecio(precioFinal); // Formatear el precio final con dos decimales
     };
     
     
@@ -172,11 +177,44 @@ if (precioCalculado <= 3500) {
             const destino = await validarDireccion(formData.direccionEntrega);
     
             if (!origen || !destino) {
-                toast.error("Una o ambas direcciones no son válidas.");
-                return;
-            }
+                 // Formatear la fecha y hora de recogida de manera más legible
+            const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
+                weekday: 'long', // Día de la semana (opcional)
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true, // Usar formato de 12 horas (AM/PM)
+            });
     
-            // Formatear la fecha y hora de recogida de manera más legible
+            // Crear el mensaje para WhatsApp con un formato más claro
+            const mensaje = `
+    *Detalles de la Orden de Mensajería:*
+    
+    ──────────────────────
+    *Tipo de Paquete:* ${formData.tipoDePaquete}
+    *Peso Estimado:* ${formData.pesoEstimado} kg
+    ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida}
+    *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
+    ──────────────────────
+    *Precio sin calcular*
+    ──────────────────────
+    Orden de mensajeria sin calcular precio
+            `;
+    
+            // URL para WhatsApp (ajustar el número y el mensaje)
+            const telefono = "+573025887156"; // Número de teléfono del destinatario
+            const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    
+            // Redirigir a WhatsApp para enviar el mensaje
+            window.open(urlWhatsApp, '_blank');
+            }else{
+                 // Formatear la fecha y hora de recogida de manera más legible
             const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
                 weekday: 'long', // Día de la semana (opcional)
                 year: 'numeric',
@@ -212,6 +250,9 @@ if (precioCalculado <= 3500) {
     
             // Redirigir a WhatsApp para enviar el mensaje
             window.open(urlWhatsApp, '_blank');
+            }
+    
+           
     
             // Registrar la orden en la base de datos
             const response = await fetch(SummaryApi.addMensaje.url, {
@@ -368,14 +409,19 @@ if (precioCalculado <= 3500) {
                     {distancia && precio && (
                         <div className="mb-4 text-center">
                             <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-                            >
-                                Registrar Orden
-                            </button>
+                           
                         </div>
                     )}
+
+<div className="mb-4 text-center">
+                            
+<button
+                        type="submit"
+                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200"
+                    >
+                        Contactar por WhatsApp
+                    </button>
+                        </div>
                 </form>
 
                 <Link to="/historial-mensajeria" className="text-blue-500 mt-4">

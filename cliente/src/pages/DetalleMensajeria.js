@@ -66,7 +66,7 @@ const DetalleMensajeria = () => {
     doc.text("ORDEN DE MENSAJERÍA", pageWidth / 2, 20, { align: "center" });
     doc.setFontSize(12);
     doc.text("TE LO RESOLVEMOS", pageWidth / 2, 30, { align: "center" });
-    doc.text("FALTA DIRECCION", pageWidth / 2, 35, { align: "center" });
+    
   
     // Borde del encabezado
     doc.rect(10, 10, pageWidth - 20, 40);

@@ -67,10 +67,10 @@ const BannerProduct = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 rounded">
-      <div className="h-56 md:h-72 w-full relative overflow-hidden rounded-lg shadow-lg">
+    <div className="container mx-auto px-4 rounded flex justify-center items-center">
+      <div className="h-60 md:h-96 w-full md:w-4/6 relative overflow-hidden rounded-lg shadow-lg">
         {/* Botones de navegación */}
-        <div className="absolute inset-0 flex items-center justify-between z-10 hidden md:flex">
+        <div className="absolute inset-0 items-center justify-between z-10 hidden md:flex">
           <button
             onClick={prevImage}
             className="bg-white shadow-md rounded-full p-2 m-2 hover:scale-110 transition-transform"
