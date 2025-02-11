@@ -65,7 +65,8 @@ const Domicilios = () => {
 
         const calcularDistancia = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/distance', {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/distance`, {
+                    // Opciones adicionales si es necesario
                     params: {
                         origins: formData.direccionRecogida + ", Tuluá, Valle del Cauca, Colombia",
                         destinations: formData.direccionEntrega +  ", Tuluá, Valle del Cauca, Colombia",

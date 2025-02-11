@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 import SummaryApi from '../common'; // Asegúrate de que el path sea correcto.
+import loadingImage from '../assets/banner/img_1.jpg'; // Asegúrate de que el path sea correcto.
 
 const BannerProduct = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -52,15 +53,15 @@ const BannerProduct = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-56 md:h-72 bg-gray-200 text-gray-500">
-        Cargando banners...
+      <div className="h-60 md:h-96 w-full md:w-4/6 relative overflow-hidden rounded-lg shadow-lg">
+        <img src={loadingImage} alt="Cargando..." className="w-full h-full" />
       </div>
     );
   }
 
   if (banners.length === 0) {
     return (
-      <div className="flex items-center justify-center h-56 md:h-72 bg-gray-200 text-gray-500">
+      <div className="h-60 md:h-96 w-full md:w-4/6 relative overflow-hidden rounded-lg shadow-lg">
         No hay banners disponibles.
       </div>
     );
@@ -127,5 +128,6 @@ const BannerProduct = () => {
 };
 
 export default BannerProduct;
+
 
 

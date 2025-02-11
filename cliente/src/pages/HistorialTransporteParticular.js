@@ -79,9 +79,13 @@ const HistorialTransporteParticular = () => {
 </p>
 
 
-                  <a href={`/detalle-TransporteParticular/${order._id}`} className="mt-4 inline-block text-blue-500 hover:underline">
-                    Ver detalles
-                  </a>
+<Link 
+    to={`/detalle-TransporteParticular/${order._id}`} 
+    className="mt-4 inline-block text-blue-500 hover:underline"
+  >
+    Ver detalles
+  </Link>
+                 
                 </li>
               ))}
             </ul>

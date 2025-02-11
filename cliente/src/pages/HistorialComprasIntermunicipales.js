@@ -79,9 +79,12 @@ const HistorialComprasIntermunicipales = () => {
 </p>
 
 
-                  <a href={`/detalle-ComprasIntermunicipales/${order._id}`} className="mt-4 inline-block text-blue-500 hover:underline">
-                    Ver detalles
-                  </a>
+<Link 
+  to={`/detalle-ComprasIntermunicipales/${order._id}`} 
+  className="mt-4 inline-block text-blue-500 hover:underline"
+>
+  Ver detalles
+</Link>
                 </li>
               ))}
             </ul>

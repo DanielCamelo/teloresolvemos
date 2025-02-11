@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import fondoMovil from './assets/fondoMovil.png';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Context from './context';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -69,12 +69,11 @@ function App() {
 
         {/* Icono de PQRS flotante */}
         <div className="floating-button-container fixed bottom-4 left-4">
-          <a
-            href="/pqrs"
-            className="pqrs-icon bg-secondary rounded-full p-3 shadow-lg flex items-center justify-center"
-          >
-            <FaHeadset size={55} color="white" />
-          </a>
+        <Link to="/pqrs"
+  className="pqrs-icon bg-secondary rounded-full p-3 shadow-lg flex items-center justify-center"
+>
+  <FaHeadset size={55} color="white" />
+</Link>
         </div>
 
         {/* Redes sociales flotantes al lado derecho */}

@@ -61,22 +61,15 @@ const Footer = () => {
               {isUneteOpen && (
                 <ul className="pl-6 list-disc text-white">
                   <li>
-                    <a
-                      href="/unete-transportador"
-                      className="hover:underline"
-                      aria-label="Únete como transportador"
-                    >
-                      Únete como Transportador
-                    </a>
+                  <Link to="/unete-transportador" className="text-white hover:underline" aria-label="Únete como transportador">
+                  Únete como Transportador
+              </Link>
                   </li>
                   <li>
-                    <a
-                      href="/unete-domiciliario"
-                      className="hover:underline"
-                      aria-label="Únete como domiciliario"
-                    >
-                      Únete como Domiciliario
-                    </a>
+                  <Link to="/unete-domiciliario" className="text-white hover:underline" aria-label="Únete como domiciliario">
+                  Únete como Domiciliario
+              </Link>
+                   
                   </li>
                 </ul>
               )}

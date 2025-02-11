@@ -78,10 +78,13 @@ const HistorialDiligencias = () => {
   Precio: {order.precio !== null ? `$${order.precio}` : "Sin asignar"}
 </p>
 
-
-                  <a href={`/detalle-diligencias/${order._id}`} className="mt-4 inline-block text-blue-500 hover:underline">
-                    Ver detalles
-                  </a>
+<Link 
+  to={`/detalle-diligencias/${order._id}`} 
+  className="mt-4 inline-block text-blue-500 hover:underline"
+>
+  Ver detalles
+</Link>
+                  
                 </li>
               ))}
             </ul>

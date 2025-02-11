@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import SummaryApi from '../common';
 import Context from '../context';
+import { Link } from 'react-router-dom';
 
 const PerfilChofer = () => {
     const [ordenesTransporteParticular, setOrdenesTransporteParticular] = useState([]);
@@ -81,12 +82,12 @@ const PerfilChofer = () => {
     return (
       <div className="text-red-500 bg-white text-center p-4">
         <p>{error}</p>
-        <a
-          href="/login"
-          className="text-white mt-4 inline-block rounded-md bg-blue-500 hover:bg-blue-600 px-4 py-2"
-        >
-          Iniciar sesión
-        </a>
+        <Link
+  to="/login"
+  className="text-white mt-4 inline-block rounded-md bg-blue-500 hover:bg-blue-600 px-4 py-2"
+>
+  Iniciar sesión
+</Link>
       </div>
     );
   }
@@ -111,12 +112,12 @@ const PerfilChofer = () => {
               <p className="text-sm">Dirección de recogida: {orden.direccionRecogida}</p>
               <p className="text-sm">Dirección de entrega: {orden.direccionEntrega}</p>
               <p className="text-sm">Precio: ${orden.precio}</p>
-              <a
-                href={`/detalle-TransporteParticular/${orden._id}`}
-                className="mt-4 inline-block text-blue-500 hover:underline"
-              >
-                Ver detalles
-              </a>
+              <Link
+  to={`/detalle-TransporteParticular/${orden._id}`}
+  className="mt-4 inline-block text-blue-500 hover:underline"
+>
+  Ver detalles
+</Link>
             </div>
           ))
         )}
@@ -137,12 +138,13 @@ const PerfilChofer = () => {
               <p className="text-sm">Dirección de recogida: {orden.direccionRecogida}</p>
               <p className="text-sm">Dirección de entrega: {orden.direccionEntrega}</p>
               <p className="text-sm">Precio: ${orden.precio}</p>
-              <a
-                href={`/detalle-TransporteSalud/${orden._id}`}
-                className="mt-4 inline-block text-blue-500 hover:underline"
-              >
-                Ver detalles
-              </a>
+              <Link
+  to={`/detalle-TransporteSalud/${orden._id}`}
+  className="mt-4 inline-block text-blue-500 hover:underline"
+>
+  Ver detalles
+</Link>
+              
             </div>
           ))
         )}

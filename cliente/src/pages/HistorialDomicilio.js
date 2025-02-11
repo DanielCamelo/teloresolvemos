@@ -76,10 +76,13 @@ const HistorialDomicilio = () => {
   
                     <p className="text-gray-700">Fecha: {new Date(order.createdAt).toLocaleString()}</p>
                     <p className="text-gray-700">Precio: ${order.precio}</p>
-  
-                    <a href={`/detalle-domicilio/${order._id}`} className="mt-4 inline-block text-blue-500 hover:underline">
-                      Ver detalles
-                    </a>
+  <Link 
+    to={`/detalle-domicilio/${order._id}`} 
+    className="mt-4 inline-block text-blue-500 hover:underline"
+  >
+    Ver detalles
+  </Link>
+
                   </li>
                 ))}
               </ul>
