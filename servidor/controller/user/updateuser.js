@@ -15,7 +15,7 @@ async function updateUser(req, res) {
                     success: false
                 });
             }
-            if (!currentUser.role.includes('administrador')) {
+            if (!currentUser.role.includes("administrador")) {
                 return res.status(403).json({
                     message: "No tienes permisos para actualizar este usuario.",
                     error: true,
@@ -43,15 +43,26 @@ async function updateUser(req, res) {
             }
 
             let rolesArray = Array.isArray(currentUser.role) ? currentUser.role : [];
-            if (Array.isArray(role)) {
-                payload.role = role; // Si el frontend envía un array, lo usa directamente
-            } else {
-                if (rolesArray.includes(role)) {
-                    payload.role = rolesArray.filter(r => r !== role); // Elimina el rol si ya existe
-                } else {
-                    payload.role = [...rolesArray, role]; // Agrega el rol si no existe
+
+            // 🛠️ CORRECCIÓN: Si `role` viene como string, intenta convertirlo en array
+            let newRoles = role;
+            if (typeof role === "string") {
+                try {
+                    newRoles = JSON.parse(role);
+                } catch (e) {
+                    newRoles = [role]; // Si no se puede parsear, se guarda como array con un solo elemento
                 }
             }
+
+            if (!Array.isArray(newRoles)) {
+                return res.status(400).json({
+                    message: "El campo 'role' debe ser un array.",
+                    error: true,
+                    success: false
+                });
+            }
+
+            payload.role = newRoles;
         }
 
         // Buscar y actualizar el usuario
