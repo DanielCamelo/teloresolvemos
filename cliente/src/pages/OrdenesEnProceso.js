@@ -51,7 +51,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de mensajería');
-      console.error(err.message);
+      
     }
   };
 
@@ -87,7 +87,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de domicilio');
-      console.error(err.message);
+      
     }
   };
 
@@ -123,7 +123,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de mensajería');
-      console.error(err.message);
+      
     }
   };
 
@@ -159,7 +159,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de mensajería');
-      console.error(err.message);
+      
     }
   };
 
@@ -195,7 +195,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de mensajería');
-      console.error(err.message);
+      
     }
   };
 
@@ -231,7 +231,7 @@ const OrdenesEnProceso = () => {
       }
     } catch (err) {
       toast.error('Error al obtener las órdenes de mensajería');
-      console.error(err.message);
+      
     }
   };
 
@@ -250,13 +250,13 @@ const OrdenesEnProceso = () => {
             const clientes = data.data.filter(user => user.role.includes("cliente"));
 
             setClientes(clientes); 
-            console.log("Clientes:", clientes);
+           
             
         } else {
             toast.error(data.message);
         }
     } catch (error) {
-        console.error("Error al obtener clientes:", error);
+       
         toast.error("Error al obtener la lista de clientes.");
     }
 };
@@ -277,13 +277,13 @@ const OrdenesEnProceso = () => {
       if (!response.ok) throw new Error('Error al obtener los domiciliarios');
 
       const data = await response.json();
-      console.log("esta es la data", data);
+      
       const domiciliariosFiltrados = data.data.filter(user => user.role.includes('domiciliario'));
-      console.log(domiciliariosFiltrados);
+      
       setDomiciliarios(domiciliariosFiltrados);
     } catch (err) {
       toast.error('Error al obtener los domiciliarios');
-      console.error(err.message);
+      
     }
   };
 
@@ -305,7 +305,7 @@ const OrdenesEnProceso = () => {
       setConductor(conductoresFiltrados);
     } catch (err) {
       toast.error('Error al obtener los Conductores');
-      console.error(err.message);
+      
     }
   };
 
@@ -354,7 +354,7 @@ const mensajeMensajeria = (orderId) => {
     // Generar el enlace de WhatsApp
     const whatsappUrl = `https://wa.me/${repartidor.phone}?text=${encodeURIComponent(mensaje)}`;
 
-    console.log(mensaje);  // Verifica que el enlace sea correcto
+    
     // Abrir WhatsApp Web en una nueva pestaña
     window.open(whatsappUrl, '_blank');
   };
@@ -406,7 +406,7 @@ const mensajeDomicilio = (orderId) => {
     // Generar el enlace de WhatsApp
     const whatsappUrl = `https://wa.me/${repartidor.phone}?text=${encodeURIComponent(mensaje)}`;
 
-    console.log(mensaje);  // Verifica que el enlace sea correcto
+    
     // Abrir WhatsApp Web en una nueva pestaña
     window.open(whatsappUrl, '_blank');
   };
@@ -457,7 +457,7 @@ const mensajeTransporteParticular = (orderId) => {
     // Generar el enlace de WhatsApp
     const whatsappUrl = `https://wa.me/${conductor.phone}?text=${encodeURIComponent(mensaje)}`;
 
-    console.log(mensaje);  // Verifica que el enlace sea correcto
+    
     // Abrir WhatsApp Web en una nueva pestaña
     window.open(whatsappUrl, '_blank');
   };
@@ -508,7 +508,7 @@ const mensajeTransporteParticular = (orderId) => {
       // Generar el enlace de WhatsApp
       const whatsappUrl = `https://wa.me/${conductor.phone}?text=${encodeURIComponent(mensaje)}`;
   
-      console.log(mensaje);  // Verifica que el enlace sea correcto
+      
       // Abrir WhatsApp Web en una nueva pestaña
       window.open(whatsappUrl, '_blank');
     };
@@ -557,7 +557,7 @@ const mensajeCompraIntermunicipal = (orderId) => {
     // Generar el enlace de WhatsApp
     const whatsappUrl = `https://wa.me/${repartidor.phone}?text=${encodeURIComponent(mensaje)}`;
 
-    console.log(mensaje);  // Verifica que el enlace sea correcto
+    
     // Abrir WhatsApp Web en una nueva pestaña
     window.open(whatsappUrl, '_blank');
   };
@@ -606,7 +606,7 @@ const mensajeDiligencias = (orderId) => {
     // Generar el enlace de WhatsApp
     const whatsappUrl = `https://wa.me/${repartidor.phone}?text=${encodeURIComponent(mensaje)}`;
 
-    console.log(mensaje);  // Verifica que el enlace sea correcto
+   
     // Abrir WhatsApp Web en una nueva pestaña
     window.open(whatsappUrl, '_blank');
   };
@@ -655,7 +655,7 @@ const mensajeDiligencias = (orderId) => {
       await fetchOrdenesDiligencias(); // Actualizar la lista de órdenes
     } catch (err) {
       toast.error('Error al asignar domiciliario');
-      console.error(err.message);
+      
     }
   };
 
@@ -692,7 +692,7 @@ const mensajeDiligencias = (orderId) => {
 
     } catch (err) {
       toast.error('Error al asignar Conductor');
-      console.error(err.message);
+      
     }
   };
 
@@ -720,7 +720,7 @@ const mensajeDiligencias = (orderId) => {
       await fetchOrdenesDiligencias(); // Actualizar la lista de órdenes
     } catch (err) {
       toast.error('Error al cambiar el estado');
-      console.error(err.message);
+      
     }
   };
 
@@ -728,7 +728,7 @@ const mensajeDiligencias = (orderId) => {
   const handleCambiarPrecio = async (orderId) => {
     const precio = nuevoPrecio[orderId];
     
-    console.log("Este es el precio antes de enviar:", precio);  // Verifica qué valor tiene el precio
+    
   
     if (!precio || isNaN(precio) || parseFloat(precio) <= 0) {
       toast.error('Por favor ingresa un precio válido');
@@ -760,7 +760,7 @@ const mensajeDiligencias = (orderId) => {
       await fetchOrdenesDiligencias();
     } catch (err) {
       toast.error('Error al cambiar el precio');
-      console.error(err.message);
+      
     }
   };
   

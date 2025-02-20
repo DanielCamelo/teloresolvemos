@@ -42,12 +42,12 @@ const ComprasIntermunicipales = () => {
     *Detalles de la Orden de compra intermunicipal:*
     
     ──────────────────────
-    *Productos:* ${formData.productos}
-    *Presupuesto Maximo:* ${formData.presupuestoMaximo}
-    ──────────────────────
     *Direcciónes:*
     *ubicacion de Compras:* ${formData.ubicacionCompra}
     *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Productos:* ${formData.productos}
+    *Presupuesto Maximo:* ${formData.presupuestoMaximo}
     ──────────────────────
     *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
             `;

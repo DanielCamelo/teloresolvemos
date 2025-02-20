@@ -11,13 +11,16 @@ const Domicilios = () => {
         direccionRecogida: '',
         direccionEntrega: '',
         opcionPago: '',
-        comentario: ''
+        comentario: '',
+        barrioEntrega: '',
+        barrioRecogida: ''
     });
 
     const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
         const [sugerenciasEntrega, setSugerenciasEntrega] = useState([]);
         const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
         const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
+        
 
         const handleChange = (e) => {
             const { name, value } = e.target;
@@ -99,17 +102,31 @@ const Domicilios = () => {
         };
 
         const handleCalcularDistancia = async () => {
-            const origen = await validarDireccion(formData.direccionRecogida);
-            const destino = await validarDireccion(formData.direccionEntrega);
+            let origen = await validarDireccion(formData.direccionRecogida);
+            let destino = await validarDireccion(formData.direccionEntrega);
+            const barriOrigen = await validarDireccion(formData.barrioRecogida);
+            const barrioDestino = await validarDireccion(formData.barrioEntrega);
         
             if (!origen || !destino) {
-                toast.error("Una o ambas direcciones no son válidas.");
-                return;
+                if (!origen) {
+                    origen = barriOrigen;
+                }
+                if (!destino) {
+                    destino = barrioDestino;
+                }
+                if (!origen || !destino) {
+                    console.log(destino, origen);
+                    toast.info("No se pudieron validar las direcciones.");
+                    toast.info("Por favor, contactanos por WhatsApp.");
+                    return;
+                }
             }
         
+            console.log(destino, origen);
             const distanciaEnMetros = await calcularDistancia(origen, destino);
             if (!distanciaEnMetros) {
                 toast.error("No se pudo calcular la distancia entre las direcciones.");
+                toast.info("Por favor, contactanos por WhatsApp.");
                 return;
             }
         
@@ -134,7 +151,9 @@ const Domicilios = () => {
             // Ajustar según los rangos
             if (precioCalculado <= 3500) {
                 precioCalculado = 3500; // Tarifa mínima
-            } else {
+            }if (precioCalculado >= 12000) {
+                precioCalculado = 12000; // Tarifa máxima
+            }else {
                 // Incrementos posteriores
                 const division = precioCalculado / 500;
                 const decimal = division - Math.floor(division);
@@ -157,7 +176,7 @@ const Domicilios = () => {
             e.preventDefault();
                 
             try {
-                const origen = await validarDireccion(formData.direccionRecogida);
+                const origen = await validarDireccion(formData.direccionRecogida) ;
                 const destino = await validarDireccion(formData.direccionEntrega);
         
                 if (!origen || !destino) {
@@ -176,12 +195,12 @@ const Domicilios = () => {
     *Detalles de la Orden de Domicilio:*
     
     ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida} ,${formData.barrioRecogida}
+    *Entrega:* ${formData.direccionEntrega} , ${formData.barrioEntrega}
+    ──────────────────────
     *Categoria del producto:* ${formData.categoriaProducto}
     *Descripcion de productos:* ${formData.descripcionProducto}
-    ──────────────────────
-    *Direcciónes:*
-    *Recogida:* ${formData.direccionRecogida}
-    *Entrega:* ${formData.direccionEntrega}
     ──────────────────────
     *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
     ──────────────────────
@@ -215,19 +234,19 @@ const Domicilios = () => {
     *Detalles de la Orden de Domicilio:*
     
     ──────────────────────
+    *Direcciónes:*
+    *Recogida:* ${formData.direccionRecogida}, ${formData.barrioRecogida}
+    *Entrega:* ${formData.direccionEntrega}, ${formData.barrioEntrega}
+    ──────────────────────
     *Categoria del producto:* ${formData.categoriaProducto}
     *Descripcion de productos:* ${formData.descripcionProducto}
     ──────────────────────
-    *Direcciónes:*
-    *Recogida:* ${formData.direccionRecogida}
-    *Entrega:* ${formData.direccionEntrega}
-    ──────────────────────
     *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
     ──────────────────────
-    *Distancia Estimada:* ${distancia} km
+    *Distancia Estimada:* ${distancia != null ? `${distancia} km` : "No disponible"}
     ──────────────────────
     *Metodo de pago:* ${formData.opcionPago}
-    *Precio sugerido:* $${precio.toLocaleString()}
+    *Precio sugerido:* ${precio != null ? `$${precio.toLocaleString()}` : "No disponible"}
     ──────────────────────
     *Comentarios:* ${formData.comentario}
             `;
@@ -249,6 +268,8 @@ const Domicilios = () => {
                     },
                     body: JSON.stringify({ 
                         ...formData, 
+                        direccionRecogida: formData.direccionRecogida + ", " + formData.barrioRecogida,
+                        direccionEntrega: formData.direccionEntrega + ", " + formData.barrioEntrega,
                         distancia: distancia,
                         precio: precio // Incluye el precio calculado
                     }) 
@@ -315,6 +336,19 @@ const Domicilios = () => {
                             />
                         </div>
                         <div>
+                            <label className="text-gray-600">Barrio de Recogida:</label>
+                            <input
+                                type="text"
+                                name="barrioRecogida"
+                                value={formData.barrioRecogida}
+                                onChange={handleChange}
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Fátima"
+                            />
+                        </div>
+                    </div>
+                    <div className='grid grid-cols-2 gap-4'>
+                    <div>
                             <label className="text-gray-600">Dirección de Entrega:</label>
                             <input
                                 type="text"
@@ -323,7 +357,18 @@ const Domicilios = () => {
                                 onChange={handleChange}
                                 required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                                placeholder="Avenida 456"
+                                placeholder="Cra 123"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-gray-600">Barrio de Entrega:</label>
+                            <input
+                                type="text"
+                                name="barrioEntrega"
+                                value={formData.barrioEntrega}
+                                onChange={handleChange}
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Palobonito"
                             />
                         </div>
                     </div>

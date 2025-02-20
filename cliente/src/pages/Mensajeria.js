@@ -12,7 +12,9 @@ const RegistrarMensajeria = () => {
         pesoEstimado: '',
         direccionRecogida: '',
         direccionEntrega: '',
-        fechaHoraRecogida: ''
+        fechaHoraRecogida: '',
+        barrioEntrega: '',
+        barrioRecogida: ''
     });
 
     const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
@@ -102,17 +104,30 @@ const RegistrarMensajeria = () => {
     
 
     const handleCalcularDistancia = async () => {
-        const origen = await validarDireccion(formData.direccionRecogida);
-        const destino = await validarDireccion(formData.direccionEntrega);
-    
+            
+        let origen = await validarDireccion(formData.direccionRecogida);
+        let destino = await validarDireccion(formData.direccionEntrega);
+        const barriOrigen = await validarDireccion(formData.barrioRecogida);
+        const barrioDestino = await validarDireccion(formData.barrioEntrega);
+                
         if (!origen || !destino) {
-            toast.error("Una o ambas direcciones no son válidas.");
-            return;
+             if (!origen) {
+                origen = barriOrigen;
+            }
+            if (!destino) {
+                destino = barrioDestino;
+            }
+            if (!origen || !destino) {
+                toast.info("No se pudieron validar las direcciones.");
+                toast.info("Por favor, contactanos por WhatsApp.");
+                return;
+             }
         }
     
         const distanciaEnMetros = await calcularDistancia(origen, destino);
         if (!distanciaEnMetros) {
             toast.error("No se pudo calcular la distancia entre las direcciones.");
+            toast.info("Por favor, contactanos por WhatsApp.");
             return;
         }
     
@@ -137,7 +152,9 @@ const RegistrarMensajeria = () => {
         // Ajustar según los rangos
 if (precioCalculado <= 3500) {
     precioCalculado = 3500; // Tarifa mínima
-} else {
+}if (precioCalculado >= 12000) {
+    precioCalculado = 12000; // Tarifa máxima
+}else {
     // Incrementos posteriores
     const division = precioCalculado / 500;
     const decimal = division - Math.floor(division);
@@ -193,12 +210,12 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
     *Detalles de la Orden de Mensajería:*
     
     ──────────────────────
-    *Tipo de Paquete:* ${formData.tipoDePaquete}
-    *Peso Estimado:* ${formData.pesoEstimado} kg
-    ──────────────────────
     *Direcciónes:*
     *Recogida:* ${formData.direccionRecogida}
     *Entrega:* ${formData.direccionEntrega}
+    ──────────────────────
+    *Tipo de Paquete:* ${formData.tipoDePaquete}
+    *Peso Estimado:* ${formData.pesoEstimado} kg
     ──────────────────────
     *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
     ──────────────────────
@@ -230,18 +247,18 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
     *Detalles de la Orden de Mensajería:*
     
     ──────────────────────
-    *Tipo de Paquete:* ${formData.tipoDePaquete}
-    *Peso Estimado:* ${formData.pesoEstimado} kg
-    ──────────────────────
     *Direcciónes:*
     *Recogida:* ${formData.direccionRecogida}
     *Entrega:* ${formData.direccionEntrega}
     ──────────────────────
+    *Tipo de Paquete:* ${formData.tipoDePaquete}
+    *Peso Estimado:* ${formData.pesoEstimado} kg
+    ──────────────────────
     *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
     ──────────────────────
-    *Distancia Estimada:* ${distancia} km
+    *Distancia Estimada:* ${distancia != null ? `${distancia} km` : "No disponible"}
     ──────────────────────
-    *Precio sugerido:* $${precio.toLocaleString()}
+    *Precio sugerido:* ${precio != null ? `$${precio.toLocaleString()}` : "No disponible"}
             `;
     
             // URL para WhatsApp (ajustar el número y el mensaje)
@@ -263,6 +280,8 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                 },
                 body: JSON.stringify({ 
                     ...formData, 
+                    direccionRecogida: formData.direccionRecogida + ", " + formData.barrioRecogida,
+                    direccionEntrega: formData.direccionEntrega + ", " + formData.barrioEntrega,
                     distancia: distancia,
                     precio: precio // Incluye el precio calculado
                 }) 
@@ -328,59 +347,55 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                         </div>
                     </div>
 
-                    <div className='grid mb-4'>
-                        <label className="text-gray-600">Dirección de Recogida:</label>
-                        <div className='bg-gray-100 p-3 rounded-lg'>
+
+                    <div className='grid grid-cols-2 gap-4'>
+                    <div>
+                            <label className="text-gray-600">Dirección de Recogida:</label>
                             <input
                                 type="text"
                                 name="direccionRecogida"
                                 value={formData.direccionRecogida}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-transparent outline-none"
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                                 placeholder="Calle 123"
                             />
-                            {sugerenciasRecogida.length > 0 && (
-                                <ul className="absolute z-10 bg-white border border-gray-300">
-                                    {sugerenciasRecogida.map((sugerencia) => (
-                                        <li
-                                            key={sugerencia.place_id}
-                                            onClick={() => seleccionarSugerencia(sugerencia.display_name, "direccionRecogida")}
-                                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                                        >
-                                            {sugerencia.display_name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+                        </div>
+                        <div>
+                            <label className="text-gray-600">Barrio de Recogida:</label>
+                            <input
+                                type="text"
+                                name="barrioRecogida"
+                                value={formData.barrioRecogida}
+                                onChange={handleChange}
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Fátima"
+                            />
                         </div>
                     </div>
-
-                    <div className='grid mb-4'>
-                        <label className="text-gray-600">Dirección de Entrega:</label>
-                        <div className='bg-gray-100 p-3 rounded-lg'>
+                    <div className='grid grid-cols-2 gap-4'>
+                    <div>
+                            <label className="text-gray-600">Dirección de Entrega:</label>
                             <input
                                 type="text"
                                 name="direccionEntrega"
                                 value={formData.direccionEntrega}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-transparent outline-none"
-                                placeholder="Avenida 456"
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Cra 123"
                             />
-                            {sugerenciasEntrega.length > 0 && (
-                                <ul className="absolute z-10 bg-white border border-gray-300">
-                                    {sugerenciasEntrega.map((sugerencia) => (
-                                        <li
-                                            key={sugerencia.place_id}
-                                            onClick={() => seleccionarSugerencia(sugerencia.display_name, "direccionEntrega")}
-                                            className="p-2 hover:bg-gray-200 cursor-pointer"
-                                        >
-                                            {sugerencia.display_name}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+                        </div>
+                        <div>
+                            <label className="text-gray-600">Barrio de Entrega:</label>
+                            <input
+                                type="text"
+                                name="barrioEntrega"
+                                value={formData.barrioEntrega}
+                                onChange={handleChange}
+                                className="w-full bg-gray-100 p-3 rounded-lg outline-none"
+                                placeholder="Palobonito"
+                            />
                         </div>
                     </div>
 

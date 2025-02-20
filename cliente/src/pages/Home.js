@@ -22,7 +22,20 @@ function Home() {
 
     <div id="services" className="flex flex-col items-center justify-center min-h-screen m-4"> 
       <BannerProduct />
-      <div className="mt-20 grid grid-cols-2 gap-6">
+
+{/* Encabezado Principal */}
+<h1 
+    className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center my-6 md:my-8 drop-shadow-lg tracking-wide bg-gradient-to-r from-red-600 via-red-500 to-green-400 text-transparent bg-clip-text leading-tight"
+    style={{
+        WebkitTextStroke: "0.5px black", // Bordes blancos en WebKit (Chrome, Safari)
+        textStroke: "0.5px black" // Para otros navegadores con soporte
+    }}
+>
+    Ofrecemos lo siguiente...
+</h1>
+
+      
+      <div className="grid grid-cols-2 gap-6">
         {servicios.map((servicio, index) => (
           <button
             key={index}
@@ -33,7 +46,7 @@ function Home() {
             style={{ fontSize: '1.5rem' }}
           >
             <span className="text-3xl">{servicio.icono}</span>
-            <p className="mt-2 text-xl text-center">{servicio.nombre}</p>
+            <p className="mt-2 text-center text-base sm:text-lg md:text-xl lg:text-2xl break-words">{servicio.nombre}</p>
           </button>
           
         ))}

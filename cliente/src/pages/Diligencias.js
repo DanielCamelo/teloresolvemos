@@ -38,11 +38,11 @@ const Diligencias = () => {
     *Detalles de la Orden de diligencia:*
     
     ──────────────────────
-    *Descripcion diligencia:* ${formData.descripcionDiligencia}
-    *Documentos Necesarios:* ${formData.documentosNecesarios}
-    ──────────────────────
     *Direcciónes:*
     *Direcciones involucradas:* ${formData.direccionInvolucrados}
+    ──────────────────────
+    *Descripcion diligencia:* ${formData.descripcionDiligencia}
+    *Documentos Necesarios:* ${formData.documentosNecesarios}
     ──────────────────────
     *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
             `;

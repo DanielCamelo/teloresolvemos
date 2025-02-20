@@ -36,33 +36,31 @@ const Login = () => {
 
     const dataApi = await dataResponse.json();
 
-    if (dataApi.success) {
+    if (dataApi.success && dataApi.data) {
+      localStorage.setItem("authToken", dataApi.data); // ✅ Guardar token en localStorage
       toast.success(dataApi.message);
-      navigate("/");
-      fetchUserDetails();
-    }
-
-    if (dataApi.error) {
+      await fetchUserDetails(); // ✅ Obtener usuario antes de redirigir
+      navigate("/"); // ✅ Redirigir al inicio
+    } else {
       toast.error(dataApi.message);
     }
   };
 
   return (
-    <section id='login' className="flex items-center justify-center min-h-screen bg-cover bg-center" >
+    <section id='login' className="flex items-center justify-center min-h-screen bg-cover bg-center">
       <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.85' }}>
         <h2 className="text-center font-bold text-xl mb-6">Bienvenido a te lo resolvemos</h2>
         
         {/* Botones de Iniciar Sesión y Registrarse en la misma fila */}
         <div className="flex mb-6 bg-gray-200 rounded-full">
           <button 
-          className="text-white bg-green-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
-            
+            className="text-white bg-green-500 py-2 px-4 rounded-full w-1/2 border-2 border-white"
             onClick={() => navigate("/login")}
           >
             Iniciar Sesión
           </button>
           <button 
-          className="text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"            
+            className="text-gray-500 bg-gray-200 py-2 px-4 rounded-full w-1/2"            
             onClick={() => navigate("/sign-up")}
           >
             Registrarse
@@ -71,7 +69,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <div className='grid mb-4'>
-            <label className="text-gray-600">Telefono :</label>
+            <label className="text-gray-600">Teléfono :</label>
             <div className='bg-gray-100 p-3 rounded-lg'>
               <input
                 type='phone'
@@ -106,7 +104,7 @@ const Login = () => {
         </form>
         
         <p className='text-center text-gray-600 mt-5'>
-        ¿No tienes una cuenta? <Link to={"/sign-up"} className='text-green-500 hover:underline'>Registrate</Link>
+          ¿No tienes una cuenta? <Link to={"/sign-up"} className='text-green-500 hover:underline'>Regístrate</Link>
         </p>
       </div>
     </section>
@@ -114,3 +112,4 @@ const Login = () => {
 };
 
 export default Login;
+

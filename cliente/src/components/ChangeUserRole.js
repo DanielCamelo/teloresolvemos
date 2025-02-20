@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import ROLE from '../common/role';
 import STATUS from '../common/status';
 import { IoMdClose } from "react-icons/io";
@@ -8,97 +8,101 @@ import { toast } from 'react-toastify';
 const ChangeUserRole = ({
     name,
     phone,
-    role,
+    role = [],  // Se asegura que role sea un array por defecto
     status,
     userId,
     onClose,
     callFunc,
 }) => {
-    const [userRole, setUserRole] = useState(role);
+    const [userRole, setUserRole] = useState(Array.isArray(role) ? role : []);
     const [userStatus, setUserStatus] = useState(status);
 
-    const handleOnChangeSelect = (e) => {
-        setUserRole(e.target.value);
-        console.log('Rol seleccionado:', e.target.value);
-    }
+    const handleRoleChange = (e) => {
+        const selectedRole = e.target.value;
+        setUserRole(prevRoles => {
+            if (prevRoles.includes(selectedRole)) {
+                return prevRoles.filter(r => r !== selectedRole); // Remueve si ya existe
+            } else {
+                return [...prevRoles, selectedRole]; // Agrega si no existe
+            }
+        });
+    };
 
-    const handleOnChangeSelectt = (e) => {
+    const handleStatusChange = (e) => {
         setUserStatus(e.target.value);
-        console.log('Estado seleccionado:', e.target.value);
-    }
+    };
 
     const updateUserRole = async () => {
-        const fetchResponse = await fetch(SummaryApi.updateUser.url, {
-            method: SummaryApi.updateUser.method,
-            credentials: 'include',
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                userId: userId,
-                role: userRole,       // Verifica que este valor sea el correcto
-                status: userStatus    // Verifica que este valor también sea el correcto
-            })
-        });
-    
-        const responseData = await fetchResponse.json();
-    
-        if (responseData.success) {
-            toast.success(responseData.message);
-            onClose();
-            callFunc(); // Llama a la función para actualizar la lista de usuarios o la vista
-        } else {
-            toast.error(responseData.message || 'Error al actualizar el usuario');
+        try {
+            const response = await fetch(SummaryApi.updateUser.url, {
+                method: SummaryApi.updateUser.method,
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId,
+                    role: userRole,  // Ahora es un array
+                    status: userStatus
+                })
+            });
+
+            const responseData = await response.json();
+
+            if (responseData.success) {
+                toast.success(responseData.message);
+                onClose();
+                callFunc();
+            } else {
+                toast.error(responseData.message || 'Error al actualizar el usuario');
+            }
+        } catch (error) {
+            console.error("Error actualizando usuario:", error);
+            toast.error("Error en la actualización.");
         }
-    
-        console.log("role updated", responseData);
     };
-    
 
     return (
-        <div className='fixed top-0 bottom-0 left-0 right-0 w-full h-full z-10 flex justify-between items-center bg-slate-200 bg-opacity-50'>
-            <div className='mx-auto bg-white shadow-md p-4 w-full max-w-sm'>
+        <div className='fixed top-0 bottom-0 left-0 right-0 w-full h-full z-10 flex justify-center items-center bg-slate-200 bg-opacity-50'>
+            <div className='bg-white shadow-md p-4 w-full max-w-sm rounded-lg'>
                 <button className='block ml-auto' onClick={onClose}>
                     <IoMdClose />
                 </button>
 
-                <h1 className='pb-4 text-lg font-medium'>Cambiar el rol y estado del usuario</h1>
+                <h1 className='pb-4 text-lg font-medium'>Cambiar rol y estado del usuario</h1>
+                <p><strong>Nombre:</strong> {name}</p>
+                <p><strong>Teléfono:</strong> {phone}</p>
 
-                <p>Nombre: {name}</p>
-                <p>Telefono: {phone}</p>
-
-                <div className='flex items-center justify-between my-4'>
-                    <p>Rol:</p>
-                    <select className='border px-4 py-1' value={userRole} onChange={handleOnChangeSelect}>
-                        {
-                            Object.values(ROLE).map(el => {
-                                return (
-                                    <option value={el} key={el}>{el}</option>
-                                )
-                            })
-                        }
+                <div className='my-4'>
+                    <p className='mb-2'>Rol:</p>
+                    <select className='border px-4 py-1 w-full' value={userRole[userRole.length - 1] || ''} onChange={handleRoleChange}>
+                        <option value="">Selecciona un rol</option>
+                        {Object.values(ROLE).map(el => (
+                            <option key={el} value={el}>{el}</option>
+                        ))}
                     </select>
+                    <div className='mt-2'>
+                        <p className='text-sm'>Roles asignados: {userRole.join(", ") || "Ninguno"}</p>
+                    </div>
                 </div>
-                <div className='flex items-center justify-between my-4'>
-                    <p>Estado:</p>
-                    <select className='border px-4 py-1' value={userStatus} onChange={handleOnChangeSelectt}>
-                        {
-                            Object.values(STATUS).map(el => {
-                                return (
-                                    <option value={el} key={el}>{el}</option>
-                                )
-                            })
-                        }
+
+                <div className='my-4'>
+                    <p className='mb-2'>Estado:</p>
+                    <select className='border px-4 py-1 w-full' value={userStatus} onChange={handleStatusChange}>
+                        {Object.values(STATUS).map(el => (
+                            <option key={el} value={el}>{el}</option>
+                        ))}
                     </select>
                 </div>
 
-                <button className='w-fit mx-auto block py-1 px-3 rounded-full bg-red-900 text-white hover:bg-red-800' onClick={updateUserRole}>
-                    Cambiar
+                <button className='w-full py-2 mt-4 bg-red-900 text-white rounded-lg hover:bg-red-800' onClick={updateUserRole}>
+                    Guardar Cambios
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ChangeUserRole;
+
 
