@@ -74,6 +74,23 @@ const SummaryApi = {
         url: `${backendDomin}/api/all-banners`,
         method: "get",
       },
+        //rutas de barrios
+        allBarrios: {
+            url: `${backendDomin}/api/all-barrios`,
+            method: "get",
+          },
+            uploadBarrios: {    
+                url: `${backendDomin}/api/upload-barrios`,
+                method: "post",
+                },
+            deleteBarrios: {
+                url: `${backendDomin}/api/delete-barrios`,
+                method: "post",
+                },
+            updateBarrios: {
+                url: `${backendDomin}/api/actualizar-barrios`,
+                method: "post",
+                },
       //rutas de usuario
       deleteUser: {
         url: `${backendDomin}/api/delete-user`,

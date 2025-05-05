@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
-import axios from 'axios';
 import SummaryApi from "../common";
 import tipoPaqueteCategoria from "../helpers/tipoPaqueteCategoria";
 import pesoPaqueteCategoria from "../helpers/pesoPaqueteCategoria";
@@ -17,184 +16,117 @@ const RegistrarMensajeria = () => {
         barrioRecogida: ''
     });
 
-    const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
-    const [sugerenciasEntrega, setSugerenciasEntrega] = useState([]);
-    const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
     const [precio, setPrecio] = useState(null); // Nuevo estado para el precio}
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+    const [barrios, setBarrios] = useState([]);
+    const [filtro, setFiltro] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-
-        if (name === "direccionRecogida") {
-            obtenerSugerencias(value, setSugerenciasRecogida);
-        } else if (name === "direccionEntrega") {
-            obtenerSugerencias(value, setSugerenciasEntrega);
-        }
     };
 
-    const obtenerSugerencias = async (direccion, setSugerencias) => {
-        if (!direccion) {
-            setSugerencias([]);
-            return;
-        }
-
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion + ", Tuluá, Valle del Cauca, Colombia")}&bounded=1&viewbox=-76.2080,-4.0725,-76.1740,-4.0500`;
+    const fetchBarrios = async () => {
         try {
-            const response = await axios.get(url);
-            setSugerencias(response.data);
-        } catch (error) {
-            console.error("Error al obtener sugerencias:", error);
-            setSugerencias([]);
+          const response = await fetch(SummaryApi.allBarrios.url, {
+            method: SummaryApi.allBarrios.method,
+            credentials: 'include',
+          });
+          const data = await response.json();
+          console.log(data);
+          setBarrios(data || []);
+        } catch (err) {
+          toast.error('Error al cargar barrios');
         }
-    };
+      };
 
-    const seleccionarSugerencia = (direccion, setSugerencias) => {
-        setFormData({ ...formData, [setSugerencias]: direccion });
-        setSugerencias([]);
-    };
+      const barriosFiltrados = barrios.filter((barrio) => {
+        const query = filtro.toLowerCase();
+        return (
+          barrio.nombreBarrio.toLowerCase().includes(query) ||
+          barrio.zona.toLowerCase().includes(query)
+        );
+      });
 
-    const validarDireccion = async (direccion) => {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion + ", Tuluá, Valle del Cauca, Colombia")}`;
-        try {
-            const response = await axios.get(url);
-            return response.data.length > 0 ? { lat: response.data[0].lat, lng: response.data[0].lon } : null;
-        } catch (error) {
-            console.error("Error al validar la dirección:", error);
-            return null;
-        }
-    };
-
-    const calcularDistancia = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/distance`, {
-                params: {
-                    origins: formData.direccionRecogida + ", Tuluá, Valle del Cauca, Colombia",
-                    destinations: formData.direccionEntrega +  ", Tuluá, Valle del Cauca, Colombia",
-                },
-                withCredentials: true, // Si es necesario para cookies
-            });
+      const handleCalcularDistancia = () => {
+        const { barrioRecogida, barrioEntrega } = formData;
     
-            console.log('Respuesta de la API:', response.data);
+        const barrioOrigen = barrios.find(b => b.nombreBarrio === barrioRecogida);
+        const barrioDestino = barrios.find(b => b.nombreBarrio === barrioEntrega);
     
-            if (
-                response.data.rows &&
-                response.data.rows.length > 0 &&
-                response.data.rows[0].elements &&
-                response.data.rows[0].elements.length > 0
-            ) {
-                const distancia = response.data.rows[0].elements[0].distance.value; // Distancia en metros
-                const duracion = response.data.rows[0].elements[0].duration.text; // Duración como texto
-                console.log(`Distancia: ${distancia} metros`);
-                console.log(`Duración estimada: ${duracion}`);
-                return distancia;
-            } else {
-                console.warn('No se encontraron datos de distancia.');
-                return null;
-            }
-            
-        } catch (error) {
-            console.error('Error al calcular la distancia:', error.response?.data || error.message);
-            return null;
-        }
-    };
-     
-      
-    
-
-    const handleCalcularDistancia = async () => {
-            
-        let origen = await validarDireccion(formData.direccionRecogida);
-        let destino = await validarDireccion(formData.direccionEntrega);
-        const barriOrigen = await validarDireccion(formData.barrioRecogida);
-        const barrioDestino = await validarDireccion(formData.barrioEntrega);
-                
-        if (!origen || !destino) {
-             if (!origen) {
-                origen = barriOrigen;
-            }
-            if (!destino) {
-                destino = barrioDestino;
-            }
-            if (!origen || !destino) {
-                toast.info("No se pudieron validar las direcciones.");
-                toast.info("Por favor, contactanos por WhatsApp.");
-                return;
-             }
-        }
-    
-        const distanciaEnMetros = await calcularDistancia(origen, destino);
-        if (!distanciaEnMetros) {
+        if (!barrioOrigen || !barrioDestino) {
             toast.error("No se pudo calcular la distancia entre las direcciones.");
             toast.info("Por favor, contactanos por WhatsApp.");
             return;
         }
-    
-        const distanciaCalculada = (distanciaEnMetros / 1000).toFixed(2); // Convertir a kilómetros
-        setDistancia(distanciaCalculada);
-    
-        // Lógica de precios según la hora
+        let precioCalculado
+
+        if(barrioDestino.zona === "fuera" || barrioOrigen.zona === "fuera"){
+            
+            precioCalculado= barrioDestino.precioCentro;
+        }
+        else if (barrioDestino.zona === "centro"){
+
+            precioCalculado= barrioOrigen.precioCentro;
+            
+        }
+        else if (barrioDestino.zona === "norte"){
+
+            precioCalculado= barrioOrigen.precioNorte;
+            
+        }
+        else if (barrioDestino.zona === "sur"){
+
+            precioCalculado= barrioOrigen.precioSur;
+            
+        }
+        else if (barrioDestino.zona === "oriente"){
+
+            precioCalculado= barrioOrigen.precioOriente;
+            
+        }
+        else if (barrioDestino.zona === "occidente"){
+            
+            precioCalculado= barrioOrigen.precioOccidente;
+            
+        }
+
+        //logica segun la hora
         const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
         const horaRecogida = fechaHoraRecogida.getHours();
-        let tarifaBase = 1500; // Tarifa base por kilómetro
-        let tarifaNocturna = 0;
-    
-        // Tarifas nocturnas de 7:00 p.m. a 6:00 a.m.
+
         if (horaRecogida >= 19 || horaRecogida < 6) {
             toast.info("Se aplicará una tarifa nocturna.");
-            tarifaNocturna = 500;
+            precioCalculado += 500; // Aumenta el precio en 500 por tarifa nocturna
+
         }
+
+        setPrecio(precioCalculado); // Actualiza el precio calculado
     
-        // Calcular el precio base
-        let precioCalculado = distanciaCalculada * tarifaBase;
-    
-        // Ajustar según los rangos
-if (precioCalculado <= 3500) {
-    precioCalculado = 3500; // Tarifa mínima
-}if (precioCalculado >= 12000) {
-    precioCalculado = 12000; // Tarifa máxima
-}else {
-    // Incrementos posteriores
-    const division = precioCalculado / 500;
-    const decimal = division - Math.floor(division);
-
-    if (decimal < 0.5) {
-        precioCalculado = Math.floor(division) * 500; // Usar piso si el decimal es menor a 0.5
-    } else {
-        precioCalculado = Math.ceil(division) * 500; // Usar techo si el decimal es mayor o igual a 0.5
-    }
-}
-
-
-
-let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
-
-
-    
-        setPrecio(precioFinal); // Formatear el precio final con dos decimales
     };
     
-    
 
-    const handleSubmit = async (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // Validar que la fecha y hora de recogida no estén en el pasado
-        const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
-        const ahora = new Date();
-    
-        if (fechaHoraRecogida < ahora) {
-            toast.error("La fecha y hora de recogida no pueden estar en el pasado.");
-            return;
-        }
-    
+
+         // Validar que la fecha y hora de recogida no estén en el pasado
+         const fechaHoraRecogida = new Date(formData.fechaHoraRecogida);
+         const ahora = new Date();
+     
+         if (fechaHoraRecogida < ahora) {
+             toast.error("La fecha y hora de recogida no pueden estar en el pasado.");
+             return;
+         }
+ 
+
         try {
-            const origen = await validarDireccion(formData.direccionRecogida);
-            const destino = await validarDireccion(formData.direccionEntrega);
+            const { barrioRecogida, barrioEntrega } = formData;
     
-            if (!origen || !destino) {
-                 // Formatear la fecha y hora de recogida de manera más legible
+        const barrioOrigen = barrios.find(b => b.nombreBarrio === barrioRecogida);
+        const barrioDestino = barrios.find(b => b.nombreBarrio === barrioEntrega);
+
+        if (!barrioOrigen || !barrioDestino) {
+
+            // Formatear la fecha y hora de recogida de manera más legible
             const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
                 weekday: 'long', // Día de la semana (opcional)
                 year: 'numeric',
@@ -204,34 +136,36 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                 minute: '2-digit',
                 hour12: true, // Usar formato de 12 horas (AM/PM)
             });
-    
+
             // Crear el mensaje para WhatsApp con un formato más claro
             const mensaje = `
-    *Detalles de la Orden de Mensajería:*
+    Detalles de la Orden de Mensajería:
     
     ──────────────────────
-    *Direcciónes:*
-    *Recogida:* ${formData.direccionRecogida}
-    *Entrega:* ${formData.direccionEntrega}
+    Direcciónes:
+    Recogida: ${formData.direccionRecogida}, ${formData.barrioRecogida}
+    Entrega: ${formData.direccionEntrega}, ${formData.barrioEntrega}
     ──────────────────────
-    *Tipo de Paquete:* ${formData.tipoDePaquete}
-    *Peso Estimado:* ${formData.pesoEstimado} kg
+    Tipo de Paquete: ${formData.tipoDePaquete}
+    Peso Estimado: ${formData.pesoEstimado} kg
     ──────────────────────
-    *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
+    Fecha y Hora de Recogida: ${fechaHoraFormateada}
     ──────────────────────
-    *Precio sin calcular*
+    Precio sin calcular
     ──────────────────────
     Orden de mensajeria sin calcular precio
             `;
-    
-            // URL para WhatsApp (ajustar el número y el mensaje)
-            const telefono = "+573025887156"; // Número de teléfono del destinatario
-            const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    
-            // Redirigir a WhatsApp para enviar el mensaje
-            window.open(urlWhatsApp, '_blank');
-            }else{
-                 // Formatear la fecha y hora de recogida de manera más legible
+
+             // URL para WhatsApp (ajustar el número y el mensaje)
+             const telefono = "+573025887156"; // Número de teléfono del destinatario
+             const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+     
+             // Redirigir a WhatsApp para enviar el mensaje
+             
+             window.open(urlWhatsApp, '_blank');
+
+        }else {
+            // Formatear la fecha y hora de recogida de manera más legible
             const fechaHoraFormateada = new Date(formData.fechaHoraRecogida).toLocaleString('es-CO', {
                 weekday: 'long', // Día de la semana (opcional)
                 year: 'numeric',
@@ -241,70 +175,81 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                 minute: '2-digit',
                 hour12: true, // Usar formato de 12 horas (AM/PM)
             });
-    
+
             // Crear el mensaje para WhatsApp con un formato más claro
             const mensaje = `
-    *Detalles de la Orden de Mensajería:*
+    Detalles de la Orden de Mensajería:
     
     ──────────────────────
-    *Direcciónes:*
-    *Recogida:* ${formData.direccionRecogida}
-    *Entrega:* ${formData.direccionEntrega}
+    Direcciónes:
+    Recogida: ${formData.direccionRecogida}, ${formData.barrioRecogida}
+    Entrega: ${formData.direccionEntrega}, ${formData.barrioEntrega}
     ──────────────────────
-    *Tipo de Paquete:* ${formData.tipoDePaquete}
-    *Peso Estimado:* ${formData.pesoEstimado} kg
+    Tipo de Paquete: ${formData.tipoDePaquete}
+    Peso Estimado: ${formData.pesoEstimado} kg
     ──────────────────────
-    *Fecha y Hora de Recogida:* ${fechaHoraFormateada}
+    Fecha y Hora de Recogida: ${fechaHoraFormateada}
     ──────────────────────
-    *Distancia Estimada:* ${distancia != null ? `${distancia} km` : "No disponible"}
-    ──────────────────────
-    *Precio sugerido:* ${precio != null ? `$${precio.toLocaleString()}` : "No disponible"}
+    Precio sugerido: ${precio != null ? `$${precio.toLocaleString()}` : "No disponible"}
             `;
-    
-            // URL para WhatsApp (ajustar el número y el mensaje)
-            const telefono = "+573025887156"; // Número de teléfono del destinatario
-            const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    
-            // Redirigir a WhatsApp para enviar el mensaje
-            window.open(urlWhatsApp, '_blank');
-            }
-    
-           
-    
-            // Registrar la orden en la base de datos
-            const response = await fetch(SummaryApi.addMensaje.url, {
-                method: SummaryApi.addMensaje.method,
-                credentials: 'include',
+
+               // URL para WhatsApp (ajustar el número y el mensaje)
+               const telefono = "+573025887156"; // Número de teléfono del destinatario
+               const urlWhatsApp = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+       
+               // Redirigir a WhatsApp para enviar el mensaje
+               window.open(urlWhatsApp, '_blank');
+
+               }
+
+               const response = await fetch(SummaryApi.addMensaje.url, {
+                method : SummaryApi.addMensaje.method,
+                credentials : 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    ...formData, 
+                body: JSON.stringify({
+                    ...formData,
                     direccionRecogida: formData.direccionRecogida + ", " + formData.barrioRecogida,
                     direccionEntrega: formData.direccionEntrega + ", " + formData.barrioEntrega,
-                    distancia: distancia,
                     precio: precio // Incluye el precio calculado
-                }) 
+
+                })
             });
-    
             const data = await response.json();
+
             if (data.success) {
                 toast.success(data.message);
             } else if (data.error) {
                 toast.error(data.message);
-            }
-        } catch (err) {
+            }     
+
+        } catch (error) {
+
             toast.error("Error al registrar la orden de mensajería");
+
+            
         }
-    };
+
+
+      }
+
+   useEffect(() => {
+       fetchBarrios();
+   
+     }, []);
+   
+    
     
 
     
 
     return (
+        
         <section id='registrar-mensajeria' className="flex items-center justify-center min-h-screen bg-cover bg-center">
             <div className='bg-white p-5 w-full max-w-md mx-auto rounded-3xl shadow-lg' style={{ margin: '1%', opacity: '0.85' }}>
                 <h2 className="text-center font-bold text-xl mb-6">Registrar Orden de Mensajería</h2>
+
 
                 <form onSubmit={handleSubmit}>
                     <div className='grid mb-4'>
@@ -347,6 +292,13 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                         </div>
                     </div>
 
+                    <datalist id="barrios">
+    {barriosFiltrados.map((barrio, index) => (
+        <option key={index} value={barrio.nombreBarrio} />
+    ))}
+</datalist>
+
+
 
                     <div className='grid grid-cols-2 gap-4'>
                     <div>
@@ -362,14 +314,14 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                             />
                         </div>
                         <div>
-                            <label className="text-gray-600">Barrio de Recogida:</label>
+                            <label htmlFor="barrioRecogida" className="text-gray-600">Barrio de Recogida:</label>
                             <input
-                                type="text"
+                                list="barrios"
                                 name="barrioRecogida"
                                 value={formData.barrioRecogida}
                                 onChange={handleChange}
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                                placeholder="Fátima"
+                                placeholder="Escribe el barrio "
                             />
                         </div>
                     </div>
@@ -387,14 +339,14 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                             />
                         </div>
                         <div>
-                            <label className="text-gray-600">Barrio de Entrega:</label>
+                            <label htmlFor="barrioEntrega" className="text-gray-600">Barrio de Entrega:</label>
                             <input
-                                type="text"
+                                list="barrios"
                                 name="barrioEntrega"
                                 value={formData.barrioEntrega}
                                 onChange={handleChange}
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                                placeholder="Palobonito"
+                                placeholder="Escribe el barrio "
                             />
                         </div>
                     </div>
@@ -421,12 +373,14 @@ let precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
                         </button>
                     </div>
 
-                    {distancia && precio && (
-                        <div className="mb-4 text-center">
-                            <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
-                           
-                        </div>
-                    )}
+                    {precio && (
+    <div className="mb-4 text-center">
+        <p className="text-lg font-semibold">
+            Precio sugerido: ${precio.toLocaleString()}
+        </p>
+    </div>
+)}
+
 
 <div className="mb-4 text-center">
                             

@@ -19,13 +19,11 @@ const ChangeUserRole = ({
 
     const handleRoleChange = (e) => {
         const selectedRole = e.target.value;
-        setUserRole(prevRoles => {
-            if (prevRoles.includes(selectedRole)) {
-                return prevRoles.filter(r => r !== selectedRole); // Remueve si ya existe
-            } else {
-                return [...prevRoles, selectedRole]; // Agrega si no existe
-            }
-        });
+        setUserRole(prevRoles => 
+            prevRoles.includes(selectedRole) 
+                ? prevRoles.filter(r => r !== selectedRole) // Remueve si ya existe
+                : [...prevRoles, selectedRole] // Agrega si no existe
+        );
     };
 
     const handleStatusChange = (e) => {
@@ -75,12 +73,20 @@ const ChangeUserRole = ({
 
                 <div className='my-4'>
                     <p className='mb-2'>Rol:</p>
-                    <select className='border px-4 py-1 w-full' value={userRole[userRole.length - 1] || ''} onChange={handleRoleChange}>
-                        <option value="">Selecciona un rol</option>
+                    <div className='border px-4 py-1 w-full'>
                         {Object.values(ROLE).map(el => (
-                            <option key={el} value={el}>{el}</option>
+                            <label key={el} className="block cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    value={el}
+                                    checked={userRole.includes(el)}
+                                    onChange={handleRoleChange}
+                                    className="mr-2"
+                                />
+                                {el}
+                            </label>
                         ))}
-                    </select>
+                    </div>
                     <div className='mt-2'>
                         <p className='text-sm'>Roles asignados: {userRole.join(", ") || "Ninguno"}</p>
                     </div>
@@ -104,5 +110,6 @@ const ChangeUserRole = ({
 };
 
 export default ChangeUserRole;
+
 
 

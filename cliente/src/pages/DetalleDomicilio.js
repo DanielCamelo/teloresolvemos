@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaClock, FaTruck, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; // Importa iconos
 import { jsPDF } from "jspdf";
 import SummaryApi from "../common";
+import logo from "../assets/Logo PNG.png";
 
 const DetalleDomicilio = () => {
   const { orderId } = useParams();
@@ -53,6 +54,14 @@ const DetalleDomicilio = () => {
     doc.setFont("helvetica", "normal");
     const pageWidth = doc.internal.pageSize.getWidth();
   
+     // Agregar el logo en la esquina superior izquierda
+         // Agregar el logo en la parte superior derecha con mayor tamaño
+      const logoWidth = 50; // Nuevo ancho del logo
+      const logoHeight = 50; // Nuevo alto del logo
+      const logoX = pageWidth - logoWidth - 10; // Posición a la derecha con un margen de 10
+      const logoY = 10; // Posición en la parte superior con un margen de 10
+      doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
+    
     // Encabezado
     doc.setFontSize(18);
     doc.text("ORDEN DE DOMICILIO", pageWidth / 2, 20, { align: "center" });
@@ -157,50 +166,51 @@ const DetalleDomicilio = () => {
             </span>
           </div>
 
-          <div className="flex justify-between items-center my-4">
-            <div className="flex items-center space-x-4">
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "pendiente")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaClock size={24} />
-                <span className="text-xs">Pendiente</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "en proceso")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaTruck size={24} />
-                <span className="text-xs">En Proceso</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "entregado")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaCheckCircle size={24} />
-                <span className="text-xs">Entregado</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "cancelado")
-                    ? "text-red-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaTimesCircle size={24} />
-                <span className="text-xs">Cancelado</span>
-              </div>
-            </div>
-          </div>
+          <div className="flex justify-center items-center my-4">
+  <div className="flex items-center space-x-6">
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "pendiente")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaClock size={24} />
+      <span className="text-xs">Pendiente</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "en proceso")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaTruck size={24} />
+      <span className="text-xs">En Proceso</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "entregado")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaCheckCircle size={24} />
+      <span className="text-xs">Entregado</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "cancelado")
+          ? "text-red-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaTimesCircle size={24} />
+      <span className="text-xs">Cancelado</span>
+    </div>
+  </div>
+</div>
+
 
           <div className="space-y-2">
             <div className="flex justify-between">
@@ -210,10 +220,6 @@ const DetalleDomicilio = () => {
             <div className="flex justify-between">
               <span className="text-gray-700">Repartidor:</span>
               <span>{order.nombreRepartidor?.name || "No asignado"}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-700">Opcion de Pago:</span>
-              <span>{order.opcionPago}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-700">Dirección de Recogida:</span>

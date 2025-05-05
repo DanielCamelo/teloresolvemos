@@ -393,7 +393,6 @@ const OrdenesCanceladas = () => {
       ──────────────────────
       *Categoria del producto:* ${ordenDomicilio.categoriaProducto}
       *Descipcion del producto:* ${ordenDomicilio.descripcionProducto} 
-      *Opcion de pago:* ${ordenDomicilio.opcionPago}
       *Comentario:* ${ordenDomicilio.comentario}
       ──────────────────────
       *Fecha y Hora de Recogida:* ${fechaFormateada}
@@ -965,7 +964,6 @@ const OrdenesCanceladas = () => {
                 <h3 className="text-lg font-bold text-gray-800">Cliente: {clientes.find(c => c._id === orden.nombreCliente)?.name}</h3>
                 <p className="text-gray-600">Teléfono: {clientes.find(c => c._id === orden.nombreCliente)?.phone}</p>
                   <p className="text-gray-600">Estado: <span className={`font-semibold text-red-600`}>{orden.estado}</span></p>
-                  <p className="text-gray-600">Tipo de Pago: {orden.opcionPago}</p>
                   <p className="text-gray-600">Recogida: {orden.direccionRecogida}</p>
                   <p className="text-gray-600">Entrega: {orden.direccionEntrega}</p>
                   <p className="text-gray-600">Precio: ${orden.precio}</p>

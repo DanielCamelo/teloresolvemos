@@ -164,50 +164,51 @@ const DetalleMensajeria = () => {
             </span>
           </div>
 
-          <div className="flex justify-between items-center my-4">
-            <div className="flex items-center space-x-4">
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "pendiente")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaClock size={24} />
-                <span className="text-xs">Pendiente</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "en proceso")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaTruck size={24} />
-                <span className="text-xs">En Proceso</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "entregado")
-                    ? "text-green-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaCheckCircle size={24} />
-                <span className="text-xs">Entregado</span>
-              </div>
-              <div
-                className={`flex flex-col items-center ${
-                  isActive(order.estado, "cancelado")
-                    ? "text-red-500"
-                    : "text-gray-400"
-                }`}
-              >
-                <FaTimesCircle size={24} />
-                <span className="text-xs">Cancelado</span>
-              </div>
-            </div>
-          </div>
+          <div className="flex justify-center items-center my-4">
+  <div className="flex items-center space-x-6">
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "pendiente")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaClock size={24} />
+      <span className="text-xs">Pendiente</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "en proceso")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaTruck size={24} />
+      <span className="text-xs">En Proceso</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "entregado")
+          ? "text-green-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaCheckCircle size={24} />
+      <span className="text-xs">Entregado</span>
+    </div>
+    <div
+      className={`flex flex-col items-center ${
+        isActive(order.estado, "cancelado")
+          ? "text-red-500"
+          : "text-gray-400"
+      }`}
+    >
+      <FaTimesCircle size={24} />
+      <span className="text-xs">Cancelado</span>
+    </div>
+  </div>
+</div>
+
 
           <div className="space-y-2">
             <div className="flex justify-between">

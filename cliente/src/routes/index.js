@@ -38,6 +38,7 @@ import DetalleComprasIntermunicipales from '../pages/DetalleComprasIntermunicipa
 import HistorialDiligencias from '../pages/HistorialDiligencias';
 import DetalleDiligencias from '../pages/DetalleDiligencias';
 import PerfilChofer from '../pages/PerfilChofer';
+import VerBarrios from '../pages/VerBarrios';
 
 const routes = createBrowserRouter(
     [
@@ -160,6 +161,10 @@ const routes = createBrowserRouter(
                 {
                     path: "ver-banners",
                     element: <VerBanners />
+                },
+                {
+                    path: "ver-barrios",
+                    element: <VerBarrios />
                 },
                 {
                     path: "ver-ordenes",

@@ -54,6 +54,10 @@ const getAllDiligenciasOrder = require('../controller/servicios/getAllDiligencia
 const assignChoferToOrder = require('../controller/serviciosTransporte/assignChoferToOrder');
 const getConductores = require('../controller/user/getConductor');
 const actualizarPrecio = require('../controller/servicios/actualizarPrecio');
+const allBarrios = require('../controller/barrios/allBarrios');
+const uploadBarrio = require('../controller/barrios/uploadBarrios');
+const deleteBarrios = require('../controller/barrios/deleteBarrios');
+const updateBarrio = require('../controller/barrios/actualizarBarrios');
 
 const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -142,22 +146,11 @@ router.post("/delete-Banner", authToken, DeleteBannerController);
 
 
 
-router.get('/distance', async (req, res) => {
-    const { origins, destinations } = req.query;
-    console.error('Orígenes bien:', apiKey, origins, destinations);
-
-    try {
-        const response = await axios.get('https://maps.googleapis.com/maps/api/distancematrix/json', {
-            params: { units: 'metric', origins, destinations, key: apiKey },
-        });
-
-        res.status(200).json(response.data);
-    } catch (error) {
-        console.error('Error al consultar la API de Google:', error.response?.data || error.message);
-        
-        res.status(500).json({ error: 'No se pudo calcular la distancia' });
-    }
-});
+//panel barrios
+router.get("/all-barrios",allBarrios);
+router.post("/upload-barrios",authToken,uploadBarrio);
+router.post("/delete-barrios", authToken,deleteBarrios);
+router.post("/actualizar-barrios", authToken, updateBarrio);
 
 
 module.exports = router;

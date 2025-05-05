@@ -15,171 +15,112 @@ const Domicilios = () => {
         barrioEntrega: '',
         barrioRecogida: ''
     });
+    
+    const [precio, setPrecio] = useState(null); // Nuevo estado para el precio}
+        const [barrios, setBarrios] = useState([]);
+        const [filtro, setFiltro] = useState('');
 
-    const [sugerenciasRecogida, setSugerenciasRecogida] = useState([]);
-        const [sugerenciasEntrega, setSugerenciasEntrega] = useState([]);
-        const [distancia, setDistancia] = useState(null); // Nuevo estado para la distancia
-        const [precio, setPrecio] = useState(null); // Nuevo estado para el precio
+
+    
         
 
         const handleChange = (e) => {
             const { name, value } = e.target;
             setFormData({ ...formData, [name]: value });
+        };
+
+
+        const fetchBarrios = async () => {
+            try {
+              const response = await fetch(SummaryApi.allBarrios.url, {
+                method: SummaryApi.allBarrios.method,
+                credentials: 'include',
+              });
+              const data = await response.json();
+              console.log(data);
+              setBarrios(data || []);
+            } catch (err) {
+              toast.error('Error al cargar barrios');
+            }
+          };
     
-            if (name === "direccionRecogida") {
-                obtenerSugerencias(value, setSugerenciasRecogida);
-            } else if (name === "direccionEntrega") {
-                obtenerSugerencias(value, setSugerenciasEntrega);
-            }
-        };
-
-
-        const obtenerSugerencias = async (direccion, setSugerencias) => {
-            if (!direccion) {
-                setSugerencias([]);
-                return;
-            }
+          const barriosFiltrados = barrios.filter((barrio) => {
+            const query = filtro.toLowerCase();
+            return (
+              barrio.nombreBarrio.toLowerCase().includes(query) ||
+              barrio.zona.toLowerCase().includes(query)
+            );
+          });
     
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion + ", Tuluá, Valle del Cauca, Colombia")}&bounded=1&viewbox=-76.2080,-4.0725,-76.1740,-4.0500`;
-            try {
-                const response = await axios.get(url);
-                setSugerencias(response.data);
-            } catch (error) {
-                console.error("Error al obtener sugerencias:", error);
-                setSugerencias([]);
-            }
-        };
-
-        const seleccionarSugerencia = (direccion, setSugerencias) => {
-            setFormData({ ...formData, [setSugerencias]: direccion });
-            setSugerencias([]);
-        };
-
-        const validarDireccion = async (direccion) => {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion + ", Tuluá, Valle del Cauca, Colombia")}`;
-            try {
-                const response = await axios.get(url);
-                return response.data.length > 0 ? { lat: response.data[0].lat, lng: response.data[0].lon } : null;
-            } catch (error) {
-                console.error("Error al validar la dirección:", error);
-                return null;
-            }
-        };
-
-        const calcularDistancia = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/distance`, {
-                    // Opciones adicionales si es necesario
-                    params: {
-                        origins: formData.direccionRecogida + ", Tuluá, Valle del Cauca, Colombia",
-                        destinations: formData.direccionEntrega +  ", Tuluá, Valle del Cauca, Colombia",
-                    },
-                    withCredentials: true, // Si es necesario para cookies
-                });
+          const handleCalcularDistancia = () => {
+            const { barrioRecogida, barrioEntrega } = formData;
         
-                console.log('Respuesta de la API:', response.data);
+            const barrioOrigen = barrios.find(b => b.nombreBarrio === barrioRecogida);
+            const barrioDestino = barrios.find(b => b.nombreBarrio === barrioEntrega);
         
-                if (
-                    response.data.rows &&
-                    response.data.rows.length > 0 &&
-                    response.data.rows[0].elements &&
-                    response.data.rows[0].elements.length > 0
-                ) {
-                    const distancia = response.data.rows[0].elements[0].distance.value; // Distancia en metros
-                    const duracion = response.data.rows[0].elements[0].duration.text; // Duración como texto
-                    console.log(`Distancia: ${distancia} metros`);
-                    console.log(`Duración estimada: ${duracion}`);
-                    return distancia;
-                } else {
-                    console.warn('No se encontraron datos de distancia.');
-                    return null;
-                }
-                
-            } catch (error) {
-                console.error('Error al calcular la distancia:', error.response?.data || error.message);
-                return null;
-            }
-        };
-
-        const handleCalcularDistancia = async () => {
-            let origen = await validarDireccion(formData.direccionRecogida);
-            let destino = await validarDireccion(formData.direccionEntrega);
-            const barriOrigen = await validarDireccion(formData.barrioRecogida);
-            const barrioDestino = await validarDireccion(formData.barrioEntrega);
-        
-            if (!origen || !destino) {
-                if (!origen) {
-                    origen = barriOrigen;
-                }
-                if (!destino) {
-                    destino = barrioDestino;
-                }
-                if (!origen || !destino) {
-                    console.log(destino, origen);
-                    toast.info("No se pudieron validar las direcciones.");
-                    toast.info("Por favor, contactanos por WhatsApp.");
-                    return;
-                }
-            }
-        
-            console.log(destino, origen);
-            const distanciaEnMetros = await calcularDistancia(origen, destino);
-            if (!distanciaEnMetros) {
+            if (!barrioOrigen || !barrioDestino) {
                 toast.error("No se pudo calcular la distancia entre las direcciones.");
                 toast.info("Por favor, contactanos por WhatsApp.");
                 return;
             }
-        
-            const distanciaCalculada = (distanciaEnMetros / 1000).toFixed(2); // Convertir a kilómetros
-            setDistancia(distanciaCalculada);
-        
-            // Lógica de precios según la hora
-            const fechaHoraActual = new Date();  // Fecha y hora actual
-            const horaActual = fechaHoraActual.getHours();
-            let tarifaBase = 1500; // Tarifa base por kilómetro
-            let tarifaNocturna = 0;
-        
-            // Tarifas nocturnas de 7:00 p.m. a 6:00 a.m.
-            if (horaActual >= 19 || horaActual < 6) {
+            let precioCalculado
+    
+            if(barrioDestino.zona === "fuera" || barrioOrigen.zona === "fuera"){
+            
+                precioCalculado= barrioDestino.precioCentro;
+            }
+            else if (barrioDestino.zona === "centro"){
+    
+                precioCalculado= barrioOrigen.precioCentro;
+                
+            }
+            else if (barrioDestino.zona === "norte"){
+    
+                precioCalculado= barrioOrigen.precioNorte;
+                
+            }
+            else if (barrioDestino.zona === "sur"){
+    
+                precioCalculado= barrioOrigen.precioSur;
+                
+            }
+            else if (barrioDestino.zona === "oriente"){
+    
+                precioCalculado= barrioOrigen.precioOriente;
+                
+            }
+            else if (barrioDestino.zona === "occidente"){
+                
+                precioCalculado= barrioOrigen.precioOccidente;
+                
+            }
+    
+            //logica segun la hora
+            const fechaHoraRecogida = new Date();
+            const horaRecogida = fechaHoraRecogida.getHours();
+    
+            if (horaRecogida >= 19 || horaRecogida < 6) {
                 toast.info("Se aplicará una tarifa nocturna.");
-                tarifaNocturna = 500;
+                precioCalculado += 500; // Aumenta el precio en 500 por tarifa nocturna
+    
             }
+    
+            setPrecio(precioCalculado); // Actualiza el precio calculado
         
-            // Calcular el precio base
-            let precioCalculado = distanciaCalculada * tarifaBase;
-        
-            // Ajustar según los rangos
-            if (precioCalculado <= 3500) {
-                precioCalculado = 3500; // Tarifa mínima
-            }if (precioCalculado >= 12000) {
-                precioCalculado = 12000; // Tarifa máxima
-            }else {
-                // Incrementos posteriores
-                const division = precioCalculado / 500;
-                const decimal = division - Math.floor(division);
-            
-                if (decimal < 0.5) {
-                    precioCalculado = Math.floor(division) * 500; // Usar piso si el decimal es menor a 0.5
-                } else {
-                    precioCalculado = Math.ceil(division) * 500; // Usar techo si el decimal es mayor o igual a 0.5
-                }
-            }
-
-            const precioFinal = precioCalculado + tarifaNocturna; // Sumar la tarifa nocturna
-        
-            
-            setPrecio(precioFinal); // Formatear el precio final con dos decimales
         };
         
+
 
         const handleSubmit = async (e) => {
             e.preventDefault();
                 
             try {
-                const origen = await validarDireccion(formData.direccionRecogida) ;
-                const destino = await validarDireccion(formData.direccionEntrega);
+                const { barrioRecogida, barrioEntrega } = formData;
+    
+        const barrioOrigen = barrios.find(b => b.nombreBarrio === barrioRecogida);
+        const barrioDestino = barrios.find(b => b.nombreBarrio === barrioEntrega);
         
-                if (!origen || !destino) {
+                if (!barrioOrigen || !barrioDestino) {
                     const fechaRegistro = new Date();
                 const fechaRegistroFormateada = fechaRegistro.toLocaleString('es-CO', {
                     weekday: 'long', // Día de la semana
@@ -204,7 +145,6 @@ const Domicilios = () => {
     ──────────────────────
     *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
     ──────────────────────
-    *Metodo de pago:* ${formData.opcionPago}
     *Precio sin calcular*
     ──────────────────────
     *Comentarios:* ${formData.comentario}
@@ -243,9 +183,6 @@ const Domicilios = () => {
     ──────────────────────
     *Fecha y Hora de Domicilio:* ${fechaRegistroFormateada}
     ──────────────────────
-    *Distancia Estimada:* ${distancia != null ? `${distancia} km` : "No disponible"}
-    ──────────────────────
-    *Metodo de pago:* ${formData.opcionPago}
     *Precio sugerido:* ${precio != null ? `$${precio.toLocaleString()}` : "No disponible"}
     ──────────────────────
     *Comentarios:* ${formData.comentario}
@@ -270,7 +207,6 @@ const Domicilios = () => {
                         ...formData, 
                         direccionRecogida: formData.direccionRecogida + ", " + formData.barrioRecogida,
                         direccionEntrega: formData.direccionEntrega + ", " + formData.barrioEntrega,
-                        distancia: distancia,
                         precio: precio // Incluye el precio calculado
                     }) 
                 });
@@ -285,6 +221,12 @@ const Domicilios = () => {
                 toast.error("Error al registrar la orden de mensajería");
             }
         };
+
+    useEffect(() => {
+        fetchBarrios();
+    }
+, []);
+
 
     return (
         <section id='registrar-domicilio' className="flex items-center justify-center min-h-screen bg-cover bg-center">
@@ -322,6 +264,14 @@ const Domicilios = () => {
                         />
                     </div>
 
+                    <datalist id="barrios">
+    {barriosFiltrados.map((barrio, index) => (
+        <option key={index} value={barrio.nombreBarrio} />
+    ))}
+</datalist>
+
+
+
                     <div className='grid grid-cols-2 gap-4'>
                     <div>
                             <label className="text-gray-600">Dirección de Recogida:</label>
@@ -336,14 +286,14 @@ const Domicilios = () => {
                             />
                         </div>
                         <div>
-                            <label className="text-gray-600">Barrio de Recogida:</label>
+                            <label htmlFor="barrioRecogida" className="text-gray-600">Barrio de Recogida:</label>
                             <input
-                                type="text"
+                                list="barrios"
                                 name="barrioRecogida"
                                 value={formData.barrioRecogida}
                                 onChange={handleChange}
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                                placeholder="Fátima"
+                                placeholder="Escribe el barrio "
                             />
                         </div>
                     </div>
@@ -361,32 +311,18 @@ const Domicilios = () => {
                             />
                         </div>
                         <div>
-                            <label className="text-gray-600">Barrio de Entrega:</label>
+                            <label htmlFor="barrioEntrega" className="text-gray-600">Barrio de Entrega:</label>
                             <input
-                                type="text"
+                                list="barrios"
                                 name="barrioEntrega"
                                 value={formData.barrioEntrega}
                                 onChange={handleChange}
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                                placeholder="Palobonito"
+                                placeholder="Escribe el barrio "
                             />
                         </div>
                     </div>
 
-                    <div className='grid mb-4'>
-                        <label className="text-gray-600">Opción de Pago:</label>
-                        <select
-                            name="opcionPago"
-                            value={formData.opcionPago}
-                            onChange={handleChange}
-                            required
-                            className="w-full bg-gray-100 p-3 rounded-lg outline-none"
-                        >
-                            <option value="">Seleccione una opción</option>
-                            <option value="en_linea">En Línea</option>
-                            <option value="contra_entrega">Contra Entrega</option>
-                        </select>
-                    </div>
 
                     <div className='grid mb-4'>
                         <label className="text-gray-600">Comentarios Adicionales:</label>
@@ -410,7 +346,7 @@ const Domicilios = () => {
                                             </button>
                                         </div>
                     
-                                        {distancia && precio && (
+                                        {precio && (
                                             <div className="mb-4 text-center">
                                                 <p className="text-lg font-semibold">Precio sugerido: ${precio.toLocaleString()}</p>
                                                 

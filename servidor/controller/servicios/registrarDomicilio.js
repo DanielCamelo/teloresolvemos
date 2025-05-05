@@ -8,7 +8,6 @@ const registrarDomicilio = async (req, res) => {
             descripcionProducto, 
             direccionRecogida, 
             direccionEntrega, 
-            opcionPago, 
             comentario, 
             precio
         } = req.body;
@@ -20,7 +19,6 @@ const registrarDomicilio = async (req, res) => {
             descripcionProducto,
             direccionRecogida,
             direccionEntrega,
-            opcionPago,
             comentario,
             estado: 'pendiente', // Estado inicial
             precio
