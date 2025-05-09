@@ -60,34 +60,215 @@ const RegistrarMensajeria = () => {
         }
         let precioCalculado
 
+        //logica de precios segun la zona
+
         if(barrioDestino.zona === "fuera" || barrioOrigen.zona === "fuera"){
             
             precioCalculado= barrioDestino.precioCentro;
         }
         else if (barrioDestino.zona === "centro"){
 
-            precioCalculado= barrioOrigen.precioCentro;
+            if (barrioOrigen.zona === "centro") {
+
+                if (barrioOrigen.precioCentro >= barrioDestino.precioCentro) {
+                    precioCalculado = barrioOrigen.precioCentro;
+                } else if (barrioDestino.precioCentro > barrioOrigen.precioCentro) {
+                    precioCalculado = barrioDestino.precioCentro;
+                }
+            }
+            else if (barrioOrigen.zona === "norte"){
+
+                if(barrioOrigen.precioCentro >= barrioDestino.precioNorte){
+                    precioCalculado= barrioOrigen.precioCentro;
+                }else if(barrioDestino.precioNorte > barrioOrigen.precioCentro){
+                    precioCalculado= barrioDestino.precioNorte;
+                }
+            }
+            else if (barrioOrigen.zona === "sur"){
+
+                if(barrioOrigen.precioCentro >= barrioDestino.precioSur){
+                    precioCalculado= barrioOrigen.precioCentro;
+                }else if(barrioDestino.precioSur > barrioOrigen.precioCentro){
+                    precioCalculado= barrioDestino.precioSur;
+                }
+            }
+            else if (barrioOrigen.zona === "oriente"){
+                if(barrioOrigen.precioCentro >= barrioDestino.precioOriente){
+                    precioCalculado= barrioOrigen.precioCentro;
+                }else if(barrioDestino.precioOriente > barrioOrigen.precioCentro){
+                    precioCalculado= barrioDestino.precioOriente;
+                }
+            }
+            else if (barrioOrigen.zona === "occidente"){
+                if(barrioOrigen.precioCentro >= barrioDestino.precioOccidente){
+                    precioCalculado= barrioOrigen.precioCentro;
+                }else if(barrioDestino.precioOccidente > barrioOrigen.precioCentro){
+                    precioCalculado= barrioDestino.precioOccidente;
+                }
+            }
             
         }
         else if (barrioDestino.zona === "norte"){
 
-            precioCalculado= barrioOrigen.precioNorte;
+            if (barrioOrigen.zona === "centro") {
+                if (barrioOrigen.precioNorte >= barrioDestino.precioCentro) {
+                    precioCalculado = barrioOrigen.precioNorte;
+                } else if (barrioDestino.precioCentro > barrioOrigen.precioNorte) {
+                    precioCalculado = barrioDestino.precioCentro;
+                }
+            }
+            else if (barrioOrigen.zona === "norte"){
+                if(barrioOrigen.precioNorte >= barrioDestino.precioNorte){
+                    precioCalculado= barrioOrigen.precioNorte;
+                }else if(barrioDestino.precioNorte > barrioOrigen.precioNorte){
+                    precioCalculado= barrioDestino.precioNorte;
+                }
+            }
+            else if (barrioOrigen.zona === "sur"){
+                if(barrioOrigen.precioNorte >= barrioDestino.precioSur){
+                    precioCalculado= barrioOrigen.precioNorte;
+                }else if(barrioDestino.precioSur > barrioOrigen.precioNorte){
+                    precioCalculado= barrioDestino.precioSur;
+                }
+            }
+            else if (barrioOrigen.zona === "oriente"){
+                if(barrioOrigen.precioNorte >= barrioDestino.precioOriente){
+                    precioCalculado= barrioOrigen.precioNorte;
+                }else if(barrioDestino.precioOriente > barrioOrigen.precioNorte){
+                    precioCalculado= barrioDestino.precioOriente;
+                }
+            }
+            else if (barrioOrigen.zona === "occidente"){
+                if(barrioOrigen.precioNorte >= barrioDestino.precioOccidente){
+                    precioCalculado= barrioOrigen.precioNorte;
+                }else if(barrioDestino.precioOccidente > barrioOrigen.precioNorte){
+                    precioCalculado= barrioDestino.precioOccidente;
+                }
+            }
             
         }
         else if (barrioDestino.zona === "sur"){
 
-            precioCalculado= barrioOrigen.precioSur;
+            if (barrioOrigen.zona === "centro") {
+                if (barrioOrigen.precioSur >= barrioDestino.precioCentro) {
+                    precioCalculado = barrioOrigen.precioSur;
+                } else if (barrioDestino.precioCentro > barrioOrigen.precioSur) {
+                    precioCalculado = barrioDestino.precioCentro;
+                }
+            }
+            else if (barrioOrigen.zona === "norte"){
+                if(barrioOrigen.precioSur >= barrioDestino.precioNorte){
+                    precioCalculado= barrioOrigen.precioSur;
+                }else if(barrioDestino.precioNorte > barrioOrigen.precioSur){
+                    precioCalculado= barrioDestino.precioNorte;
+                }
+            }
+            else if (barrioOrigen.zona === "sur"){
+                if(barrioOrigen.precioSur >= barrioDestino.precioSur){
+                    precioCalculado= barrioOrigen.precioSur;
+                }else if(barrioDestino.precioSur > barrioOrigen.precioSur){
+                    precioCalculado= barrioDestino.precioSur;
+                }
+            }
+            else if (barrioOrigen.zona === "oriente"){
+                if(barrioOrigen.precioSur >= barrioDestino.precioOriente){
+                    precioCalculado= barrioOrigen.precioSur;
+                }else if(barrioDestino.precioOriente > barrioOrigen.precioSur){
+                    precioCalculado= barrioDestino.precioOriente;
+                }
+            }
+            else if (barrioOrigen.zona === "occidente"){
+                if(barrioOrigen.precioSur >= barrioDestino.precioOccidente){
+                    precioCalculado= barrioOrigen.precioSur;
+                }else if(barrioDestino.precioOccidente > barrioOrigen.precioSur){
+                    precioCalculado= barrioDestino.precioOccidente;
+                }
+            }
             
         }
         else if (barrioDestino.zona === "oriente"){
 
-            precioCalculado= barrioOrigen.precioOriente;
+            if (barrioOrigen.zona === "centro") {
+                if (barrioOrigen.precioOriente >= barrioDestino.precioCentro) {
+                    precioCalculado = barrioOrigen.precioOriente;
+                } else if (barrioDestino.precioCentro > barrioOrigen.precioOriente) {
+                    precioCalculado = barrioDestino.precioCentro;
+                }
+            }
+            else if (barrioOrigen.zona === "norte"){
+                if(barrioOrigen.precioOriente >= barrioDestino.precioNorte){
+                    precioCalculado= barrioOrigen.precioOriente;
+                }else if(barrioDestino.precioNorte > barrioOrigen.precioOriente){
+                    precioCalculado= barrioDestino.precioNorte;
+                }
+            }
+            else if (barrioOrigen.zona === "sur"){
+                if(barrioOrigen.precioOriente >= barrioDestino.precioSur){
+                    precioCalculado= barrioOrigen.precioOriente;
+                }else if(barrioDestino.precioSur > barrioOrigen.precioOriente){
+                    precioCalculado= barrioDestino.precioSur;
+                }
+            }
+            else if (barrioOrigen.zona === "oriente"){
+                if(barrioOrigen.precioOriente >= barrioDestino.precioOriente){
+                    precioCalculado= barrioOrigen.precioOriente;
+                }else if(barrioDestino.precioOriente > barrioOrigen.precioOriente){
+                    precioCalculado= barrioDestino.precioOriente;
+                }
+            }
+            else if (barrioOrigen.zona === "occidente"){
+                if(barrioOrigen.precioOriente >= barrioDestino.precioOccidente){
+                    precioCalculado= barrioOrigen.precioOriente;
+                }else if(barrioDestino.precioOccidente > barrioOrigen.precioOriente){
+                    precioCalculado= barrioDestino.precioOccidente;
+                }
+            }
+
             
         }
         else if (barrioDestino.zona === "occidente"){
+
+            if (barrioOrigen.zona === "centro") {
+                if (barrioOrigen.precioOccidente >= barrioDestino.precioCentro) {
+                    precioCalculado = barrioOrigen.precioOccidente;
+                } else if (barrioDestino.precioCentro > barrioOrigen.precioOccidente) {
+                    precioCalculado = barrioDestino.precioCentro;
+                }
+            }
+            else if (barrioOrigen.zona === "norte"){
+                if(barrioOrigen.precioOccidente >= barrioDestino.precioNorte){
+                    precioCalculado= barrioOrigen.precioOccidente;
+                }else if(barrioDestino.precioNorte > barrioOrigen.precioOccidente){
+                    precioCalculado= barrioDestino.precioNorte;
+                }
+            }
+            else if (barrioOrigen.zona === "sur"){
+                if(barrioOrigen.precioOccidente >= barrioDestino.precioSur){
+                    precioCalculado= barrioOrigen.precioOccidente;
+                }else if(barrioDestino.precioSur > barrioOrigen.precioOccidente){
+                    precioCalculado= barrioDestino.precioSur;
+                }
+            }
+            else if (barrioOrigen.zona === "oriente"){
+                if(barrioOrigen.precioOccidente >= barrioDestino.precioOriente){
+                    precioCalculado= barrioOrigen.precioOccidente;
+                }else if(barrioDestino.precioOriente > barrioOrigen.precioOccidente){
+                    precioCalculado= barrioDestino.precioOriente;
+                }
+            }
+            else if (barrioOrigen.zona === "occidente"){
+                if(barrioOrigen.precioOccidente >= barrioDestino.precioOccidente){
+                    precioCalculado= barrioOrigen.precioOccidente;
+                }else if(barrioDestino.precioOccidente > barrioOrigen.precioOccidente){
+                    precioCalculado= barrioDestino.precioOccidente;
+                }
+            }
             
-            precioCalculado= barrioOrigen.precioOccidente;
-            
+        }
+
+        if (!formData.fechaHoraRecogida) {
+            toast.warning("Por favor, selecciona una fecha para calcular el precio.");
+            return; // Detiene la ejecución si no hay fecha
         }
 
         //logica segun la hora
@@ -308,7 +489,6 @@ const RegistrarMensajeria = () => {
                                 name="direccionRecogida"
                                 value={formData.direccionRecogida}
                                 onChange={handleChange}
-                                required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                                 placeholder="Calle 123"
                             />
@@ -320,6 +500,7 @@ const RegistrarMensajeria = () => {
                                 name="barrioRecogida"
                                 value={formData.barrioRecogida}
                                 onChange={handleChange}
+                                required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                                 placeholder="Escribe el barrio "
                             />
@@ -333,7 +514,6 @@ const RegistrarMensajeria = () => {
                                 name="direccionEntrega"
                                 value={formData.direccionEntrega}
                                 onChange={handleChange}
-                                required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                                 placeholder="Cra 123"
                             />
@@ -345,6 +525,7 @@ const RegistrarMensajeria = () => {
                                 name="barrioEntrega"
                                 value={formData.barrioEntrega}
                                 onChange={handleChange}
+                                required
                                 className="w-full bg-gray-100 p-3 rounded-lg outline-none"
                                 placeholder="Escribe el barrio "
                             />

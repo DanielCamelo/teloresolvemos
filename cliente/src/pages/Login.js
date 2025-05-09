@@ -72,12 +72,13 @@ const Login = () => {
             <label className="text-gray-600">Teléfono :</label>
             <div className='bg-gray-100 p-3 rounded-lg'>
               <input
-                type='phone'
+                type='tel'
                 placeholder='Ingresa tu número de teléfono'
                 name='phone'
                 value={data.phone}
                 onChange={handleChange}
                 required
+                autoComplete='username'
                 className='w-full bg-transparent outline-none'
               />
             </div>
@@ -92,6 +93,7 @@ const Login = () => {
                 value={data.password}
                 onChange={handleChange}
                 required
+                autoComplete='current-password'
                 className='w-full bg-transparent outline-none'
               />
               <div className='cursor-pointer ml-2 text-gray-500' onClick={() => setShowPassword(!showPassword)}>

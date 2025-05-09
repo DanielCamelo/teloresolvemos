@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState , useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
     FaBars, FaTimes, FaEnvelope, FaCar, FaPlane, FaHospital, 
     FaHome, FaShippingFast, FaMotorcycle, FaTruck, FaClock, 
@@ -61,6 +61,34 @@ const Header = () => {
         setMenuOpen(false);
         setActiveDropdown(null);
     };
+
+   
+
+useEffect(() => {
+    const fetchUser = async () => {
+        try {
+            const res = await fetch(SummaryApi.current_user.url, {
+                method: SummaryApi.current_user.method,
+                credentials: 'include',
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                dispatch(setUserDetails(data.data)); // Asegúrate que `data.data` contiene el usuario
+            } else {
+                dispatch(setUserDetails(null));
+            }
+        } catch (error) {
+            console.error('Error al obtener el usuario:', error);
+            dispatch(setUserDetails(null));
+        }
+    };
+
+    if (!user?._id) {
+        fetchUser();
+    }
+}, [dispatch , user]);
+
 
     return (
         <header className="shadow-md bg-neutral-dark">
