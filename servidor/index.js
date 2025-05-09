@@ -7,6 +7,10 @@ const router = require('./routes');
 
 
 const app = express();
+
+app.set('trust proxy', true); // Confía en proxies si usas HTTPS detrás de uno
+
+
 // redireccion de www a sin www
 app.use((req, res, next) => {
     if (req.headers.host.startsWith('www.')) {
